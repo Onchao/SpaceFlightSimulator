@@ -16,16 +16,41 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 public class GamestateController {
-    static Pane createScene(){
-        if(Gamestate.getGS() == Gamestate.gs.MENU) {
-            return Menu.createMenu();
-        }
-        else /*if(Gamestate.getGS() == Gamestate.gs.BUILD)*/ {
-            System.out.println("LOL");
-            return Menu.createMenu();
-        }/*
-        else if(Gamestate.getGS() == Gamestate.gs.FLY) {
+    static Stage stage;
+    static CustomScene currentScene;
+    static Scene SC;
 
-        }*/
+    GamestateController(Stage stage){
+        this.stage = stage;
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                currentScene.update();
+            }
+        };
+        timer.start();
+    }
+
+    static void changeScene(Gamestate.gs newGS){
+        if(newGS == Gamestate.gs.MENU){
+            Gamestate.setGamestateMENU();
+            currentScene = new Menu();
+            SC = new Scene(currentScene.getRoot());
+        }
+        else if(newGS == Gamestate.gs.BUILD){
+            Gamestate.setGamestateBUILD();
+            //currentScene = new                                                    SOMETHING NICE();
+            Pane test = new Pane();
+            test.setPrefSize(600,600);
+            test.getChildren().add(new Rectangle(600,600,Color.SEAGREEN));
+            SC = new Scene(test);
+        }
+        else //if(newGS == Gamestate.gs.FLY)
+        {
+
+        }
+        stage.setScene(SC);
+        stage.show();
     }
 }

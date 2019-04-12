@@ -18,12 +18,11 @@ import javafx.event.EventHandler;
 
 
 public class Main extends Application {
-
+    public Stage pubStage;
     @Override
     public void start(Stage stage) throws Exception {
-        Scene sc = new Scene(GamestateController.createScene());
-        stage.setScene(sc);
-        stage.show();
+        GamestateController GC = new GamestateController(stage);
+        GC.changeScene(Gamestate.gs.MENU);
     }
 
     public static void main(String[] args) {
