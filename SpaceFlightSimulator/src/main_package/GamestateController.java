@@ -2,6 +2,8 @@ package main_package;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -40,11 +42,14 @@ public class GamestateController {
         }
         else if(newGS == Gamestate.gs.BUILD){
             Gamestate.setGamestateBUILD();
-            //currentScene = new                                                    SOMETHING NICE();
-            Pane test = new Pane();
-            test.setPrefSize(600,600);
-            test.getChildren().add(new Rectangle(600,600,Color.SEAGREEN));
-            SC = new Scene(test);
+
+            ObservableList <SpaceshipComponent> components = FXCollections.observableArrayList(    // TODO: find a good place to put this list
+                    new ExampleComponent("test1"),
+                    new ExampleComponent("test2"),
+                    new ExampleComponent("test3"));
+
+            currentScene = new Build(components);
+            SC = new Scene(currentScene.getRoot());
         }
         else //if(newGS == Gamestate.gs.FLY)
         {
