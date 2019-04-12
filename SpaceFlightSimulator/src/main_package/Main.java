@@ -12,32 +12,22 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 
 
 public class Main extends Application {
-    enum gamestate{
-        MENU,
-        BUILD,
-        FLY,
-        // FAIL, // ???
-        // SUCCEED // ???
-    }
-    static gamestate GS;
-
-    private Parent createMenu() {
-        return new Menu().getRoot();
-    }
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(createMenu()));
-
+        Scene sc = new Scene(GamestateController.createScene());
+        stage.setScene(sc);
         stage.show();
     }
 
     public static void main(String[] args) {
-        GS = gamestate.MENU;
+        Gamestate.setGamestateMENU();
         launch(args);
     }
 }
