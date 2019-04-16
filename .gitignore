@@ -1,0 +1,9 @@
+*~
+*.swp
+*.swo
+
+.idea/
+*.class
+
+META-INF/
+

@@ -6,6 +6,7 @@ public interface SpaceshipComponent {
     String getName();
 
     int getHeight();
+    int getWidth();
     int getMass();
 
     Image getImage();

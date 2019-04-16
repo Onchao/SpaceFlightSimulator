@@ -2,33 +2,31 @@ package main_package;
 
 import javafx.scene.image.Image;
 
-public class ExampleComponent implements SpaceshipComponent {
-    private String name;
+public class FuelTankComponent implements SpaceshipComponent {
     private Image img;
 
-    public ExampleComponent(String name) {
-        this.name = name;
-        img = new Image("file:images/example_component.png");
+    public FuelTankComponent() {
+        img = new Image("file:images/tank.png");
     }
 
     @Override
     public String getName() {
-        return name;
+        return "Fuel Tank";
     }
 
     @Override
     public int getHeight() {
-        return 50;
+        return 200;
     }
 
     @Override
     public int getWidth() {
-        return 100;
+        return 200;
     }
 
     @Override
     public int getMass() {
-        return 150;
+        return 0;
     }
 
     @Override

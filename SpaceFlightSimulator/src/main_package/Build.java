@@ -26,17 +26,17 @@ public class Build implements CustomScene {
         componentList = new ListView<>();
         componentList.setItems(availableComponents);
 
-        componentList.setLayoutX(350);
+        componentList.setLayoutX(600);
 
-        root.setPrefSize(600, 600);
-        nextComponentPosition = 570;
+        root.setPrefSize(850, 850);
+        nextComponentPosition = 800;
         root.getChildren().add(componentList);
 
         Button flyButton = new Button("Let's fly!");
         // TODO: event handler for this one
         root.getChildren().add(flyButton);
 
-        nextComponent = new Rectangle(100, nextComponentPosition - 50, 100, 50);
+        nextComponent = new Rectangle(150, nextComponentPosition - 50, 200, 50);
         nextComponent.setArcHeight(10);
         nextComponent.setArcWidth(10);
         nextComponent.setFill(Color.LIMEGREEN);
@@ -49,7 +49,7 @@ public class Build implements CustomScene {
                 if (chosenComponent == null) return;
 
                 ImageView componentImage = new ImageView(chosenComponent.getImage());
-                componentImage.setX(100);
+                componentImage.setX(210 - chosenComponent.getWidth()/2);
                 componentImage.setY(nextComponentPosition - chosenComponent.getHeight());
                 root.getChildren().add(componentImage);
 

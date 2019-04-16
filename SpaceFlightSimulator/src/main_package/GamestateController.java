@@ -44,9 +44,15 @@ public class GamestateController {
             Gamestate.setGamestateBUILD();
 
             ObservableList <SpaceshipComponent> components = FXCollections.observableArrayList(    // TODO: find a good place to put this list
-                    new ExampleComponent("test1"),
-                    new ExampleComponent("test2"),
-                    new ExampleComponent("test3"));
+                    new CrewCapsuleComponent(),
+                    new FuelTankComponent(),
+                    new PowerfulAtmosphericEngineComponent(),
+                    new HighEfficiencyVaccumEngineComponent(),
+                    new AerodynamicNoseConeComponent(),
+                    new ParachuteComponent(),
+                    new CircularDecouplerComponent(),
+                    new RadialDecouplerComponent(),
+                    new LandingStrutsComponent());
 
             currentScene = new Build(components);
             SC = new Scene(currentScene.getRoot());
