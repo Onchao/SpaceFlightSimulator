@@ -18,5 +18,5 @@ import javafx.event.EventHandler;
 
 interface CustomScene {
     void update();
-    Pane getRoot();
+    Parent getRoot();
 }
