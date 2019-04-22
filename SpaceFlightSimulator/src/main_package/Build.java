@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
@@ -22,12 +23,12 @@ import java.util.List;
 public class Build implements CustomScene {
     private Pane root = new Pane();
     private ScrollPane scroller = new ScrollPane();
-    private ListView<SpaceshipComponent> componentList;
+    private ListView<SpaceshipComponentFactory> componentList;
 
     private int nextComponentPosition;
     private Rectangle nextComponent;
 
-    Build (ObservableList<SpaceshipComponent> availableComponents) {
+    Build (ObservableList<SpaceshipComponentFactory> availableComponents) {
         root.getChildren().add(scroller);
         Pane spaceshipView = new Pane();
         scroller.setContent(spaceshipView);
@@ -61,7 +62,18 @@ public class Build implements CustomScene {
         EventHandler<MouseEvent> eventInsertComponent = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent actionEvent) {
-                SpaceshipComponent chosenComponent = componentList.getSelectionModel().getSelectedItem();
+                SpaceshipComponentFactory chosenComponentF = componentList.getSelectionModel().getSelectedItem();
+
+                SpaceshipComponent chosenComponent = null;
+                try {
+                    chosenComponent = chosenComponentF.getInstance();             // TODO: check left/right
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
 
                 if (chosenComponent == null) return;
 

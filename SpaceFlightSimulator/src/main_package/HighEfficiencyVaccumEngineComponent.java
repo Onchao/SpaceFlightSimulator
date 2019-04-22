@@ -9,8 +9,7 @@ public class HighEfficiencyVaccumEngineComponent implements SpaceshipComponent {
         img = new Image("file:images/vacEngine.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "High Efficiency Vaccum Engine";
     }
 

@@ -9,8 +9,7 @@ public class FuelTankComponent implements SpaceshipComponent {
         img = new Image("file:images/tank.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "Fuel Tank";
     }
 

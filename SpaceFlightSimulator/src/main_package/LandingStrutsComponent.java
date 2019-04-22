@@ -9,8 +9,7 @@ public class LandingStrutsComponent implements SpaceshipComponent {
         img = new Image("file:images/strut.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "Landing Strut";
     }
 

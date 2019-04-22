@@ -9,8 +9,7 @@ public class PowerfulAtmosphericEngineComponent implements SpaceshipComponent {
         img = new Image("file:images/atmEngine.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "Powerful Atmospheric Engine";
     }
 

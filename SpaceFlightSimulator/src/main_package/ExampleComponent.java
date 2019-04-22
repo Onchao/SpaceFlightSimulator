@@ -6,14 +6,12 @@ public class ExampleComponent implements SpaceshipComponent {
     private String name;
     private Image img;
 
-    public ExampleComponent(String name) {
-        this.name = name;
+    public ExampleComponent() {
         img = new Image("file:images/example_component.png");
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public static String getName() {
+        return "Example";
     }
 
     @Override

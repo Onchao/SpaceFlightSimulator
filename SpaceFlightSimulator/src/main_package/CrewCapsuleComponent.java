@@ -9,8 +9,7 @@ public class CrewCapsuleComponent implements SpaceshipComponent {
         img = new Image("file:images/capsule.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "Crew Capsule";
     }
 

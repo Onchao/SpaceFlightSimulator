@@ -9,8 +9,7 @@ public class CircularDecouplerComponent implements SpaceshipComponent {
         img = new Image("file:images/circularDec.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "Circular Decoupler";
     }
 

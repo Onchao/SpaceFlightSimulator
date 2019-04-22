@@ -3,14 +3,19 @@ package main_package;
 import javafx.scene.image.Image;
 
 public class RadialDecouplerComponent implements SpaceshipComponent {
-    private Image img;
-
-    public RadialDecouplerComponent() {
-        img = new Image("file:images/radialDec.png");
+    public enum Direction {
+        RIGHT, LEFT
     }
 
-    @Override
-    public String getName() {
+    private Image img;
+    private Direction direction;
+
+    public RadialDecouplerComponent(Direction dir) {
+        img = new Image("file:images/radialDec.png");
+        direction = dir;
+    }
+
+    public static String getName() {
         return "Radial Decoupler";
     }
 

@@ -9,8 +9,7 @@ public class ParachuteComponent implements SpaceshipComponent {
         img = new Image("file:images/parachute.png");
     }
 
-    @Override
-    public String getName() {
+    public static String getName() {
         return "Parachute";
     }
 
