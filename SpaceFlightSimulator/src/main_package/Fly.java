@@ -53,18 +53,17 @@ public class Fly implements CustomScene{
         Time.updateTime();
 
         for ( CelestialBody B: solarSystem.bodies){
-            double x = B.getAbsPos_x()/500000;
-            double y = B.getAbsPos_y()/500000;
+            double x = B.getAbsPos_x()/Const.SCALE/100;
+            double y = B.getAbsPos_y()/Const.SCALE/100;
             y*=-1;
             //System.out.println(x);
             //System.out.println(y);
 
-            double r = B.radius/5000;
+            double r = B.radius/Const.SCALE;
             x+=400;
             y+=400;
             Random rand = new Random();
             root.getChildren().add(new Circle(x,y,r));
         }
-
     }
 }

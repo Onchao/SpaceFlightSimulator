@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import world.Const;
 import world.Time;
 
 public class GamestateController {
@@ -80,6 +81,15 @@ public class GamestateController {
                     Time.slower();
                     System.out.println(Time.timeWarp + "x");
                 }
+            });
+            SC.setOnScroll(e -> {
+                double y = e.getDeltaY();
+                if (y > 0) {
+                    Const.SCALE*=1.1;
+                } else if (y<0){
+                    Const.SCALE*=0.9;
+                }
+                System.out.println(Const.SCALE);
             });
 
             stage.setScene(SC);
