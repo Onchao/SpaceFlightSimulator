@@ -68,7 +68,7 @@ public class CelestialBody {
     public Position getRelPos(){
         if(parent == null)
             return new Position(0,0);
-        double orbits = Const.TIME/(orbitalPeriod*24*3600);
+        double orbits = Time.TIME/(orbitalPeriod*24*3600);
         double anglePos = orbits*360+year1angle; // deg
         return new Position(Math.cos(Math.toRadians(anglePos))*orbitalRadius, Math.sin(Math.toRadians(anglePos))*orbitalRadius);
     }
