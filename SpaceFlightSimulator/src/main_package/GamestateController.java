@@ -59,7 +59,9 @@ public class GamestateController {
         }
         else //if(newGS == Gamestate.gs.FLY)
         {
-
+            Gamestate.setGamestateFLY();
+            currentScene = new Fly();
+            SC = new Scene(currentScene.getRoot());
         }
         stage.setScene(SC);
         stage.show();

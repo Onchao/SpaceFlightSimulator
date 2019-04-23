@@ -1,5 +1,7 @@
 package world;
 
+import javafx.geometry.Pos;
+
 import static java.lang.StrictMath.exp;
 
 public class CelestialBody {
@@ -7,9 +9,10 @@ public class CelestialBody {
     CelestialBody parent;
     double orbitalRadius;   // km
     double orbitalPeriod;   // d
-    double radius;          // km
+    public double radius;          // km
     double mass;            // kg
     double rotationPeriod;  // kg
+    double year1angle;      // deg
     boolean atmExist;
     double A;
     double B;
@@ -23,7 +26,8 @@ public class CelestialBody {
                          double orbitalPeriod,
                          double radius,
                          double mass,
-                         double rotationPeriod){
+                         double rotationPeriod,
+                         double year1angle){
         this.name = name;
         this.parent = parent;
         this.orbitalRadius = orbitalRadius;
@@ -31,6 +35,7 @@ public class CelestialBody {
         this.radius = radius;
         this.mass = mass;
         this.rotationPeriod = rotationPeriod;
+        this.year1angle = year1angle;
         this.atmExist = false;
         this.A = 0;
         this.B = 0;
@@ -43,6 +48,7 @@ public class CelestialBody {
                          double radius,
                          double mass,
                          double rotationPeriod,
+                         double year1angle,
                          boolean atmExist,
                          double A,
                          double B ){
@@ -53,9 +59,42 @@ public class CelestialBody {
         this.radius = radius;
         this.mass = mass;
         this.rotationPeriod = rotationPeriod;
+        this.year1angle = year1angle;
         this.atmExist = atmExist;
         this.A = A;
         this.B = B;
+    }
+
+    public Position getRelPos(){
+        if(parent == null)
+            return new Position(0,0);
+        double orbits = Const.TIME/(orbitalPeriod*24*3600);
+        double anglePos = orbits*360+year1angle; // deg
+        return new Position(Math.cos(Math.toRadians(anglePos))*orbitalRadius, Math.sin(Math.toRadians(anglePos))*orbitalRadius);
+    }
+
+    public Position getAbsPos(){
+        if(parent == null)
+            return new Position(0,0);
+        Position relative = getRelPos();
+        Position parentPos = parent.getAbsPos();
+        return new Position(relative.x + parentPos.x, relative.y + parentPos.y);
+    }
+
+    public double getAbsPos_x(){
+        if(parent == null)
+            return 0;
+        Position relative = getRelPos();
+        Position parentPos = parent.getAbsPos();
+        return relative.x + parentPos.x;
+    }
+
+    public double getAbsPos_y(){
+        if(parent == null)
+            return 0;
+        Position relative = getRelPos();
+        Position parentPos = parent.getAbsPos();
+        return relative.y + parentPos.y;
     }
 }
 

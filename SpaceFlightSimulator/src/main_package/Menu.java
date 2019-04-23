@@ -27,6 +27,10 @@ public class Menu implements CustomScene {
         Button buttonNewGame = new Button("New game");
         root.getChildren().add(buttonNewGame);
 
+        Button buttonTestFlight = new Button("Test flight");
+        root.getChildren().add(buttonTestFlight);
+        buttonTestFlight.setTranslateY(30);
+
         //Button buttonContinueGame = new Button("Continue journey");
         //buttonContinueGame.setTranslateY(30);
         //root.getChildren().add(buttonContinueGame);
@@ -38,6 +42,14 @@ public class Menu implements CustomScene {
             }
         };
         buttonNewGame.setOnAction(eventNewGame);
+
+        EventHandler<ActionEvent> eventTestFlight = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                GamestateController.changeScene(Gamestate.gs.FLY);
+            }
+        };
+        buttonTestFlight.setOnAction(eventTestFlight);
     }
 
     @Override
