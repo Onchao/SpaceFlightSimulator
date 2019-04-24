@@ -6,6 +6,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import world.CelestialBody;
 import world.Const;
 import world.SolarSystem;
@@ -21,9 +22,18 @@ public class Fly implements CustomScene{
     private Pane root = new Pane();
     private SolarSystem solarSystem = new SolarSystem();
     private Time time = new Time(0*3600*24);
+    private Rectangle background;
 
     Fly(){
         root.setPrefSize(800, 800);
+        background = new Rectangle(0,0,3840, 2160);
+        background.setFill(Color.rgb(8, 8, 32));
+        root.getChildren().add(background);
+
+        for ( CelestialBody B: solarSystem.bodies){
+            root.getChildren().add(B.shade);
+            root.getChildren().add(B.planet);
+        }
         update();
     }
 
@@ -33,50 +43,26 @@ public class Fly implements CustomScene{
     }
     @Override
     public void update() {
-        // TODO: is it optimal ???
-        root.getChildren().clear();
-
         Time.updateTime();
 
-        // VISUAL HELP
         for ( CelestialBody B: solarSystem.bodies){
             double x = B.getAbsPos_x()/Const.SCALE;
             double y = B.getAbsPos_y()/Const.SCALE;
             x-=solarSystem.bodies.get(Const.originIndex).getAbsPos_x()/Const.SCALE;
             y-=solarSystem.bodies.get(Const.originIndex).getAbsPos_y()/Const.SCALE;
-
-
             y*=-1;
-            //System.out.println(x);
-            //System.out.println(y);
+            double rShade = Math.pow(B.radius/(Math.pow(Const.SCALE,0.3)), 1.0/2.5)*2;
+            double rPlanet = B.radius/Const.SCALE;
 
-            // log_a(b) = log_x(b) / log_x(a)
-            //double r = Math.log(B.radius)/Math.log(1.0001)/1000;
-            double r = Math.pow(B.radius/(Math.pow(Const.SCALE,0.3)), 1.0/2.5)*2;
             x+=400;
             y+=400;
 
-
-            Random rand = new Random();
-            root.getChildren().add(new Circle(x,y,r, new Color(0,0,0, 0.3)));
-        }
-
-        // PLANET
-        for ( CelestialBody B: solarSystem.bodies){
-            double x = B.getAbsPos_x()/Const.SCALE;
-            double y = B.getAbsPos_y()/Const.SCALE;
-            x-=solarSystem.bodies.get(Const.originIndex).getAbsPos_x()/Const.SCALE;
-            y-=solarSystem.bodies.get(Const.originIndex).getAbsPos_y()/Const.SCALE;
-
-            y*=-1;
-            //System.out.println(x);
-            //System.out.println(y);
-
-            double r = B.radius/Const.SCALE;
-            x+=400;
-            y+=400;
-            Random rand = new Random();
-            root.getChildren().add(new Circle(x,y,r));
+            B.shade.setCenterX(x);
+            B.shade.setCenterY(y);
+            B.shade.setRadius(rShade);
+            B.planet.setCenterX(x);
+            B.planet.setCenterY(y);
+            B.planet.setRadius(rPlanet);
         }
     }
 }

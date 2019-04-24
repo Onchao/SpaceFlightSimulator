@@ -1,6 +1,8 @@
 package world;
 
 import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import static java.lang.StrictMath.exp;
 
@@ -19,27 +21,8 @@ public class CelestialBody {
     double atmDensity(double height){
         return A*exp(B*height);
     }
-
-    public CelestialBody(String name,
-                         CelestialBody parent,
-                         double orbitalRadius,
-                         double orbitalPeriod,
-                         double radius,
-                         double mass,
-                         double rotationPeriod,
-                         double year1angle){
-        this.name = name;
-        this.parent = parent;
-        this.orbitalRadius = orbitalRadius;
-        this.orbitalPeriod = orbitalPeriod;
-        this.radius = radius;
-        this.mass = mass;
-        this.rotationPeriod = rotationPeriod;
-        this.year1angle = year1angle;
-        this.atmExist = false;
-        this.A = 0;
-        this.B = 0;
-    }
+    public Circle planet;
+    public Circle shade;
 
     public CelestialBody(String name,
                          CelestialBody parent,
@@ -51,7 +34,9 @@ public class CelestialBody {
                          double year1angle,
                          boolean atmExist,
                          double A,
-                         double B ){
+                         double B,
+                         Color color
+                         ){
         this.name = name;
         this.parent = parent;
         this.orbitalRadius = orbitalRadius;
@@ -60,9 +45,31 @@ public class CelestialBody {
         this.mass = mass;
         this.rotationPeriod = rotationPeriod;
         this.year1angle = year1angle;
+
         this.atmExist = atmExist;
         this.A = A;
         this.B = B;
+
+        planet = new Circle(0,0,0, color);
+        Color colorOpacity = new Color((float)color.getRed(), (float)color.getGreen(), (float)color.getBlue(), 0.2);
+
+        shade = new Circle(0,0,0, colorOpacity);
+
+        shade.setStroke(color);
+        shade.setStrokeWidth(0.5);
+    }
+
+    public CelestialBody(String name,
+                         CelestialBody parent,
+                         double orbitalRadius,
+                         double orbitalPeriod,
+                         double radius,
+                         double mass,
+                         double rotationPeriod,
+                         double year1angle,
+                         Color color
+    ){
+        this(name, parent, orbitalRadius, orbitalPeriod, radius, mass, rotationPeriod, year1angle, false, 0, 0, color);
     }
 
     public Position getRelPos(){
