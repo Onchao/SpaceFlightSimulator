@@ -16,5 +16,6 @@ public class SolarSystem {
         bodies.add(sun);
         bodies.add(earth);
         bodies.add(moon);
+        Const.solarSystemSize = bodies.size();
     }
 }

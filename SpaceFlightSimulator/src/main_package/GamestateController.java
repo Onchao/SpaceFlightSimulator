@@ -81,13 +81,18 @@ public class GamestateController {
                     Time.slower();
                     System.out.println(Time.timeWarp + "x");
                 }
+
+                if(e.getCode() == KeyCode.TAB){
+                    Const.cycleOrigin();
+                }
+
             });
             SC.setOnScroll(e -> {
                 double y = e.getDeltaY();
                 if (y > 0) {
-                    Const.SCALE*=1.1;
-                } else if (y<0){
                     Const.SCALE*=0.9;
+                } else if (y<0){
+                    Const.SCALE*=1.1;
                 }
                 System.out.println(Const.SCALE);
             });

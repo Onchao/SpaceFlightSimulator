@@ -24,21 +24,7 @@ public class Fly implements CustomScene{
 
     Fly(){
         root.setPrefSize(800, 800);
-
-        for ( CelestialBody B: solarSystem.bodies){
-            double x = B.getAbsPos_x()/500000;
-            double y = B.getAbsPos_y()/500000;
-            y*=-1;
-            //System.out.println(x);
-            //System.out.println(y);
-
-            double r = B.radius/5000;
-            x+=400;
-            y+=400;
-            Random rand = new Random();
-            root.getChildren().add(new Circle(x,y,r));
-            //root.getChildren().add(new Circle(x,y,r, new Color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), 1.0)));
-        }
+        update();
     }
 
     @Override
@@ -52,9 +38,36 @@ public class Fly implements CustomScene{
 
         Time.updateTime();
 
+        // VISUAL HELP
         for ( CelestialBody B: solarSystem.bodies){
-            double x = B.getAbsPos_x()/Const.SCALE/100;
-            double y = B.getAbsPos_y()/Const.SCALE/100;
+            double x = B.getAbsPos_x()/Const.SCALE;
+            double y = B.getAbsPos_y()/Const.SCALE;
+            x-=solarSystem.bodies.get(Const.originIndex).getAbsPos_x()/Const.SCALE;
+            y-=solarSystem.bodies.get(Const.originIndex).getAbsPos_y()/Const.SCALE;
+
+
+            y*=-1;
+            //System.out.println(x);
+            //System.out.println(y);
+
+            // log_a(b) = log_x(b) / log_x(a)
+            //double r = Math.log(B.radius)/Math.log(1.0001)/1000;
+            double r = Math.pow(B.radius/(Math.pow(Const.SCALE,0.3)), 1.0/2.5)*2;
+            x+=400;
+            y+=400;
+
+
+            Random rand = new Random();
+            root.getChildren().add(new Circle(x,y,r, new Color(0,0,0, 0.3)));
+        }
+
+        // PLANET
+        for ( CelestialBody B: solarSystem.bodies){
+            double x = B.getAbsPos_x()/Const.SCALE;
+            double y = B.getAbsPos_y()/Const.SCALE;
+            x-=solarSystem.bodies.get(Const.originIndex).getAbsPos_x()/Const.SCALE;
+            y-=solarSystem.bodies.get(Const.originIndex).getAbsPos_y()/Const.SCALE;
+
             y*=-1;
             //System.out.println(x);
             //System.out.println(y);
