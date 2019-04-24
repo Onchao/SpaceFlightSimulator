@@ -1,12 +1,14 @@
 package main_package;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class AerodynamicNoseConeComponent implements SpaceshipComponent {
-    private Image img;
+public class AerodynamicNoseConeComponent extends SpaceshipComponent {
+    private ImageView img;
 
     public AerodynamicNoseConeComponent() {
-        img = new Image("file:images/cone.png");
+        img = new ImageView(new Image("file:images/cone.png"));
+        super.lowerMount = new Mount(0, -60, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {
@@ -29,7 +31,7 @@ public class AerodynamicNoseConeComponent implements SpaceshipComponent {
     }
 
     @Override
-    public Image getImage() {
+    public ImageView getImage() {
         return img;
     }
 

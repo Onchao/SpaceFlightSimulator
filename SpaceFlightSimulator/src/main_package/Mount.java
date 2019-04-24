@@ -1,14 +1,42 @@
 package main_package;
 
+import javafx.scene.shape.Rectangle;
+
 public class Mount {
+    public double getPositionX() {
+        if (getParent() == null)
+            return getOffsetX();
+        return getParent().getImage().getLayoutX() + getOffsetX();
+    }
+
+    public double getPositionY() {
+        if (getParent() == null)
+            return getOffsetY();
+        return getParent().getImage().getLayoutY() + getOffsetY();
+    }
+
+    public enum Direction {
+        UPPER, LOWER, RIGHT, LEFT
+    }
+
+    private SpaceshipComponent parent;
+
     private int offsetX;
     private int offsetY;
+    private int height;
+    private int width;
+    private Direction direction;
     private boolean used;
 
-    public Mount(int x, int y) {
-        offsetX = x;
-        offsetY = y;
+    public Mount(int ox, int oy, int h, int w, Direction dir, SpaceshipComponent parent) {
+        offsetX = ox;
+        offsetY = oy;
+        height = h;
+        width = w;
+        direction = dir;
         used = false;
+
+        this.parent = parent;
     }
 
     public int getOffsetX() {
@@ -17,6 +45,22 @@ public class Mount {
 
     public int getOffsetY() {
         return offsetY;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public SpaceshipComponent getParent() {
+        return parent;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public boolean isUsed() {

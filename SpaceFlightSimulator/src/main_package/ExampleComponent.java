@@ -1,13 +1,14 @@
 package main_package;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class ExampleComponent implements SpaceshipComponent {
+public class ExampleComponent extends SpaceshipComponent {
     private String name;
-    private Image img;
+    private ImageView img;
 
     public ExampleComponent() {
-        img = new Image("file:images/example_component.png");
+        img = new ImageView(new Image("file:images/example_component.png"));
     }
 
     public static String getName() {
@@ -30,7 +31,7 @@ public class ExampleComponent implements SpaceshipComponent {
     }
 
     @Override
-    public Image getImage() {
+    public ImageView getImage() {
         return img;
     }
 

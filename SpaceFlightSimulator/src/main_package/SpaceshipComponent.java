@@ -1,27 +1,32 @@
 package main_package;
 
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public interface SpaceshipComponent {
-    int getHeight();
-    int getWidth();
-    int getMass();
+public abstract class SpaceshipComponent {
+    protected Mount upperMount = null;
+    protected Mount lowerMount = null;
+    protected Mount rightMount = null;
+    protected Mount leftMount = null;
 
-    default Mount getUpperMount() {
-        return null;
+    public abstract int getHeight();
+    public abstract int getWidth();
+    public abstract int getMass();
+
+    public Mount getUpperMount() {
+        return upperMount;
     }
 
-    default Mount getLowerMount() {
-        return null;
+    public Mount getLowerMount() {
+        return lowerMount;
     }
 
-    default Mount getRightMount() {
-        return null;
+    public Mount getRightMount() {
+        return rightMount;
     }
 
-    default Mount getLeftMount() {
-        return null;
+    public Mount getLeftMount() {
+        return leftMount;
     }
 
-    Image getImage();
+    public abstract ImageView getImage();
 }

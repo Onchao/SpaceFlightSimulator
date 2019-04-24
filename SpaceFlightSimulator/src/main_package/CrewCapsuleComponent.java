@@ -1,12 +1,16 @@
 package main_package;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class CrewCapsuleComponent implements SpaceshipComponent {
-    private Image img;
+public class CrewCapsuleComponent extends SpaceshipComponent {
+    private ImageView img;
 
     public CrewCapsuleComponent() {
-        img = new Image("file:images/capsule.png");
+        img = new ImageView(new Image("file:images/capsule.png"));
+
+        super.upperMount = new Mount(0, -60, 50, 200, Mount.Direction.UPPER, this);
+        super.lowerMount = new Mount(0, 170, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {
@@ -29,7 +33,7 @@ public class CrewCapsuleComponent implements SpaceshipComponent {
     }
 
     @Override
-    public Image getImage() {
+    public ImageView getImage() {
         return img;
     }
 

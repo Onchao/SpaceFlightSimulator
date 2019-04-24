@@ -9,6 +9,10 @@ public class SpaceshipComponentFactory<T extends SpaceshipComponent> {
         cls = c;
     }
 
+    public Class<T> getComponentClass() {
+        return cls;
+    }
+
     public T getInstance(Object... args) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return (T)cls.getConstructors()[0].newInstance(args);
     }

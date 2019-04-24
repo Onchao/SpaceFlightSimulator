@@ -1,12 +1,16 @@
 package main_package;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class CircularDecouplerComponent implements SpaceshipComponent {
-    private Image img;
+public class CircularDecouplerComponent extends SpaceshipComponent {
+    private ImageView img;
 
     public CircularDecouplerComponent() {
-        img = new Image("file:images/circularDec.png");
+        img = new ImageView(new Image("file:images/circularDec.png"));
+
+        super.lowerMount = new Mount(0, 100, 50, 200, Mount.Direction.LOWER, this);
+        super.upperMount = new Mount(0, -60, 50, 200, Mount.Direction.UPPER, this);
     }
 
     public static String getName() {
@@ -29,7 +33,7 @@ public class CircularDecouplerComponent implements SpaceshipComponent {
     }
 
     @Override
-    public Image getImage() {
+    public ImageView getImage() {
         return img;
     }
 

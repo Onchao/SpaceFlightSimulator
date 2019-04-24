@@ -1,18 +1,23 @@
 package main_package;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class RadialDecouplerComponent implements SpaceshipComponent {
+public class RadialDecouplerComponent extends SpaceshipComponent {
     public enum Direction {
         RIGHT, LEFT
     }
 
-    private Image img;
+    private ImageView img;
     private Direction direction;
 
     public RadialDecouplerComponent(Direction dir) {
-        img = new Image("file:images/radialDec.png");
         direction = dir;
+
+        img = new ImageView(new Image("file:images/radialDec.png")); // TODO: flip image if necessary
+
+        super.leftMount = new Mount(-60, 0, 200, 50, Mount.Direction.LEFT, this);
+        super.rightMount = new Mount(100, 0, 200, 50, Mount.Direction.RIGHT, this);
     }
 
     public static String getName() {
@@ -35,7 +40,7 @@ public class RadialDecouplerComponent implements SpaceshipComponent {
     }
 
     @Override
-    public Image getImage() {
+    public ImageView getImage() {
         return img;
     }
 

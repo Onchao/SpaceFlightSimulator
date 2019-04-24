@@ -1,12 +1,15 @@
 package main_package;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class ParachuteComponent implements SpaceshipComponent {
-    private Image img;
+public class ParachuteComponent extends SpaceshipComponent {
+    private ImageView img;
 
     public ParachuteComponent() {
-        img = new Image("file:images/parachute.png");
+        img = new ImageView(new Image("file:images/parachute.png"));
+
+        super.lowerMount = new Mount(0, -50, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {
@@ -29,7 +32,7 @@ public class ParachuteComponent implements SpaceshipComponent {
     }
 
     @Override
-    public Image getImage() {
+    public ImageView getImage() {
         return img;
     }
 
