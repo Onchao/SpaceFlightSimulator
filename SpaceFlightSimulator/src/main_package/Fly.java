@@ -1,6 +1,8 @@
 package main_package;
 
+import javafx.geometry.Point2D;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.effect.Light;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -51,7 +53,7 @@ public class Fly implements CustomScene{
             x-=solarSystem.bodies.get(Const.originIndex).getAbsPos_x()/Const.SCALE;
             y-=solarSystem.bodies.get(Const.originIndex).getAbsPos_y()/Const.SCALE;
             y*=-1;
-            double rShade = Math.pow(B.radius/(Math.pow(Const.SCALE,0.3)), 1.0/2.5)*2;
+            double rShade = Math.pow(B.radius/(Math.pow(Const.SCALE,0.3)), 1.0/4)*2;
             double rPlanet = B.radius/Const.SCALE;
 
             x+=400;
@@ -63,6 +65,9 @@ public class Fly implements CustomScene{
             B.planet.setCenterX(x);
             B.planet.setCenterY(y);
             B.planet.setRadius(rPlanet);
+
+            Circle path = new Circle(x,y,0.5,Color.GREEN);
+            root.getChildren().add(path);
         }
     }
 }

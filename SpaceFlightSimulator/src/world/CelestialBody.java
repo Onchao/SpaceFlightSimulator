@@ -72,6 +72,7 @@ public class CelestialBody {
         this(name, parent, orbitalRadius, orbitalPeriod, radius, mass, rotationPeriod, year1angle, false, 0, 0, color);
     }
 
+
     public Position getRelPos(){
         if(parent == null)
             return new Position(0,0);
