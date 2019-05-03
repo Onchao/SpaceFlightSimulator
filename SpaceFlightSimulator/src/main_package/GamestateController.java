@@ -1,24 +1,13 @@
 package main_package;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Point2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import world.Const;
+import world.Origin;
 import world.Time;
 
 public class GamestateController {
@@ -72,18 +61,18 @@ public class GamestateController {
             SC = new Scene(currentScene.getRoot());
 
             SC.setOnKeyPressed(e -> {
-                if (e.getCode() == KeyCode.ADD || e.getCode() == KeyCode.MINUS) {
+                if (e.getCode() == KeyCode.ADD || e.getCode() == KeyCode.EQUALS) {
                     Time.faster();
                     System.out.println(Time.timeWarp + "x");
 
                 }
-                if (e.getCode() == KeyCode.SUBTRACT || e.getCode() == KeyCode.EQUALS) {
+                if (e.getCode() == KeyCode.SUBTRACT || e.getCode() == KeyCode.MINUS) {
                     Time.slower();
                     System.out.println(Time.timeWarp + "x");
                 }
 
                 if(e.getCode() == KeyCode.TAB){
-                    Const.cycleOrigin();
+                    Origin.cycleOrigin();
                 }
 
             });
@@ -100,6 +89,5 @@ public class GamestateController {
             stage.setScene(SC);
             stage.show();
         }
-
     }
 }

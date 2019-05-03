@@ -1,30 +1,22 @@
 package main_package;
 
-import javafx.geometry.Point2D;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.effect.Light;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import world.CelestialBody;
-import world.Const;
-import world.SolarSystem;
-import world.Time;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Random;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import world.*;
 
 public class Fly implements CustomScene{
     private Pane root = new Pane();
     private SolarSystem solarSystem = new SolarSystem();
     private Time time = new Time(0*3600*24);
     private Rectangle background;
+    private Ship ship = new Ship(solarSystem.bodies.get(1), 0);
+    Origin origin = new Origin(solarSystem.bodies, ship);
+
+    Polygon polygon;
 
     Fly(){
         root.setPrefSize(800, 800);
@@ -36,6 +28,12 @@ public class Fly implements CustomScene{
             root.getChildren().add(B.shade);
             root.getChildren().add(B.planet);
         }
+
+        //PROTOTYPE SHIP
+        polygon = new Polygon();
+        polygon.setFill(Color.WHITE);
+        root.getChildren().add(polygon);
+
         update();
     }
 
@@ -50,8 +48,10 @@ public class Fly implements CustomScene{
         for ( CelestialBody B: solarSystem.bodies){
             double x = B.getAbsPos_x()/Const.SCALE;
             double y = B.getAbsPos_y()/Const.SCALE;
-            x-=solarSystem.bodies.get(Const.originIndex).getAbsPos_x()/Const.SCALE;
-            y-=solarSystem.bodies.get(Const.originIndex).getAbsPos_y()/Const.SCALE;
+
+            x-=origin.getOrigin_x()/Const.SCALE;
+            y-=origin.getOrigin_y()/Const.SCALE;
+
             y*=-1;
             double rShade = Math.pow(B.radius/(Math.pow(Const.SCALE,0.3)), 1.0/4)*2;
             double rPlanet = B.radius/Const.SCALE;
@@ -69,5 +69,21 @@ public class Fly implements CustomScene{
             Circle path = new Circle(x,y,0.5,Color.GREEN);
             root.getChildren().add(path);
         }
+
+        ship.update();
+        // PROTOTYPE SHIP
+        polygon.getPoints().clear();
+
+        double u = (ship.getAbsPos_x() - origin.getOrigin_x())/Const.SCALE;
+        double v = (ship.getAbsPos_y() - origin.getOrigin_y())/Const.SCALE;
+
+        polygon.getPoints().addAll(
+                400 + u + 20*Math.cos(Math.toRadians(ship.angleOnPlanet)),
+                400 + (v + 20*Math.sin(Math.toRadians(ship.angleOnPlanet)))*-1,
+                400 + u - 5*Math.cos(Math.toRadians(ship.angleOnPlanet + 90)),
+                400 + (v - 5*Math.sin(Math.toRadians(ship.angleOnPlanet + 90)))*-1,
+                400 + u + 5*Math.cos(Math.toRadians(ship.angleOnPlanet + 90)),
+                400 + (v + 5*Math.sin(Math.toRadians(ship.angleOnPlanet + 90)))*-1
+        );
     }
 }
