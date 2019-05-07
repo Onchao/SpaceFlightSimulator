@@ -13,7 +13,7 @@ public class CelestialBody {
     double orbitalPeriod;   // d
     public double radius;          // km
     double mass;            // kg
-    double rotationPeriod;  // kg
+    double rotationPeriod;  // d
     double year1angle;      // deg
     boolean atmExist;
     double A;
@@ -104,6 +104,24 @@ public class CelestialBody {
         Position parentPos = parent.getAbsPos();
         return relative.y + parentPos.y;
     }
+
+    // relative to planet center
+    public double getAngleDif(){
+        return 360 * Time.deltaTIME / rotationPeriod / 24 / 3600;
+    }
+
+    // relative to planet center
+    public Position getShipPosFromAngle(double angle){
+        return new Position(radius*Math.cos(Math.toRadians(angle)), radius*Math.sin(Math.toRadians(angle)));
+    }
+    public double getShipPosFromAngle_x(double angle){
+        return radius*Math.cos(Math.toRadians(angle));
+    }
+    public double getShipPosFromAngle_y(double angle){
+        return radius*Math.sin(Math.toRadians(angle));
+    }
+
+
 }
 
 /*
