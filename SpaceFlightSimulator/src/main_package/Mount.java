@@ -20,6 +20,7 @@ public class Mount {
     }
 
     private SpaceshipComponent parent;
+    private SpaceshipComponent attached;
 
     private int offsetX;
     private int offsetY;
@@ -67,7 +68,12 @@ public class Mount {
         return used;
     }
 
-    public void setUsed(boolean used) {
-        this.used = used;
+    public void setUsed(boolean used, SpaceshipComponent a) {
+        if (used) {
+            this.used = used;
+            attached = a;
+        } else {
+            this.used = false;
+        }
     }
 }

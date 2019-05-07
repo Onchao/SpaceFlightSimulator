@@ -4,10 +4,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class RadialDecouplerComponent extends SpaceshipComponent {
-    public enum Direction {
-        RIGHT, LEFT
-    }
-
     private ImageView img;
     private Direction direction;
 

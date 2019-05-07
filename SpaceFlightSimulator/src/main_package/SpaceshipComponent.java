@@ -8,6 +8,8 @@ public abstract class SpaceshipComponent {
     protected Mount rightMount = null;
     protected Mount leftMount = null;
 
+    protected int stageNumber;
+
     public abstract int getHeight();
     public abstract int getWidth();
     public abstract int getMass();
@@ -26,6 +28,14 @@ public abstract class SpaceshipComponent {
 
     public Mount getLeftMount() {
         return leftMount;
+    }
+
+    public void setStageNumber (int n) {
+        stageNumber = n;
+    }
+
+    public int getStageNumber() {
+        return stageNumber;
     }
 
     public abstract ImageView getImage();

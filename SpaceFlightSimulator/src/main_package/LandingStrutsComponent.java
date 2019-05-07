@@ -4,23 +4,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class LandingStrutsComponent extends SpaceshipComponent {
-
-    enum Direction {
-        LEFT, RIGHT
-    }
-
     private ImageView img;
     private Direction direction;
 
     public LandingStrutsComponent(Direction dir) {
         direction = dir;
 
-        img = new ImageView(new Image("file:images/strut.png")); // TODO: flip image if necessary
-
-        if (direction == Direction.LEFT)
+        if (direction == Direction.LEFT) {
+            img = new ImageView(new Image("file:images/strut.png"));
             super.rightMount = new Mount(90, 0, 200, 50, Mount.Direction.RIGHT, this);
-        else
+        } else {
+            img = new ImageView(new Image("file:images/strut.png", -getWidth(), getHeight(), false, true));
             super.leftMount = new Mount(-60, 0, 200, 50, Mount.Direction.RIGHT, this);
+        }
     }
 
     public static String getName() {

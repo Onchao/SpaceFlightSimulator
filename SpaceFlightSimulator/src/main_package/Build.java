@@ -170,55 +170,96 @@ public class Build implements CustomScene {
         }
 
         @Override
-            public void handle(MouseEvent actionEvent) {
-                SpaceshipComponent chosenComponent = null;
-                try {
-                    chosenComponent = chosenComponentF.getInstance();             // TODO: check left/right
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
+        public void handle(MouseEvent actionEvent) {
+            SpaceshipComponent chosenComponent = null;
+            try {
+                if (chosenComponentF.getComponentClass() == LandingStrutsComponent.class || chosenComponentF.getComponentClass() == RadialDecouplerComponent.class) {
+                    Direction dir;
+                    if (myMount.getDirection() == Mount.Direction.RIGHT)
+                        dir = Direction.RIGHT;
+                    else
+                        dir = Direction.LEFT;
+                    chosenComponent = chosenComponentF.getInstance(dir);
+                } else {
+                    chosenComponent = chosenComponentF.getInstance();
                 }
-
-                if (chosenComponent == null) return;
-
-                ImageView componentImage = chosenComponent.getImage();
-                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth())/2);
-                componentImage.setLayoutY(myMount.getPositionY() - chosenComponent.getHeight() + 60);
-                spaceshipView.getChildren().add(componentImage);
-
-                if (myMount.getPositionY() - chosenComponent.getHeight() - myMount.getHeight() <= 10) {
-                    for (Node n : spaceshipView.getChildren()) {
-                        n.setLayoutY(n.getLayoutY() + chosenComponent.getHeight());
-                    }
-                }
-
-                ArrayList<Node> toRemove = new ArrayList<>();
-                for (Node n : spaceshipView.getChildren()) {
-                    if (n instanceof MountImg) {
-                        toRemove.add(n);
-                    }
-                }
-                spaceshipView.getChildren().removeAll(toRemove.toArray(new Node[toRemove.size()]));
-
-                myMount.setUsed(true);
-                switch (myMount.getDirection()) {
-                    case LOWER:
-                        chosenComponent.getUpperMount().setUsed(true);
-                        break;
-                    case UPPER:
-                        chosenComponent.getLowerMount().setUsed(true);
-                        break;
-                    case LEFT:
-                        chosenComponent.getRightMount().setUsed(true);
-                        break;
-                    case RIGHT:
-                        chosenComponent.getLeftMount().setUsed(true);
-                }
-
-                builder.addComponent(chosenComponent);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
             }
+
+            if (chosenComponent == null) {
+                System.out.println("Something's wrong...");
+                return;
+            }
+
+            ImageView componentImage = chosenComponent.getImage();
+            positionComponent(chosenComponent, componentImage);
+            spaceshipView.getChildren().add(componentImage);
+
+            shiftView(chosenComponent);
+
+            ArrayList<Node> toRemove = new ArrayList<>();
+            for (Node n : spaceshipView.getChildren()) {
+                if (n instanceof MountImg) {
+                    toRemove.add(n);
+                }
+            }
+            spaceshipView.getChildren().removeAll(toRemove.toArray(new Node[toRemove.size()]));
+
+            fillMounts(chosenComponent);
+
+            builder.addComponent(chosenComponent, myMount);
+        }
+
+        private void fillMounts(SpaceshipComponent chosenComponent) {
+            myMount.setUsed(true, chosenComponent);
+            switch (myMount.getDirection()) {
+                case LOWER:
+                    chosenComponent.getUpperMount().setUsed(true, myMount.getParent());
+                    break;
+                case UPPER:
+                    chosenComponent.getLowerMount().setUsed(true, myMount.getParent());
+                    break;
+                case LEFT:
+                    chosenComponent.getRightMount().setUsed(true, myMount.getParent());
+                    break;
+                case RIGHT:
+                    chosenComponent.getLeftMount().setUsed(true, myMount.getParent());
+            }
+        }
+
+        private void shiftView(SpaceshipComponent chosenComponent) {
+            if (myMount.getPositionY() - chosenComponent.getHeight() - myMount.getHeight() <= 10) {
+                for (Node n : spaceshipView.getChildren()) {
+                    n.setLayoutY(n.getLayoutY() + chosenComponent.getHeight());
+                }
+            }
+
+            if (myMount.getPositionX() - chosenComponent.getWidth() <= 10) {
+                for (Node n : spaceshipView.getChildren()) {
+                    n.setLayoutX(n.getLayoutX() + chosenComponent.getWidth());
+                }
+            }
+        }
+
+        private void positionComponent(SpaceshipComponent chosenComponent, ImageView componentImage) {
+            if (myMount.getDirection() == Mount.Direction.UPPER) {
+                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth()) / 2);
+                componentImage.setLayoutY(myMount.getPositionY() - chosenComponent.getHeight() + 60);
+            } else if (myMount.getDirection() == Mount.Direction.LEFT) {
+                componentImage.setLayoutX(myMount.getPositionX() - chosenComponent.getWidth() + 60);
+                componentImage.setLayoutY(myMount.getPositionY());
+            } else if (myMount.getDirection() == Mount.Direction.RIGHT) {
+                componentImage.setLayoutX(myMount.getPositionX() - 10);
+                componentImage.setLayoutY(myMount.getPositionY());
+            } else {
+                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth()) / 2);
+                componentImage.setLayoutY(myMount.getPositionY() - 10);
+            }
+        }
     }
 }

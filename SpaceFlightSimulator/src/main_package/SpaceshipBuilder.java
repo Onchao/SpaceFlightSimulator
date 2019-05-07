@@ -6,9 +6,11 @@ import java.util.List;
 public class SpaceshipBuilder {
 
     List<SpaceshipComponent> components;
+    List<List<SpaceshipComponent>> stages;
 
     public SpaceshipBuilder() {
         components = new ArrayList<>();
+        stages = new ArrayList<>();
     }
 
     public List<Mount> getMountPoints (SpaceshipComponentFactory fact) {
@@ -17,10 +19,16 @@ public class SpaceshipBuilder {
         Class cls = fact.getComponentClass();
 
         if (cls == RadialDecouplerComponent.class || cls == LandingStrutsComponent.class) {
-            //TODO
+            for (SpaceshipComponent c : components) {
+                if (c.getRightMount() != null && !c.getRightMount().isUsed()) ret.add(c.getRightMount());
+                if (c.getLeftMount() != null && !c.getLeftMount().isUsed()) ret.add(c.getLeftMount());
+            }
         } else {
             if (cls == FuelTankComponent.class) {
-                //TODO
+                for (SpaceshipComponent c : components) {
+                    if (c.getRightMount() != null && !c.getRightMount().isUsed()) ret.add(c.getRightMount());
+                    if (c.getLeftMount() != null && !c.getLeftMount().isUsed()) ret.add(c.getLeftMount());
+                }
             }
 
             if (components.isEmpty()) {
@@ -36,7 +44,23 @@ public class SpaceshipBuilder {
         return ret;
     }
 
-    public void addComponent (SpaceshipComponent c) {
-        components.add(c);
+    public void addComponent (SpaceshipComponent c, Mount mount) {
+        if (mount.getParent() == null) {
+            c.setStageNumber(0);
+        } else if (!(mount.getParent() instanceof RadialDecouplerComponent) && !(mount.getParent() instanceof CircularDecouplerComponent)) {
+            c.setStageNumber(mount.getParent().getStageNumber());
+        } else {
+            c.setStageNumber(mount.getParent().getStageNumber() + 1);
+        }
+
+        if (c.getStageNumber() >= stages.size()) {
+            stages.add(new ArrayList<>());
+        }
+        stages.get(c.getStageNumber()).add(c);
+    }
+
+    public Spaceship build() {
+        //TODO: sanity checks
+        return new Spaceship(stages);
     }
 }
