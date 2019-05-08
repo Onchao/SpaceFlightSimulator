@@ -9,8 +9,8 @@ public class CircularDecouplerComponent extends SpaceshipComponent {
     public CircularDecouplerComponent() {
         img = new ImageView(new Image("file:images/circularDec.png"));
 
-        super.lowerMount = new Mount(0, 100, 50, 200, Mount.Direction.LOWER, this);
-        super.upperMount = new Mount(0, -60, 50, 200, Mount.Direction.UPPER, this);
+        super.lowerMount = new Mount(40, 140, 50, 200, Mount.Direction.LOWER, this);
+        super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
     }
 
     public static String getName() {

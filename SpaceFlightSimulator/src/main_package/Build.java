@@ -97,52 +97,13 @@ public class Build implements CustomScene {
 
                 for (Mount m : possibleMountPoints) {
                     MountImg img = getMountPointImg(m);
-                    spaceshipView.getChildren().add(img);
+                    spaceshipView.getChildren().add(0, img);
 
                     img.setOnMouseClicked(new MountClickHandler(spaceshipView, builder, factory, m));
                 }
             }
         });
 
-        /*
-        EventHandler<MouseEvent> eventInsertComponent = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent actionEvent) {
-                SpaceshipComponentFactory chosenComponentF = componentList.getSelectionModel().getSelectedItem();
-
-                SpaceshipComponent chosenComponent = null;
-                try {
-                    chosenComponent = chosenComponentF.getInstance();             // TODO: check left/right
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
-
-                if (chosenComponent == null) return;
-
-                ImageView componentImage = chosenComponent.getImage();
-                componentImage.setLayoutX(210 - chosenComponent.getWidth()/2);
-                componentImage.setLayoutY(nextComponentPosition - chosenComponent.getHeight());
-                spaceshipView.getChildren().add(componentImage);
-
-                nextComponentPosition -= chosenComponent.getHeight();
-                if (nextComponentPosition - nextComponent.getHeight() <= 10) {
-                    nextComponentPosition += chosenComponent.getHeight();
-                    for (Node n : spaceshipView.getChildren()) {
-                        n.setLayoutY(n.getLayoutY() + chosenComponent.getHeight());
-                    }
-                }
-                nextComponent.setLayoutY(nextComponentPosition - nextComponent.getHeight());
-            }
-        };
-
-        nextComponent.setOnMouseClicked(eventInsertComponent);
-
-        spaceshipView.getChildren().add(nextComponent);
-        */
         spaceshipView.getChildren().add(base);
     }
 
@@ -248,17 +209,17 @@ public class Build implements CustomScene {
 
         private void positionComponent(SpaceshipComponent chosenComponent, ImageView componentImage) {
             if (myMount.getDirection() == Mount.Direction.UPPER) {
-                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth()) / 2);
-                componentImage.setLayoutY(myMount.getPositionY() - chosenComponent.getHeight() + 60);
+                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth())/2 - 40);
+                componentImage.setLayoutY(myMount.getPositionY() - chosenComponent.getHeight() + 60 -40);
             } else if (myMount.getDirection() == Mount.Direction.LEFT) {
-                componentImage.setLayoutX(myMount.getPositionX() - chosenComponent.getWidth() + 60);
-                componentImage.setLayoutY(myMount.getPositionY());
+                componentImage.setLayoutX(myMount.getPositionX() - chosenComponent.getWidth() + 60 - 40);
+                componentImage.setLayoutY(myMount.getPositionY() - 40);
             } else if (myMount.getDirection() == Mount.Direction.RIGHT) {
-                componentImage.setLayoutX(myMount.getPositionX() - 10);
-                componentImage.setLayoutY(myMount.getPositionY());
+                componentImage.setLayoutX(myMount.getPositionX() - 10 - 40);
+                componentImage.setLayoutY(myMount.getPositionY() - 40);
             } else {
-                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth()) / 2);
-                componentImage.setLayoutY(myMount.getPositionY() - 10);
+                componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth())/2 - 40);
+                componentImage.setLayoutY(myMount.getPositionY() - 10 - 40);
             }
         }
     }

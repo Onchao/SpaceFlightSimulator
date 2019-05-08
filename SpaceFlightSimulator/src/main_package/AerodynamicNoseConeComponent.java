@@ -8,7 +8,7 @@ public class AerodynamicNoseConeComponent extends SpaceshipComponent {
 
     public AerodynamicNoseConeComponent() {
         img = new ImageView(new Image("file:images/cone.png"));
-        super.lowerMount = new Mount(0, -60, 50, 200, Mount.Direction.LOWER, this);
+        super.lowerMount = new Mount(40, -20, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {

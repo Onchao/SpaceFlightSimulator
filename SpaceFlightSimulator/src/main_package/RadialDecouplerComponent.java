@@ -10,10 +10,13 @@ public class RadialDecouplerComponent extends SpaceshipComponent {
     public RadialDecouplerComponent(Direction dir) {
         direction = dir;
 
-        img = new ImageView(new Image("file:images/radialDec.png")); // TODO: flip image if necessary
+        if (direction == Direction.LEFT)
+            img = new ImageView(new Image("file:images/radialDec.png"));
+        else
+            img = new ImageView(new Image("file:images/radialDec_r.png"));
 
-        super.leftMount = new Mount(-60, 0, 200, 50, Mount.Direction.LEFT, this);
-        super.rightMount = new Mount(100, 0, 200, 50, Mount.Direction.RIGHT, this);
+        super.leftMount = new Mount(-20, 40, 200, 50, Mount.Direction.LEFT, this);
+        super.rightMount = new Mount(90, 40, 200, 50, Mount.Direction.RIGHT, this);
     }
 
     public static String getName() {

@@ -9,7 +9,7 @@ public class ParachuteComponent extends SpaceshipComponent {
     public ParachuteComponent() {
         img = new ImageView(new Image("file:images/parachute.png"));
 
-        super.lowerMount = new Mount(0, -50, 50, 200, Mount.Direction.LOWER, this);
+        super.lowerMount = new Mount(40, -10, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {

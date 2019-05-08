@@ -56,6 +56,7 @@ public class SpaceshipBuilder {
         if (c.getStageNumber() >= stages.size()) {
             stages.add(new ArrayList<>());
         }
+        components.add(c);
         stages.get(c.getStageNumber()).add(c);
     }
 

@@ -9,8 +9,8 @@ public class CrewCapsuleComponent extends SpaceshipComponent {
     public CrewCapsuleComponent() {
         img = new ImageView(new Image("file:images/capsule.png"));
 
-        super.upperMount = new Mount(0, -60, 50, 200, Mount.Direction.UPPER, this);
-        super.lowerMount = new Mount(0, 170, 50, 200, Mount.Direction.LOWER, this);
+        super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
+        super.lowerMount = new Mount(40, 210, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {
