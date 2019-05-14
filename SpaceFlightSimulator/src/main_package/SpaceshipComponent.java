@@ -39,4 +39,12 @@ public abstract class SpaceshipComponent {
     }
 
     public abstract ImageView getImage();
+
+    public double getCenterOfMassX () {
+        return getImage().getLayoutX() + 40 + getWidth()/2;
+    }
+
+    public double getCenterOfMassY () {
+        return getImage().getLayoutY() + 40 + getHeight()/2;
+    }
 }

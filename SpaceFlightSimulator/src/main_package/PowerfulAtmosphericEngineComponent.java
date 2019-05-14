@@ -3,8 +3,11 @@ package main_package;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent {
+public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;
+
+    private double thrust;
+    private double maxThrust;
 
     public PowerfulAtmosphericEngineComponent() {
         img = new ImageView(new Image("file:images/atmEngine.png"));
@@ -29,7 +32,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent {
 
     @Override
     public int getMass() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -40,5 +43,21 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public double getThrust() {
+        return thrust;
+    }
+
+    @Override
+    public double maxThrust() {
+        return maxThrust;
+    }
+
+    @Override
+    public void setThrust(double val) {
+        if (val > maxThrust) val = maxThrust;
+        thrust = val;
     }
 }
