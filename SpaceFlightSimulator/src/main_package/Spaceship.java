@@ -1,5 +1,9 @@
 package main_package;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -7,10 +11,33 @@ public class Spaceship {
     private List<List<SpaceshipComponent>> stages;
     private Point origin;
 
+    private Group drawable;
+
     public Spaceship (List<List<SpaceshipComponent>> stages) {
         this.stages = stages;
 
         origin = getCenterOfMass();
+
+        drawable = new Group();
+
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                drawable.getChildren().add(comp.getImage());
+            }
+        }
+    }
+
+    public Node getDrawable() {
+        return drawable;
+    }
+
+    public double getScale() {
+        return drawable.getScaleX();
+    }
+
+    public void setScale(double scale) {
+        drawable.setScaleX(scale);
+        drawable.setScaleY(scale);
     }
 
     public void setPosition (double x, double y) {     //TODO: add angle here
