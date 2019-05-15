@@ -3,7 +3,7 @@ package world;
 import java.util.LinkedList;
 
 public class Ship {
-    CelestialBody parent;
+    private CelestialBody parent;
     double vel_x;
     double vel_y;
     private double rel_pos_x;
@@ -28,6 +28,9 @@ public class Ship {
         this.angleOnPlanet = angleOnPlanet;
         rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
         rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet);
+    }
+    public CelestialBody getParent(){
+        return parent;
     }
 
     public void update(){
