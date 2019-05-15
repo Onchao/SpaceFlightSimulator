@@ -47,4 +47,12 @@ public abstract class SpaceshipComponent {
     public double getCenterOfMassY () {
         return getImage().getLayoutY() + 40 + getHeight()/2;
     }
+
+    public double getMomentOfInertiaX () {
+        return getWidth()*getHeight()*getHeight()*getHeight()*getMass()/12;
+    }
+
+    public double getMomentOfInertiaY () {
+        return getHeight()*getWidth()*getWidth()*getWidth()*getMass()/12;
+    }
 }

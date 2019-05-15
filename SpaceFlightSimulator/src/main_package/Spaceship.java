@@ -127,4 +127,17 @@ public class Spaceship {
 
         return new Point(xs/d, ys/d);
     }
+
+    public double getMomentOfInertia () {
+        double ret = 0;
+
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                double d = getCenterOfMass().getX() - comp.getImage().getLayoutX();
+                ret += comp.getMomentOfInertiaX() + comp.getMass()*d*d;
+            }
+        }
+
+        return ret;
+    }
 }
