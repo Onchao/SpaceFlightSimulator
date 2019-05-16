@@ -22,7 +22,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         GamestateController GC = new GamestateController(stage);
-        GC.changeScene(Gamestate.gs.MENU);
+        GC.changeScene(Gamestate.gs.MENU, null);
     }
 
     public static void main(String[] args) {

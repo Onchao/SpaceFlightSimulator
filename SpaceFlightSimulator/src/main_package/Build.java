@@ -1,6 +1,7 @@
 package main_package;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -65,6 +66,7 @@ public class Build implements CustomScene {
 
         Button flyButton = new Button("Let's fly!");
         // TODO: event handler for this one
+
         root.getChildren().add(flyButton);
 
         base = new Rectangle(600, 20);
@@ -103,6 +105,14 @@ public class Build implements CustomScene {
                 }
             }
         });
+
+        EventHandler<ActionEvent> eventFly = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                GamestateController.changeScene(Gamestate.gs.FLY, builder.build());
+            }
+        };
+        flyButton.setOnAction(eventFly);
 
         spaceshipView.getChildren().add(base);
     }

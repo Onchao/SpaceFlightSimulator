@@ -2,7 +2,7 @@ package world;
 
 import java.util.LinkedList;
 
-public class Ship {
+public class Ship2 {
     private CelestialBody parent;
     double vel_x;
     double vel_y;
@@ -19,7 +19,7 @@ public class Ship {
     boolean landed = true;
     //LinkedList<Position> convexHull = new LinkedList<>();
 
-    public Ship(CelestialBody parent, double angleOnPlanet){
+    public Ship2(CelestialBody parent, double angleOnPlanet){
         //convexHull.add(new Position(0,12));
         //convexHull.add(new Position(1, 0));
         //convexHull.add(new Position(-1, 0));

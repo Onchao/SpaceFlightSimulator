@@ -27,7 +27,7 @@ public class GamestateController {
         timer.start();
     }
 
-    static void changeScene(Gamestate.gs newGS){
+    static void changeScene(Gamestate.gs newGS, Spaceship spaceship){
         if(newGS == Gamestate.gs.MENU){
             Gamestate.setGamestateMENU();
             currentScene = new Menu();
@@ -57,7 +57,7 @@ public class GamestateController {
         else //if(newGS == Gamestate.gs.FLY)
         {
             Gamestate.setGamestateFLY();
-            currentScene = new Fly();
+            currentScene = new Fly(spaceship);
             SC = new Scene(currentScene.getRoot());
 
             SC.setOnKeyPressed(e -> {
@@ -74,7 +74,12 @@ public class GamestateController {
                 if(e.getCode() == KeyCode.TAB){
                     Origin.cycleOrigin();
                 }
-
+                if (e.getCode() == KeyCode.M) {
+                    if(Const.SCALE < 0.1)
+                         Const.SCALE = 5000;
+                    else
+                        Const.SCALE = 0.01;
+                }
             });
             SC.setOnScroll(e -> {
                 double y = e.getDeltaY();

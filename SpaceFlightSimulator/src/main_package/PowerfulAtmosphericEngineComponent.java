@@ -6,11 +6,11 @@ import javafx.scene.image.ImageView;
 public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;
 
-    private double thrust;
+    private double thrust = 8000*1000; // N
     private double maxThrust;
 
     public PowerfulAtmosphericEngineComponent() {
-        img = new ImageView(new Image("file:images/atmEngine.png"));
+        img = new ImageView(new Image("file:SpaceFlightSimulator/images/atmEngine.png"));
 
         super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
         super.lowerMount = new Mount(40, 250, 50, 200, Mount.Direction.LOWER, this);

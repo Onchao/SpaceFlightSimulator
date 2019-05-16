@@ -38,7 +38,7 @@ public class Menu implements CustomScene {
         EventHandler<ActionEvent> eventNewGame = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                GamestateController.changeScene(Gamestate.gs.BUILD);
+                GamestateController.changeScene(Gamestate.gs.BUILD, null);
             }
         };
         buttonNewGame.setOnAction(eventNewGame);
@@ -46,7 +46,7 @@ public class Menu implements CustomScene {
         EventHandler<ActionEvent> eventTestFlight = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                GamestateController.changeScene(Gamestate.gs.FLY);
+                GamestateController.changeScene(Gamestate.gs.FLY, null);
             }
         };
         buttonTestFlight.setOnAction(eventTestFlight);

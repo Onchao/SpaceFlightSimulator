@@ -2,7 +2,12 @@ package main_package;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Rotate;
+import world.CelestialBody;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,48 +15,92 @@ import java.util.List;
 public class Spaceship {
     private List<List<SpaceshipComponent>> stages;
     private Point origin;
-
     private Group drawable;
+    public Node getDrawable(){ return drawable; }
+    private CelestialBody parent;
+    public CelestialBody getParent(){ return parent; }
+    public ImageView img = new ImageView(new Image("file:SpaceFlightSimulator/images/smallRocket.png"));
+
+    private double rel_pos_x;
+    private double rel_pos_y;
+    public double getAbsPos_x(){
+        return parent.getAbsPos_x() + rel_pos_x;
+    }
+    public double getAbsPos_y(){
+        return parent.getAbsPos_y() + rel_pos_y;
+    }
+    public double angleOnPlanet;
+    boolean landed = true;
+    Rotate rotate = new Rotate();
+
 
     public Spaceship (List<List<SpaceshipComponent>> stages) {
         this.stages = stages;
 
-        origin = getCenterOfMass();
-
         drawable = new Group();
-
         for (List<SpaceshipComponent> stage : stages) {
             for (SpaceshipComponent comp : stage) {
                 drawable.getChildren().add(comp.getImage());
             }
         }
+        //origin = getCenterOfMass();
+        origin =  new Point(drawable.getLayoutBounds().getCenterX(),drawable.getLayoutBounds().getCenterY());
+
     }
 
-    public Node getDrawable() {
-        return drawable;
+    public void placeSpaceship(CelestialBody parent, double angleOnPlanet){
+        this.parent = parent;
+        this.angleOnPlanet = angleOnPlanet;
+        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
+        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet);
+
+        drawable.getTransforms().add(rotate);
+        img.getTransforms().add(rotate);
+        rotate.setAngle(-angleOnPlanet + 90);
     }
+
+    public void update(){
+        if(landed){
+            double angleDif = parent.getAngleDif();
+            angleOnPlanet+=angleDif;
+
+            rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
+            rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet);
+        }
+    }
+
+    //TODO: changeParent
+    void changeParent(){
+
+    }
+
 
     public double getScale() {
         return drawable.getScaleX();
     }
 
-    public void setScale(double scale) {
+    public void setPrintScale(double scale) {
         drawable.setScaleX(scale);
         drawable.setScaleY(scale);
     }
 
-    public void setPosition (double x, double y) {     //TODO: add angle here
-        double dx = x - origin.getX();
-        double dy = y - origin.getY();
+    public void setPrintPosition(double x, double y) {
+        double dx = (x - origin.getX());
+        double dy = (y - origin.getY());
 
         origin = new Point(x, y);
+        img.setX(x - 25);
+        img.setY(y - 25);
 
         for (List<SpaceshipComponent> stage : stages) {
             for (SpaceshipComponent comp : stage) {
-                comp.getImage().setLayoutX(comp.getImage().getLayoutX() + dx);
-                comp.getImage().setLayoutY(comp.getImage().getLayoutY() + dy);
+                comp.getImage().setLayoutX((comp.getImage().getLayoutX() + dx));
+                comp.getImage().setLayoutY((comp.getImage().getLayoutY() + dy));
             }
         }
+        rotate.setAngle(-angleOnPlanet + 90);
+        rotate.setPivotX(x);
+        rotate.setPivotY(y);
     }
 
     public Point getPosition () {
