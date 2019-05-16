@@ -19,7 +19,7 @@ public class Spaceship {
     public Node getDrawable(){ return drawable; }
     private CelestialBody parent;
     public CelestialBody getParent(){ return parent; }
-    public ImageView img = new ImageView(new Image("file:SpaceFlightSimulator/images/smallRocket.png"));
+    public ImageView img = new ImageView(new Image("file:images/smallRocket.png"));
 
     private double rel_pos_x;
     private double rel_pos_y;

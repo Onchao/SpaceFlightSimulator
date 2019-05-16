@@ -82,12 +82,12 @@ public class Fly implements CustomScene{
             double u = (spaceship.getAbsPos_x() - origin.getOrigin_x())/Const.SCALE;
             double v = (spaceship.getAbsPos_y() - origin.getOrigin_y())/Const.SCALE;
             flatPlanet.getPoints().addAll(
-                    400 + u - 2000*Math.cos(Math.toRadians(spaceship.angleOnPlanet)),
-                    400 + (v - 2000*Math.sin(Math.toRadians(spaceship.angleOnPlanet)))*-1,
-                    400 + u - 600*Math.cos(Math.toRadians(spaceship.angleOnPlanet + 90)),
-                    400 + (v - 600*Math.sin(Math.toRadians(spaceship.angleOnPlanet + 90)))*-1,
-                    400 + u + 600*Math.cos(Math.toRadians(spaceship.angleOnPlanet + 90)),
-                    400 + (v + 600*Math.sin(Math.toRadians(spaceship.angleOnPlanet + 90)))*-1
+                    400 + u - 6000*Math.cos(Math.toRadians(spaceship.angleOnPlanet)),
+                    400 + (v - 6000*Math.sin(Math.toRadians(spaceship.angleOnPlanet)))*-1,
+                    400 + u - 2600*Math.cos(Math.toRadians(spaceship.angleOnPlanet + 90)),
+                    400 + (v - 2600*Math.sin(Math.toRadians(spaceship.angleOnPlanet + 90)))*-1,
+                    400 + u + 2600*Math.cos(Math.toRadians(spaceship.angleOnPlanet + 90)),
+                    400 + (v + 2600*Math.sin(Math.toRadians(spaceship.angleOnPlanet + 90)))*-1
             );
         }
         else{

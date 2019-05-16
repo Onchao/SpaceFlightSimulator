@@ -7,7 +7,7 @@ public class FuelTankComponent extends SpaceshipComponent {
     private ImageView img;
 
     public FuelTankComponent() {
-        img = new ImageView(new Image("file:SpaceFlightSimulator/images/tank.png"));
+        img = new ImageView(new Image("file:images/tank.png"));
 
         super.leftMount = new Mount(-20, 40, 200, 50, Mount.Direction.LEFT, this);
         super.rightMount = new Mount(250, 40, 200, 50, Mount.Direction.RIGHT, this);
