@@ -2,6 +2,9 @@ package main_package;
 
 import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class SpaceshipComponent {
     protected Mount upperMount = null;
     protected Mount lowerMount = null;
@@ -54,5 +57,16 @@ public abstract class SpaceshipComponent {
 
     public double getMomentOfInertiaY () {
         return getHeight()*getWidth()*getWidth()*getWidth()*getMass()/12;
+    }
+
+    public List<Point> getVertices () {
+        List<Point> ret = new ArrayList<>();
+
+        ret.add(new Point(getImage().getLayoutX() + 40, getImage().getLayoutY() + 40));
+        ret.add(new Point(getImage().getLayoutX() + 40 + getWidth(), getImage().getLayoutY() + 40));
+        ret.add(new Point(getImage().getLayoutX() + 40, getImage().getLayoutY() + 40 + getHeight()));
+        ret.add(new Point(getImage().getLayoutX() + 40 + getWidth(), getImage().getLayoutY() + 40 + getHeight()));
+
+        return ret;
     }
 }

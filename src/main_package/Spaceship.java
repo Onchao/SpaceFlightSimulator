@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
 import world.CelestialBody;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +34,15 @@ public class Spaceship {
     boolean landed = true;
     Rotate rotate = new Rotate();
 
+    private Point convertCoordinates(Point point) {
+        double dx = (point.getX() - origin.getX())/50; // 1m == 50px
+        double dy = (point.getY() - origin.getY())/50;
+
+        double r = Math.sqrt(dx*dx + dy*dy);
+        double angle = Math.atan2(dy, dx) + (rotate.getAngle()*(2*Math.PI))/360;
+
+        return new Point(r*Math.cos(angle), r*Math.sin(angle));
+    }
 
     public Spaceship (List<List<SpaceshipComponent>> stages) {
         this.stages = stages;
@@ -139,7 +149,7 @@ public class Spaceship {
             d += comp.getMass();
         }
 
-        return new Point(xs/d, ys/d);
+        return convertCoordinates(new Point(xs/d, ys/d));
     }
 
     public Point getCenterOfMass () {
@@ -156,7 +166,7 @@ public class Spaceship {
             d += smass;
         }
 
-        return new Point(xs/d, ys/d);
+        return convertCoordinates(new Point(xs/d, ys/d));
     }
 
     public Point getThrustCenter () {
@@ -174,7 +184,7 @@ public class Spaceship {
             }
         }
 
-        return new Point(xs/d, ys/d);
+        return convertCoordinates(new Point(xs/d, ys/d));
     }
 
     public double getMomentOfInertia () {
@@ -186,6 +196,17 @@ public class Spaceship {
                 ret += comp.getMomentOfInertiaX() + comp.getMass()*d*d;
             }
         }
+
+        return ret;
+    }
+
+    public List<Point> getVertices () {
+        List<Point> ret = new ArrayList<>();
+
+        for (List<SpaceshipComponent> stage : stages)
+            for (SpaceshipComponent comp : stage)
+                for (Point v : comp.getVertices())
+                    ret.add(convertCoordinates(v));
 
         return ret;
     }
