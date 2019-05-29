@@ -1,5 +1,6 @@
 package ship;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ import java.util.List;
 public class Spaceship {
     private List<List<SpaceshipComponent>> stages;
     private Group drawable;
+    private double distToBottom;
     public Node getDrawable(){ return drawable; }
     public ImageView img = new ImageView(new Image("file:images/smallRocket.png"));
 
@@ -77,6 +79,15 @@ public class Spaceship {
         //origin = getCenterOfMass();
         origin =  new Point(drawable.getLayoutBounds().getCenterX(),drawable.getLayoutBounds().getCenterY());
 
+        double minY = 1000000000.0; // almost infinity
+
+        for (Point v : getVertices()) {
+            if (v.getY() < minY) minY = v.getY();
+        }
+
+        distToBottom = Math.abs(minY);
+
+        System.out.println(distToBottom);
     }
 
     public void placeSpaceship(CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem){
@@ -333,5 +344,9 @@ public class Spaceship {
             parent = newParent;
             System.out.println("NEW PARENT: " + parent.name);
         }
+    }
+
+    public double getDistToBottom() {
+        return distToBottom;
     }
 }
