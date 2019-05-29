@@ -71,4 +71,24 @@ public abstract class SpaceshipComponent {
 
         return ret;
     }
+
+    public String getDescription() {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(toString());
+        builder.append("\n\n");
+        builder.append("Mass: ");
+        builder.append(getMass());
+        builder.append("kg\n");
+        builder.append("Height: ");
+        builder.append(getHeight()/50);
+        builder.append("m\n");
+        builder.append("Width: ");
+        builder.append(getWidth()/50);
+        builder.append("m\n");
+        builder.append("Stage number: ");
+        builder.append(getStageNumber());
+
+        return builder.toString();
+    }
 }
