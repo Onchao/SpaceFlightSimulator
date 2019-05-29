@@ -7,8 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import utility.Const;
 import utility.Point;
-import world.CelestialBody;
-import world.Time;
+import world.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -140,8 +139,8 @@ public class Spaceship {
     }
 
     public void setPrintScale() {
-        drawable.setScaleX(Const.SCALE/50);
-        drawable.setScaleY(Const.SCALE/50);
+        drawable.setScaleX(Scale.SCALE/50);
+        drawable.setScaleY(Scale.SCALE/50);
     }
 
     public void setPrintPosition(double x, double y) {

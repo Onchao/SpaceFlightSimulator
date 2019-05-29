@@ -72,14 +72,14 @@ public class Fly implements CustomScene{
         Time.updateTime();
         flatPlanet.getPoints().clear();
 
-        if (Origin.originIndex == 0 && Const.SCALE > 0.1){
+        if (Origin.originIndex == 0 && Scale.SCALE > 0.1){
             for (CelestialBody B : solarSystem.bodies) {
                 B.shade.setRadius(0);
                 B.planet.setRadius(0);
             }
 
-            double u = (spaceship.getAbsPos_x() - origin.getOrigin_x())*Const.SCALE;
-            double v = (spaceship.getAbsPos_y() - origin.getOrigin_y())*Const.SCALE;
+            double u = (spaceship.getAbsPos_x() - origin.getOrigin_x()) * Scale.SCALE;
+            double v = (spaceship.getAbsPos_y() - origin.getOrigin_y()) * Scale.SCALE;
             flatPlanet.getPoints().addAll(
                     400 + u - 6000*Math.cos(Math.toRadians(spaceship.angleOnPlanet)),
                     400 + (v - 6000*Math.sin(Math.toRadians(spaceship.angleOnPlanet)))*-1,
@@ -91,15 +91,15 @@ public class Fly implements CustomScene{
         }
         else{
             for (CelestialBody B : solarSystem.bodies) {
-                double x = B.getAbsPos_x() * Const.SCALE;
-                double y = B.getAbsPos_y() * Const.SCALE;
+                double x = B.getAbsPos_x() * Scale.SCALE;
+                double y = B.getAbsPos_y() * Scale.SCALE;
 
-                x -= origin.getOrigin_x() * Const.SCALE;
-                y -= origin.getOrigin_y() * Const.SCALE;
+                x -= origin.getOrigin_x() * Scale.SCALE;
+                y -= origin.getOrigin_y() * Scale.SCALE;
 
                 y *= -1;
-                double rShade = Math.pow(B.radius * (Math.pow(Const.SCALE, 0.3)), 1.0 / 4) * 2;
-                double rPlanet = B.radius * Const.SCALE;
+                double rShade = Math.pow(B.radius * (Math.pow(Scale.SCALE, 0.3)), 1.0 / 4) * 2;
+                double rPlanet = B.radius * Scale.SCALE;
 
                 x += 400;
                 y += 400;
@@ -117,11 +117,11 @@ public class Fly implements CustomScene{
         }
 
         spaceship.update();
-        double u = (spaceship.getAbsPos_x() - origin.getOrigin_x()) * Const.SCALE;
-        double v = (spaceship.getAbsPos_y() - origin.getOrigin_y()) * Const.SCALE;
+        double u = (spaceship.getAbsPos_x() - origin.getOrigin_x()) * Scale.SCALE;
+        double v = (spaceship.getAbsPos_y() - origin.getOrigin_y()) * Scale.SCALE;
         spaceship.setPrintPosition(400 + u, 400 + -v);
 
-        if(Const.SCALE < 1){
+        if(Scale.SCALE < 1){
             spaceship.img.setVisible(true);
             spaceship.getDrawable().setVisible(false);
         }
