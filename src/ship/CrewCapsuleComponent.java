@@ -25,7 +25,7 @@ public class CrewCapsuleComponent extends SpaceshipComponent {
 
     @Override
     public int getWidth() {
-        return 200;
+        return 10*1000;
     }
 
     @Override

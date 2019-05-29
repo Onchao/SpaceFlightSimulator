@@ -31,7 +31,12 @@ public class Spaceship {
     public double getAbsPos_y(){
         return parent.getAbsPos_y() + rel_pos_y;
     }
-    public double angleOnPlanet;
+    private double angleOnPlanet;
+    public double getAngleOnPlanet(){
+        return angleOnPlanet;
+    }
+
+    private SolarSystem solarSystem;
 
     // what is it doing?
     private boolean landed = true;
@@ -41,6 +46,14 @@ public class Spaceship {
     private double vel_y; // to parent [m/s]
 
     Rotate rotate = new Rotate();
+
+    public void info(){
+        System.out.println("pos_x: "  + getAbsPos_x());
+        System.out.println("pos_y: "  + getAbsPos_y());
+        System.out.println("vel: " + Math.sqrt(vel_x*vel_x + vel_y*vel_y));
+        System.out.println("gravity_x: "  + getGravityInfluence().getX());
+        System.out.println("gravity_y: "  + getGravityInfluence().getY());
+    }
 
     private Point convertCoordinates(Point point) {
         double dx = (point.getX() - origin.getX())/50; // 1m == 50px
@@ -66,7 +79,8 @@ public class Spaceship {
 
     }
 
-    public void placeSpaceship(CelestialBody parent, double angleOnPlanet){
+    public void placeSpaceship(CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem){
+        this.solarSystem = solarSystem;
         this.parent = parent;
         this.angleOnPlanet = angleOnPlanet;
         rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
@@ -89,17 +103,31 @@ public class Spaceship {
             rotate.setAngle(-angleOnPlanet + 90);
         }
         else{
+            Point gravityVel = getGravityInfluence();
+            vel_x += gravityVel.getX();
+            vel_y += gravityVel.getY();
             rel_pos_x = rel_pos_x + vel_x* Time.deltaTIME;
             rel_pos_y = rel_pos_y + vel_y* Time.deltaTIME;
 
             updateAngleOnPlanet();
+            updateParent();
         }
         setPrintScale();
     }
 
-    //TODO: changeParent (artur)
-    void changeParent(){
-
+    private Point getGravityInfluence(){ // [m/s]
+        double x = 0;
+        double y = 0;
+        for (CelestialBody B : solarSystem.bodies) {
+            double r = B.getDistanceTo(getAbsPos_x(),getAbsPos_y());
+            double velocity = Const.G * B.mass * Time.deltaTIME / r/r;
+            double angle = Math.toDegrees(Math.atan2(getAbsPos_y() - B.getAbsPos_y(),
+                    getAbsPos_x() - B.getAbsPos_x()));
+            //if(B.name.equals("Earth")) System.out.println(angle);
+            x -= velocity * Math.cos(Math.toRadians(angle));
+            y -= velocity * Math.sin(Math.toRadians(angle));
+        }
+        return new Point(x, y);
     }
 
     void attemptLiftOff(){
@@ -110,20 +138,14 @@ public class Spaceship {
 
         double velocity = 2*parent.radius*Math.PI
                 /(parent.rotationPeriod);
-
         vel_x = velocity * Math.cos(Math.toRadians(angleOnPlanet + 90));
         vel_y = velocity * Math.sin(Math.toRadians(angleOnPlanet + 90));
-
-
-        //angleOnPlanet
-        // nadac predkosc z planety
-
         landed = false;
     }
 
     //TODO: attemptLanding (artur)
     void attemptLanding(){
-
+        // if (stable time > cos)
     }
 
     private boolean enginesPresent(){
@@ -287,8 +309,29 @@ public class Spaceship {
         }
         else{
             angleOnPlanet = Math.toDegrees(
-                    Math.tan((getAbsPos_y() - parent.getAbsPos_y())/
-                            (getAbsPos_x() - parent.getAbsPos_x())));
+                    Math.atan2(getAbsPos_y() - parent.getAbsPos_y(),
+                            getAbsPos_x() - parent.getAbsPos_x()));
+        }
+    }
+
+    public void updateParent(){
+        CelestialBody newParent = solarSystem.bodies.get(0);
+        for (CelestialBody B : solarSystem.bodies) {
+            double dist = B.getDistanceTo(getAbsPos_x(), getAbsPos_y());
+            if(dist < B.getEscapeRadius()){
+                newParent = B;
+            }
+        }
+        if(newParent != parent){
+            Point velocity = parent.getPlanetVelocity();
+            vel_x += velocity.getX();
+            vel_y += velocity.getY();
+            rel_pos_x = rel_pos_x + parent.getRelPos().getX();
+            rel_pos_y = rel_pos_y + parent.getRelPos().getY();
+
+
+            parent = newParent;
+            System.out.println("NEW PARENT: " + parent.name);
         }
     }
 }

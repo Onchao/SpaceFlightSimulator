@@ -29,7 +29,6 @@ public class SolarSystem {
         bodies.add(moon);
 
         bodies.add(mars);
-
     }
 
     public Const getOrigin(){

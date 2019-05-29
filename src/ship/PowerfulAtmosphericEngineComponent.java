@@ -33,7 +33,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     @Override
     public int getMass() {
-        return 1;
+        return 70*1000;
     }
 
     @Override

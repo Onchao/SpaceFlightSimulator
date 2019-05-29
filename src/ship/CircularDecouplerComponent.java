@@ -30,7 +30,7 @@ public class CircularDecouplerComponent extends SpaceshipComponent {
 
     @Override
     public int getMass() {
-        return 1;
+        return 2000;
     }
 
     @Override

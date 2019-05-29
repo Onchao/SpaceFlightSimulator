@@ -30,9 +30,10 @@ public class FuelTankComponent extends SpaceshipComponent {
         return 200;
     }
 
+    // fuel 100*1000 kg
     @Override
     public int getMass() {
-        return 1;
+        return 110*1000; // [kg]
     }
 
     @Override

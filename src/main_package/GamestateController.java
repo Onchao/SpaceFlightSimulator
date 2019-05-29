@@ -94,7 +94,11 @@ public class GamestateController {
                     spaceship.setThrottleModifier(-10);
                 }
 
-                // shift = w, ctrl = s, a, d
+                // INFO
+                if (e.getCode() == KeyCode.I) {
+                    spaceship.info();
+                }
+
             });
 
             SC.setOnKeyReleased(e-> {

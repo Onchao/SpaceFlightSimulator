@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import utility.Point;
 
+import static java.lang.Double.MAX_VALUE;
 import static java.lang.StrictMath.exp;
 
 public class CelestialBody {
@@ -90,6 +91,11 @@ public class CelestialBody {
         return new Point(relative.getX() + parentPos.getX(), relative.getY() + parentPos.getY());
     }
 
+    public double getOrbitalAngle(){
+        double orbits = Time.TIME/orbitalPeriod;
+        return orbits*360 + year1angle; // [deg]
+    }
+
     public double getAbsPos_x(){
         if(parent == null)
             return 0;
@@ -122,7 +128,23 @@ public class CelestialBody {
         return radius*Math.sin(Math.toRadians(angle));
     }
 
+    public Point getPlanetVelocity(){
+        double velocity = 2*parent.orbitalRadius*Math.PI
+                /(parent.orbitalPeriod);
+        double vel_x = velocity * Math.cos(Math.toRadians(getOrbitalAngle() + 90));
+        double vel_y = velocity * Math.sin(Math.toRadians(getOrbitalAngle() + 90));
+        return new Point(0,0);
+    }
 
+    public double getEscapeRadius(){
+        if(parent == null)
+            return MAX_VALUE;
+        return 20*radius;
+    }
+
+    public double getDistanceTo(double x, double y){
+        return Math.sqrt((getAbsPos_x()-x)*(getAbsPos_x()-x) + (getAbsPos_y()-y)*(getAbsPos_y()-y));
+    }
 }
 
 /*

@@ -33,7 +33,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public int getMass() {
-        return 1;
+        return 20*1000;
     }
 
     @Override

@@ -40,7 +40,7 @@ public class Fly implements CustomScene{
         root.getChildren().add(flatPlanet);
 
         this.spaceship = spaceship;
-        spaceship.placeSpaceship(solarSystem.bodies.get(1), 0);
+        spaceship.placeSpaceship(solarSystem.bodies.get(1), 0, solarSystem);
         root.getChildren().add(spaceship.getDrawable());
         origin = new Origin(solarSystem.bodies, spaceship);
 
@@ -81,12 +81,12 @@ public class Fly implements CustomScene{
             double u = (spaceship.getAbsPos_x() - origin.getOrigin_x()) * Scale.SCALE;
             double v = (spaceship.getAbsPos_y() - origin.getOrigin_y()) * Scale.SCALE;
             flatPlanet.getPoints().addAll(
-                    400 + u - 6000*Math.cos(Math.toRadians(spaceship.angleOnPlanet)),
-                    400 + (v - 6000*Math.sin(Math.toRadians(spaceship.angleOnPlanet)))*-1,
-                    400 + u - 2600*Math.cos(Math.toRadians(spaceship.angleOnPlanet + 90)),
-                    400 + (v - 2600*Math.sin(Math.toRadians(spaceship.angleOnPlanet + 90)))*-1,
-                    400 + u + 2600*Math.cos(Math.toRadians(spaceship.angleOnPlanet + 90)),
-                    400 + (v + 2600*Math.sin(Math.toRadians(spaceship.angleOnPlanet + 90)))*-1
+                    400 + u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
+                    400 + (v - 6000*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet())))*-1,
+                    400 + u - 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),
+                    400 + (v - 2600*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet() + 90)))*-1,
+                    400 + u + 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),
+                    400 + (v + 2600*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet() + 90)))*-1
             );
         }
         else{

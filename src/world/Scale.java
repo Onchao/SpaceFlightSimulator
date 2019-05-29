@@ -1,10 +1,5 @@
 package world;
 
-
-import ship.Spaceship;
-
-import java.util.ArrayList;
-
 public class Scale {
     private static double[] presetScales = {1, 1e-5, 5e-7, 1.5e-9 };
     private static int presetIndex = 0;
