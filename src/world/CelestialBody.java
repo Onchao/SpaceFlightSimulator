@@ -3,6 +3,7 @@ package world;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import utility.Point;
 
 import static java.lang.StrictMath.exp;
 
@@ -73,36 +74,36 @@ public class CelestialBody {
     }
 
 
-    public Position getRelPos(){
+    public Point getRelPos(){
         if(parent == null)
-            return new Position(0,0);
+            return new Point(0,0);
         double orbits = Time.TIME/(orbitalPeriod*24*3600);
         double anglePos = orbits*360+year1angle; // deg
-        return new Position(Math.cos(Math.toRadians(anglePos))*orbitalRadius, Math.sin(Math.toRadians(anglePos))*orbitalRadius);
+        return new Point(Math.cos(Math.toRadians(anglePos))*orbitalRadius, Math.sin(Math.toRadians(anglePos))*orbitalRadius);
     }
 
-    public Position getAbsPos(){
+    public Point getAbsPos(){
         if(parent == null)
-            return new Position(0,0);
-        Position relative = getRelPos();
-        Position parentPos = parent.getAbsPos();
-        return new Position(relative.x + parentPos.x, relative.y + parentPos.y);
+            return new Point(0,0);
+        Point relative = getRelPos();
+        Point parentPos = parent.getAbsPos();
+        return new Point(relative.getX() + parentPos.getX(), relative.getY() + parentPos.getY());
     }
 
     public double getAbsPos_x(){
         if(parent == null)
             return 0;
-        Position relative = getRelPos();
-        Position parentPos = parent.getAbsPos();
-        return relative.x + parentPos.x;
+        Point relative = getRelPos();
+        Point parentPos = parent.getAbsPos();
+        return relative.getX() + parentPos.getX();
     }
 
     public double getAbsPos_y(){
         if(parent == null)
             return 0;
-        Position relative = getRelPos();
-        Position parentPos = parent.getAbsPos();
-        return relative.y + parentPos.y;
+        Point relative = getRelPos();
+        Point parentPos = parent.getAbsPos();
+        return relative.getY() + parentPos.getY();
     }
 
     // relative to planet center
@@ -111,8 +112,8 @@ public class CelestialBody {
     }
 
     // relative to planet center
-    public Position getShipPosFromAngle(double angle){
-        return new Position(radius*Math.cos(Math.toRadians(angle)), radius*Math.sin(Math.toRadians(angle)));
+    public Point getShipPosFromAngle(double angle){
+        return new Point(radius*Math.cos(Math.toRadians(angle)), radius*Math.sin(Math.toRadians(angle)));
     }
     public double getShipPosFromAngle_x(double angle){
         return radius*Math.cos(Math.toRadians(angle));
