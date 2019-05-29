@@ -122,6 +122,8 @@ public class Fly implements CustomScene{
         spaceship.setPrintPosition(400 + u, 400 + -v);
         // spaceship: 4m = 200px -> 1m = 50px /50/1000 = 0.001px
         // planets: 1km = 1px
+
+        //TODO: this is stupid...
         spaceship.setPrintScale(1/Const.SCALE/50/1000);
         //spaceship.setPrintScale(0.1);
 

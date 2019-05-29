@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import utility.Point;
 import world.CelestialBody;
+import world.Time;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,15 +15,16 @@ import java.util.List;
 
 public class Spaceship {
     private List<List<SpaceshipComponent>> stages;
-    private Point origin;
     private Group drawable;
     public Node getDrawable(){ return drawable; }
-    private CelestialBody parent;
-    public CelestialBody getParent(){ return parent; }
     public ImageView img = new ImageView(new Image("file:images/smallRocket.png"));
 
-    private double rel_pos_x;
-    private double rel_pos_y;
+    // where is it?
+    private CelestialBody parent;
+    public CelestialBody getParent(){ return parent; }
+    private Point origin;
+    private double rel_pos_x; // to parent [km]
+    private double rel_pos_y; // to parent [km]
     public double getAbsPos_x(){
         return parent.getAbsPos_x() + rel_pos_x;
     }
@@ -30,7 +32,14 @@ public class Spaceship {
         return parent.getAbsPos_y() + rel_pos_y;
     }
     public double angleOnPlanet;
-    boolean landed = true;
+
+    // what is it doing?
+    private boolean landed = true;
+    private int throttle; // [0,100]
+    private int throttleModifier;
+    private double vel_x; // to parent km/s
+    private double vel_y; // to parent km/s
+
     Rotate rotate = new Rotate();
 
     private Point convertCoordinates(Point point) {
@@ -69,20 +78,60 @@ public class Spaceship {
     }
 
     public void update(){
-        if(landed){
-            double angleDif = parent.getAngleDif();
-            angleOnPlanet+=angleDif;
+        updateThrottle();
+        if(landed && throttle!=0)
+            attemptLiftOff();
 
+        if(landed){
+            updateAngleOnPlanet();
             rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
             rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet);
+            rotate.setAngle(-angleOnPlanet + 90);
+        }
+        else{
+            rel_pos_x = rel_pos_x + vel_x* Time.deltaTIME;
+            rel_pos_y = rel_pos_y + vel_y* Time.deltaTIME;
+
+            updateAngleOnPlanet();
         }
     }
 
-    //TODO: changeParent
+    //TODO: changeParent (artur)
     void changeParent(){
 
     }
 
+    void attemptLiftOff(){
+        System.out.println("LIFT OFF");
+
+        if(!enginesPresent() || !fuelPresent())
+            return;
+
+        double velocity = 2*parent.radius*Math.PI
+                /(parent.rotationPeriod*24*3600);
+
+        vel_x = velocity * Math.cos(Math.toRadians(angleOnPlanet + 90));
+        vel_y = velocity * Math.sin(Math.toRadians(angleOnPlanet + 90));
+
+
+        //angleOnPlanet
+        // nadac predkosc z planety
+
+        landed = false;
+    }
+
+    //TODO: attemptLanding (artur)
+    void attemptLanding(){
+
+    }
+
+    private boolean enginesPresent(){
+        return true;
+    }
+
+    private boolean fuelPresent(){
+        return true;
+    }
 
     public double getScale() {
         return drawable.getScaleX();
@@ -107,7 +156,6 @@ public class Spaceship {
                 comp.getImage().setLayoutY((comp.getImage().getLayoutY() + dy));
             }
         }
-        rotate.setAngle(-angleOnPlanet + 90);
         rotate.setPivotX(x);
         rotate.setPivotY(y);
     }
@@ -208,5 +256,39 @@ public class Spaceship {
                     ret.add(convertCoordinates(v));
 
         return ret;
+    }
+
+    public void maxThrottle(){
+        throttle = 100;
+        setThrottleModifier(0);
+    }
+    public void zeroThrottle(){
+        throttle = 0;
+        setThrottleModifier(0);
+    }
+    public void setThrottleModifier(int delta){
+        throttleModifier = delta;
+    }
+    private void updateThrottle(){
+        if(throttleModifier != 0){
+            throttle += throttleModifier;
+            if(throttle<0)
+                throttle = 0;
+            else if(throttle > 100)
+                throttle = 100;
+        }
+    }
+
+    private void updateAngleOnPlanet(){
+        if(landed) {
+            double angleDif = parent.getAngleDif();
+            angleOnPlanet += angleDif;
+        }
+        else{
+            angleOnPlanet = Math.toDegrees(
+                    Math.tan((getAbsPos_y() - parent.getAbsPos_y())/
+                            (getAbsPos_x() - parent.getAbsPos_x())));
+
+        }
     }
 }

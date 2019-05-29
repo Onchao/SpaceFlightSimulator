@@ -8,13 +8,13 @@ import utility.Point;
 import static java.lang.StrictMath.exp;
 
 public class CelestialBody {
-    String name;
-    CelestialBody parent;
-    double orbitalRadius;   // km
-    double orbitalPeriod;   // d
-    public double radius;          // km
-    double mass;            // kg
-    double rotationPeriod;  // d
+    public final String name;
+    public final CelestialBody parent;
+    public final double orbitalRadius;   // km
+    public final double orbitalPeriod;   // d
+    public final double radius;          // km
+    public final double mass;            // kg
+    public final double rotationPeriod;  // d
     double year1angle;      // deg
     boolean atmExist;
     double A;

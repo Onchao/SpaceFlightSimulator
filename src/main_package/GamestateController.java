@@ -75,13 +75,39 @@ public class GamestateController {
                 if(e.getCode() == KeyCode.TAB){
                     Origin.cycleOrigin();
                 }
+
                 if (e.getCode() == KeyCode.M) {
                     if(Const.SCALE < 0.1)
                          Const.SCALE = 5000;
                     else
                         Const.SCALE = 0.01;
                 }
+
+                if (e.getCode() == KeyCode.Z) {
+                    spaceship.maxThrottle();
+                }
+
+                if (e.getCode() == KeyCode.X) {
+                    spaceship.zeroThrottle();
+                }
+
+                if (e.getCode() == KeyCode.W || e.getCode() == KeyCode.SHIFT) {
+                    spaceship.setThrottleModifier(10);
+                }
+                else if (e.getCode() == KeyCode.S || e.getCode() == KeyCode.CONTROL) {
+                    spaceship.setThrottleModifier(-10);
+                }
+
+                // shift = w, ctrl = s, a, d
             });
+
+            SC.setOnKeyReleased(e-> {
+                if (e.getCode() == KeyCode.W || e.getCode() == KeyCode.SHIFT
+                    || e.getCode() == KeyCode.S || e.getCode() == KeyCode.CONTROL) {
+                    spaceship.setThrottleModifier(0);
+                }
+            });
+
             SC.setOnScroll(e -> {
                 double y = e.getDeltaY();
                 if (y > 0) {
