@@ -1,6 +1,6 @@
-package main_package;
+package utility;
 
-import javafx.scene.shape.Rectangle;
+import ship.SpaceshipComponent;
 
 public class Mount {
     public double getPositionX() {

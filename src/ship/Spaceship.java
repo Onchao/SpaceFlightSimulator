@@ -1,12 +1,11 @@
-package main_package;
+package ship;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
+import utility.Point;
 import world.CelestialBody;
 
 import java.util.ArrayList;

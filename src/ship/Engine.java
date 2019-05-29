@@ -1,4 +1,4 @@
-package main_package;
+package ship;
 
 public interface Engine {
     double getThrust();

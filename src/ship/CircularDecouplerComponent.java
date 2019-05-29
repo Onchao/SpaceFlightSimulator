@@ -1,23 +1,26 @@
-package main_package;
+package ship;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utility.Mount;
 
-public class AerodynamicNoseConeComponent extends SpaceshipComponent {
+public class CircularDecouplerComponent extends SpaceshipComponent {
     private ImageView img;
 
-    public AerodynamicNoseConeComponent() {
-        img = new ImageView(new Image("file:images/cone.png"));
-        super.lowerMount = new Mount(40, -20, 50, 200, Mount.Direction.LOWER, this);
+    public CircularDecouplerComponent() {
+        img = new ImageView(new Image("file:images/circularDec.png"));
+
+        super.lowerMount = new Mount(40, 140, 50, 200, Mount.Direction.LOWER, this);
+        super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
     }
 
     public static String getName() {
-        return "Aerodynamic Nose Cone";
+        return "Circular Decoupler";
     }
 
     @Override
     public int getHeight() {
-        return 200;
+        return 40;
     }
 
     @Override

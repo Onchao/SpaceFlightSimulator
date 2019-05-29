@@ -1,4 +1,4 @@
-package main_package;
+package utility;
 
 import javafx.scene.shape.Rectangle;
 

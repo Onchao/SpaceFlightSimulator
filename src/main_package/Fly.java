@@ -1,11 +1,12 @@
 package main_package;
 
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import ship.Spaceship;
+import utility.Const;
 import world.*;
 
 public class Fly implements CustomScene{
@@ -16,8 +17,6 @@ public class Fly implements CustomScene{
     //private Ship ship = new Ship(solarSystem.bodies.get(1), 0);
     Spaceship spaceship;
     Origin origin;
-
-
 
     Polygon polygon;
     Circle redCircle;
@@ -132,26 +131,5 @@ public class Fly implements CustomScene{
         else {
             spaceship.img.setVisible(false);
         }
-
-        /*
-        // PROTOTYPE SHIP
-        polygon.getPoints().clear();
-
-        double u = (ship.getAbsPos_x() - origin.getOrigin_x())/Const.SCALE;
-        double v = (ship.getAbsPos_y() - origin.getOrigin_y())/Const.SCALE;
-
-        polygon.getPoints().addAll(
-                400 + u + 20*Math.cos(Math.toRadians(ship.angleOnPlanet)),
-                400 + (v + 20*Math.sin(Math.toRadians(ship.angleOnPlanet)))*-1,
-                400 + u - 5*Math.cos(Math.toRadians(ship.angleOnPlanet + 90)),
-                400 + (v - 5*Math.sin(Math.toRadians(ship.angleOnPlanet + 90)))*-1,
-                400 + u + 5*Math.cos(Math.toRadians(ship.angleOnPlanet + 90)),
-                400 + (v + 5*Math.sin(Math.toRadians(ship.angleOnPlanet + 90)))*-1
-        );
-        redCircle.setCenterX(u+400);
-        redCircle.setCenterY(v+400);
-        redCircle.setRadius(4/Const.SCALE/1000);
-*/
-
     }
 }

@@ -1,25 +1,28 @@
-package main_package;
+package ship;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utility.Mount;
 
-public class CrewCapsuleComponent extends SpaceshipComponent {
+public class FuelTankComponent extends SpaceshipComponent {
     private ImageView img;
 
-    public CrewCapsuleComponent() {
-        img = new ImageView(new Image("file:images/capsule.png"));
+    public FuelTankComponent() {
+        img = new ImageView(new Image("file:images/tank.png"));
 
+        super.leftMount = new Mount(-20, 40, 200, 50, Mount.Direction.LEFT, this);
+        super.rightMount = new Mount(250, 40, 200, 50, Mount.Direction.RIGHT, this);
         super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
-        super.lowerMount = new Mount(40, 210, 50, 200, Mount.Direction.LOWER, this);
+        super.lowerMount = new Mount(40, 250, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {
-        return "Crew Capsule";
+        return "Fuel Tank";
     }
 
     @Override
     public int getHeight() {
-        return 160;
+        return 200;
     }
 
     @Override

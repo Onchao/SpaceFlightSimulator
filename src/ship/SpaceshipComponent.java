@@ -1,6 +1,8 @@
-package main_package;
+package ship;
 
 import javafx.scene.image.ImageView;
+import utility.Mount;
+import utility.Point;
 
 import java.util.ArrayList;
 import java.util.List;

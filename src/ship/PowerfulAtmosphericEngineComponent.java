@@ -1,7 +1,8 @@
-package main_package;
+package ship;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utility.Mount;
 
 public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;

@@ -1,4 +1,4 @@
-package main_package;
+package ship;
 
 import java.lang.reflect.InvocationTargetException;
 

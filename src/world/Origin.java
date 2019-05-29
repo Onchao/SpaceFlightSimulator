@@ -1,7 +1,7 @@
 package world;
 
 
-import main_package.Spaceship;
+import ship.Spaceship;
 
 import java.util.ArrayList;
 

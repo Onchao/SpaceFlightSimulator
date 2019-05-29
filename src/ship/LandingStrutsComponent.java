@@ -1,7 +1,9 @@
-package main_package;
+package ship;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utility.Direction;
+import utility.Mount;
 
 public class LandingStrutsComponent extends SpaceshipComponent {
     private ImageView img;
