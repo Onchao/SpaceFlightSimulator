@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
+import utility.Const;
 import utility.Point;
 import world.CelestialBody;
 import world.Time;
@@ -23,8 +24,8 @@ public class Spaceship {
     private CelestialBody parent;
     public CelestialBody getParent(){ return parent; }
     private Point origin;
-    private double rel_pos_x; // to parent [km]
-    private double rel_pos_y; // to parent [km]
+    private double rel_pos_x; // to parent [m]
+    private double rel_pos_y; // to parent [m]
     public double getAbsPos_x(){
         return parent.getAbsPos_x() + rel_pos_x;
     }
@@ -37,8 +38,8 @@ public class Spaceship {
     private boolean landed = true;
     private int throttle; // [0,100]
     private int throttleModifier;
-    private double vel_x; // to parent km/s
-    private double vel_y; // to parent km/s
+    private double vel_x; // to parent [m/s]
+    private double vel_y; // to parent [m/s]
 
     Rotate rotate = new Rotate();
 
@@ -94,6 +95,7 @@ public class Spaceship {
 
             updateAngleOnPlanet();
         }
+        setPrintScale();
     }
 
     //TODO: changeParent (artur)
@@ -108,7 +110,7 @@ public class Spaceship {
             return;
 
         double velocity = 2*parent.radius*Math.PI
-                /(parent.rotationPeriod*24*3600);
+                /(parent.rotationPeriod);
 
         vel_x = velocity * Math.cos(Math.toRadians(angleOnPlanet + 90));
         vel_y = velocity * Math.sin(Math.toRadians(angleOnPlanet + 90));
@@ -137,9 +139,9 @@ public class Spaceship {
         return drawable.getScaleX();
     }
 
-    public void setPrintScale(double scale) {
-        drawable.setScaleX(scale);
-        drawable.setScaleY(scale);
+    public void setPrintScale() {
+        drawable.setScaleX(Const.SCALE/50);
+        drawable.setScaleY(Const.SCALE/50);
     }
 
     public void setPrintPosition(double x, double y) {
@@ -288,7 +290,6 @@ public class Spaceship {
             angleOnPlanet = Math.toDegrees(
                     Math.tan((getAbsPos_y() - parent.getAbsPos_y())/
                             (getAbsPos_x() - parent.getAbsPos_x())));
-
         }
     }
 }

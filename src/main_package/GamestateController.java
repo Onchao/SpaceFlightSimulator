@@ -78,9 +78,9 @@ public class GamestateController {
 
                 if (e.getCode() == KeyCode.M) {
                     if(Const.SCALE < 0.1)
-                         Const.SCALE = 5000;
+                         Const.SCALE = 0.001;
                     else
-                        Const.SCALE = 0.01;
+                        Const.SCALE = 1000;
                 }
 
                 if (e.getCode() == KeyCode.Z) {
@@ -111,9 +111,9 @@ public class GamestateController {
             SC.setOnScroll(e -> {
                 double y = e.getDeltaY();
                 if (y > 0) {
-                    Const.SCALE*=0.9;
-                } else if (y<0){
                     Const.SCALE*=1.1;
+                } else if (y<0){
+                    Const.SCALE*=0.9;
                 }
                 System.out.println(Const.SCALE);
             });

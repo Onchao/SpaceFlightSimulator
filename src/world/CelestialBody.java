@@ -10,12 +10,12 @@ import static java.lang.StrictMath.exp;
 public class CelestialBody {
     public final String name;
     public final CelestialBody parent;
-    public final double orbitalRadius;   // km
-    public final double orbitalPeriod;   // d
-    public final double radius;          // km
-    public final double mass;            // kg
-    public final double rotationPeriod;  // d
-    double year1angle;      // deg
+    public final double orbitalRadius;   // [m]
+    public final double orbitalPeriod;   // [s]
+    public final double radius;          // [m]
+    public final double mass;            // [kg]
+    public final double rotationPeriod;  // [s]
+    double year1angle;                   // [deg]
     boolean atmExist;
     double A;
     double B;
@@ -40,11 +40,11 @@ public class CelestialBody {
                          ){
         this.name = name;
         this.parent = parent;
-        this.orbitalRadius = orbitalRadius;
-        this.orbitalPeriod = orbitalPeriod;
-        this.radius = radius;
+        this.orbitalRadius = orbitalRadius * 1000;
+        this.orbitalPeriod = orbitalPeriod * 24 * 3600;
+        this.radius = radius * 1000;
         this.mass = mass;
-        this.rotationPeriod = rotationPeriod;
+        this.rotationPeriod = rotationPeriod * 24 * 3600;
         this.year1angle = year1angle;
 
         this.atmExist = atmExist;
@@ -77,8 +77,8 @@ public class CelestialBody {
     public Point getRelPos(){
         if(parent == null)
             return new Point(0,0);
-        double orbits = Time.TIME/(orbitalPeriod*24*3600);
-        double anglePos = orbits*360+year1angle; // deg
+        double orbits = Time.TIME/orbitalPeriod;
+        double anglePos = orbits*360 + year1angle; // [deg]
         return new Point(Math.cos(Math.toRadians(anglePos))*orbitalRadius, Math.sin(Math.toRadians(anglePos))*orbitalRadius);
     }
 
@@ -108,7 +108,7 @@ public class CelestialBody {
 
     // relative to planet center
     public double getAngleDif(){
-        return 360 * Time.deltaTIME / rotationPeriod / 24 / 3600;
+        return 360 * Time.deltaTIME / rotationPeriod;
     }
 
     // relative to planet center
