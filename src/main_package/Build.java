@@ -113,7 +113,7 @@ public class Build implements CustomScene {
             }
         });
 
-        EventHandler<ActionEvent> eventFly = e -> GamestateController.changeScene(Gamestate.gs.FLY, builder.build());
+        EventHandler<ActionEvent> eventFly = e -> GamestateController.changeScene(Gamestate.gs.FLY, builder);
         flyButton.setOnAction(eventFly);
 
         spaceshipView.getChildren().add(base);

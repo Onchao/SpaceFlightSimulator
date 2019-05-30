@@ -6,6 +6,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ship.Spaceship;
+import ship.SpaceshipBuilder;
 import utility.Const;
 import world.*;
 
@@ -23,7 +24,7 @@ public class Fly implements CustomScene{
     Polygon flatPlanet;
 
 
-    Fly(Spaceship spaceship){
+    Fly(SpaceshipBuilder builder){
         root.setPrefSize(800, 800);
         background = new Rectangle(0,0,3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));
@@ -39,8 +40,8 @@ public class Fly implements CustomScene{
         flatPlanet.setFill(Color.LIME);
         root.getChildren().add(flatPlanet);
 
-        this.spaceship = spaceship;
-        spaceship.placeSpaceship(solarSystem.bodies.get(1), 0, solarSystem);
+        spaceship = builder.build(solarSystem.bodies.get(1), 0, solarSystem);
+        //spaceship.placeSpaceship();
         root.getChildren().add(spaceship.getDrawable());
         origin = new Origin(solarSystem.bodies, spaceship);
 
@@ -78,8 +79,8 @@ public class Fly implements CustomScene{
                 B.planet.setRadius(0);
             }
 
-            double u = (spaceship.getAbsPos_x() - origin.getOrigin_x() - spaceship.getDistToBottom()*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
-            double v = (spaceship.getAbsPos_y() - origin.getOrigin_y() - spaceship.getDistToBottom()*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            double u = (spaceship.getAbsPos().getX() - origin.getOrigin().getX() - spaceship.getDistToBottom()*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            double v = (spaceship.getAbsPos().getY() - origin.getOrigin().getY() - spaceship.getDistToBottom()*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
             flatPlanet.getPoints().addAll(
                     400 + u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
                     400 + (v - 6000*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet())))*-1,
@@ -91,11 +92,11 @@ public class Fly implements CustomScene{
         }
         else{
             for (CelestialBody B : solarSystem.bodies) {
-                double x = B.getAbsPos_x() * Scale.SCALE;
-                double y = B.getAbsPos_y() * Scale.SCALE;
+                double x = B.getAbsPos().getX() * Scale.SCALE;
+                double y = B.getAbsPos().getY() * Scale.SCALE;
 
-                x -= origin.getOrigin_x() * Scale.SCALE;
-                y -= origin.getOrigin_y() * Scale.SCALE;
+                x -= origin.getOrigin().getX() * Scale.SCALE;
+                y -= origin.getOrigin().getY() * Scale.SCALE;
 
                 y *= -1;
                 double rShade = Math.pow(B.radius * (Math.pow(Scale.SCALE, 0.3)), 1.0 / 4) * 2;
@@ -117,8 +118,8 @@ public class Fly implements CustomScene{
         }
 
         spaceship.update();
-        double u = (spaceship.getAbsPos_x() - origin.getOrigin_x()) * Scale.SCALE;
-        double v = (spaceship.getAbsPos_y() - origin.getOrigin_y()) * Scale.SCALE;
+        double u = (spaceship.getAbsPos().getX() - origin.getOrigin().getX()) * Scale.SCALE;
+        double v = (spaceship.getAbsPos().getY() - origin.getOrigin().getY()) * Scale.SCALE;
         spaceship.setPrintPosition(400 + u, 400 + -v);
 
         if(Scale.SCALE < 1){

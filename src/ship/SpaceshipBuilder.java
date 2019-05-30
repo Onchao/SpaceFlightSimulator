@@ -1,6 +1,8 @@
 package ship;
 
 import utility.Mount;
+import world.CelestialBody;
+import world.SolarSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +64,14 @@ public class SpaceshipBuilder {
         stages.get(c.getStageNumber()).add(c);
     }
 
-    public Spaceship build() {
+    public Spaceship spaceship;
+    public Spaceship build(CelestialBody parent, double angleOnPlanet,SolarSystem solarSystem) {
         //TODO: sanity checks
-        return new Spaceship(stages);
+        spaceship =  new Spaceship(stages, parent, angleOnPlanet, solarSystem);
+        return spaceship;
     }
+    public Spaceship getSpaceship(){
+        return spaceship;
+    }
+
 }

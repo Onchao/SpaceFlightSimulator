@@ -2,6 +2,7 @@ package world;
 
 
 import ship.Spaceship;
+import utility.Point;
 
 import java.util.ArrayList;
 
@@ -21,14 +22,9 @@ public class Origin {
         originSize = bodies.size() + 1;
     }
 
-    public double getOrigin_x(){
+    public Point getOrigin(){
         if(originIndex == 0)
-            return ship.getAbsPos_x();
-        return bodies.get(originIndex - 1).getAbsPos_x();
-    }
-    public double getOrigin_y(){
-        if(originIndex == 0)
-            return ship.getAbsPos_y();
-        return bodies.get(originIndex - 1).getAbsPos_y();
+            return ship.getAbsPos();
+        return bodies.get(originIndex - 1).getAbsPos();
     }
 }

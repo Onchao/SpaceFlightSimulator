@@ -27,7 +27,7 @@ public class GamestateController {
         timer.start();
     }
 
-    static void changeScene(Gamestate.gs newGS, Spaceship spaceship){
+    static void changeScene(Gamestate.gs newGS, SpaceshipBuilder builder){
         if(newGS == Gamestate.gs.MENU){
             Gamestate.setGamestateMENU();
             currentScene = new Menu();
@@ -57,8 +57,9 @@ public class GamestateController {
         else //if(newGS == Gamestate.gs.FLY)
         {
             Gamestate.setGamestateFLY();
-            currentScene = new Fly(spaceship);
+            currentScene = new Fly(builder);
             SC = new Scene(currentScene.getRoot());
+            Spaceship spaceship = builder.getSpaceship();
 
             SC.setOnKeyPressed(e -> {
                 if (e.getCode() == KeyCode.ADD || e.getCode() == KeyCode.EQUALS) {

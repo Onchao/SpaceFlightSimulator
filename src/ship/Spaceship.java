@@ -26,12 +26,11 @@ public class Spaceship {
     private Point origin;
     private double rel_pos_x; // to parent [m]
     private double rel_pos_y; // to parent [m]
-    public double getAbsPos_x(){
-        return parent.getAbsPos_x() + rel_pos_x;
+    public Point getAbsPos(){
+        return new Point(parent.getAbsPos().getX() + rel_pos_x,
+                parent.getAbsPos().getY() + rel_pos_y);
     }
-    public double getAbsPos_y(){
-        return parent.getAbsPos_y() + rel_pos_y;
-    }
+
     private double angleOnPlanet;
     public double getAngleOnPlanet(){
         return angleOnPlanet;
@@ -51,8 +50,8 @@ public class Spaceship {
     private double turnModifier = 0;
 
     public void info(){
-        System.out.println("pos_x: "  + getAbsPos_x());
-        System.out.println("pos_y: "  + getAbsPos_y());
+        System.out.println("pos_x: "  + getAbsPos().getX());
+        System.out.println("pos_y: "  + getAbsPos().getY());
         System.out.println("vel: " + Math.sqrt(vel_x*vel_x + vel_y*vel_y));
 
         System.out.println("gravity_x: "  + getGravityInfluence().getX());
@@ -70,7 +69,7 @@ public class Spaceship {
         return new Point(r*Math.cos(angle), r*Math.sin(angle));
     }
 
-    public Spaceship (List<List<SpaceshipComponent>> stages) {
+    public Spaceship (List<List<SpaceshipComponent>> stages, CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem) {
         this.stages = stages;
 
         drawable = new Group();
@@ -79,18 +78,24 @@ public class Spaceship {
                 drawable.getChildren().add(comp.getImage());
             }
         }
-        //origin = getCenterOfMass();
         origin =  new Point(drawable.getLayoutBounds().getCenterX(),drawable.getLayoutBounds().getCenterY());
-
         double minY = 1000000000.0; // almost infinity
-
         for (Point v : getVertices()) {
             if (v.getY() < minY) minY = v.getY();
         }
-
         distToBottom = Math.abs(minY);
+        System.out.println("distToBottom: " + distToBottom);
 
-        System.out.println(distToBottom);
+        this.parent = parent;
+        this.angleOnPlanet = angleOnPlanet;
+        this.solarSystem = solarSystem;
+
+        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
+        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
+
+        drawable.getTransforms().add(rotate);
+        img.getTransforms().add(rotate);
+        rotate.setAngle(-angleOnPlanet + 90);
     }
 
     //TODO: make it with respect to "rotate"
@@ -101,20 +106,6 @@ public class Spaceship {
         }
         distToBottom = Math.abs(minY);
         return distToBottom;
-    }
-    public void placeSpaceship(CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem){
-        this.solarSystem = solarSystem;
-        this.parent = parent;
-        this.angleOnPlanet = angleOnPlanet;
-        System.out.println("distToBottom: " + distToBottom);
-        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
-        //System.out.println(parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom));
-        //System.out.println(parent.getShipPosFromAngle_x(angleOnPlanet, 0));
-        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
-
-        drawable.getTransforms().add(rotate);
-        img.getTransforms().add(rotate);
-        rotate.setAngle(-angleOnPlanet + 90);
     }
 
     public void update(){
@@ -154,10 +145,10 @@ public class Spaceship {
         double x = 0;
         double y = 0;
         for (CelestialBody B : solarSystem.bodies) {
-            double r = B.getDistanceTo(getAbsPos_x(),getAbsPos_y());
+            double r = B.getDistanceTo(getAbsPos().getX(),getAbsPos().getY());
             double velocity = Const.G * B.mass * Time.deltaTIME / r/r;
-            double angle = Math.toDegrees(Math.atan2(getAbsPos_y() - B.getAbsPos_y(),
-                    getAbsPos_x() - B.getAbsPos_x()));
+            double angle = Math.toDegrees(Math.atan2(getAbsPos().getY() - B.getAbsPos().getY(),
+                    getAbsPos().getX() - B.getAbsPos().getX()));
             //if(B.name.equals("Earth")) System.out.println(angle);
             x -= velocity * Math.cos(Math.toRadians(angle));
             y -= velocity * Math.sin(Math.toRadians(angle));
@@ -255,9 +246,11 @@ public class Spaceship {
         rotate.setPivotY(y);
     }
 
+    /*
     public Point getPosition () {
         return origin;
     }
+    */
 
     public List<SpaceshipComponent> getStage (int i) {
         return Collections.unmodifiableList(stages.get(i));
@@ -375,6 +368,7 @@ public class Spaceship {
         return ret;
     }
 
+    //TODO: make this based on moment and time
     public void maxThrottle(){
         throttle = 100;
         setThrottleModifier(0);
@@ -411,15 +405,16 @@ public class Spaceship {
         }
         else{
             angleOnPlanet = Math.toDegrees(
-                    Math.atan2(getAbsPos_y() - parent.getAbsPos_y(),
-                            getAbsPos_x() - parent.getAbsPos_x()));
+                    Math.atan2(getAbsPos().getY() - parent.getAbsPos().getY(),
+                            getAbsPos().getX() - parent.getAbsPos().getX()));
         }
     }
 
+    //TODO: BUG HIGHLY ANTICIPATED !!!
     public void updateParent(){
         CelestialBody newParent = solarSystem.bodies.get(0);
         for (CelestialBody B : solarSystem.bodies) {
-            double dist = B.getDistanceTo(getAbsPos_x(), getAbsPos_y());
+            double dist = B.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
             if(dist < B.getEscapeRadius()){
                 newParent = B;
             }
@@ -430,7 +425,6 @@ public class Spaceship {
             vel_y += velocity.getY();
             rel_pos_x = rel_pos_x + parent.getRelPos().getX();
             rel_pos_y = rel_pos_y + parent.getRelPos().getY();
-
 
             parent = newParent;
             System.out.println("NEW PARENT: " + parent.name);

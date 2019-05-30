@@ -96,22 +96,6 @@ public class CelestialBody {
         return orbits*360 + year1angle; // [deg]
     }
 
-    public double getAbsPos_x(){
-        if(parent == null)
-            return 0;
-        Point relative = getRelPos();
-        Point parentPos = parent.getAbsPos();
-        return relative.getX() + parentPos.getX();
-    }
-
-    public double getAbsPos_y(){
-        if(parent == null)
-            return 0;
-        Point relative = getRelPos();
-        Point parentPos = parent.getAbsPos();
-        return relative.getY() + parentPos.getY();
-    }
-
     // relative to planet center
     public double getAngleDif(){
         return 360 * Time.deltaTIME / rotationPeriod;
@@ -133,7 +117,7 @@ public class CelestialBody {
                 /(parent.orbitalPeriod);
         double vel_x = velocity * Math.cos(Math.toRadians(getOrbitalAngle() + 90));
         double vel_y = velocity * Math.sin(Math.toRadians(getOrbitalAngle() + 90));
-        return new Point(0,0);
+        return new Point(vel_x,vel_y);
     }
 
     public double getEscapeRadius(){
@@ -143,7 +127,7 @@ public class CelestialBody {
     }
 
     public double getDistanceTo(double x, double y){
-        return Math.sqrt((getAbsPos_x()-x)*(getAbsPos_x()-x) + (getAbsPos_y()-y)*(getAbsPos_y()-y));
+        return Math.sqrt((getAbsPos().getX()-x) * (getAbsPos().getX()-x) + (getAbsPos().getY()-y) * (getAbsPos().getY()-y));
     }
 }
 
