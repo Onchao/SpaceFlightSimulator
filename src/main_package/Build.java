@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
@@ -25,6 +26,7 @@ public class Build implements CustomScene {
     private Pane root = new Pane();
     private ScrollPane scroller = new ScrollPane();
     private ListView<SpaceshipComponentFactory> componentList;
+    private Label componentDesc;
 
     private int nextComponentPosition;
     private Rectangle nextComponent;
@@ -58,6 +60,11 @@ public class Build implements CustomScene {
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
+        componentDesc = new Label();
+        componentDesc.setText("");
+        componentDesc.setLayoutX(610);
+        componentDesc.setLayoutY(400);
+
         componentList = new ListView<>();
         componentList.setItems(availableComponents);
 
@@ -65,7 +72,7 @@ public class Build implements CustomScene {
 
         root.setPrefSize(850, 850);
         nextComponentPosition = 800;
-        root.getChildren().add(componentList);
+        root.getChildren().addAll(componentList, componentDesc);
 
         Button flyButton = new Button("Let's fly!");
         // TODO: event handler for this one
@@ -84,37 +91,29 @@ public class Build implements CustomScene {
         nextComponent.setLayoutX(150);
         nextComponent.setLayoutY(nextComponentPosition - nextComponent.getHeight());
 
-        componentList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                ArrayList<Node> toRemove = new ArrayList<>();
-                for (Node n : spaceshipView.getChildren()) {
-                    if (n instanceof MountImg) {
-                        toRemove.add(n);
-                    }
+        componentList.setOnMouseClicked(mouseEvent -> {
+            ArrayList<Node> toRemove = new ArrayList<>();
+            for (Node n : spaceshipView.getChildren()) {
+                if (n instanceof MountImg) {
+                    toRemove.add(n);
                 }
-                spaceshipView.getChildren().removeAll(toRemove.toArray(new Node[toRemove.size()]));
+            }
+            spaceshipView.getChildren().removeAll(toRemove.toArray(new Node[toRemove.size()]));
 
-                SpaceshipComponentFactory factory = componentList.getSelectionModel().getSelectedItem();
-                System.out.println("Selected " + factory);
+            SpaceshipComponentFactory factory = componentList.getSelectionModel().getSelectedItem();
+            System.out.println("Selected " + factory);
 
-                List<Mount> possibleMountPoints = builder.getMountPoints(factory);
+            List<Mount> possibleMountPoints = builder.getMountPoints(factory);
 
-                for (Mount m : possibleMountPoints) {
-                    MountImg img = getMountPointImg(m);
-                    spaceshipView.getChildren().add(0, img);
+            for (Mount m : possibleMountPoints) {
+                MountImg img = getMountPointImg(m);
+                spaceshipView.getChildren().add(0, img);
 
-                    img.setOnMouseClicked(new MountClickHandler(spaceshipView, builder, factory, m));
-                }
+                img.setOnMouseClicked(new MountClickHandler(spaceshipView, componentDesc, builder, factory, m));
             }
         });
 
-        EventHandler<ActionEvent> eventFly = new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                GamestateController.changeScene(Gamestate.gs.FLY, builder.build());
-            }
-        };
+        EventHandler<ActionEvent> eventFly = e -> GamestateController.changeScene(Gamestate.gs.FLY, builder.build());
         flyButton.setOnAction(eventFly);
 
         spaceshipView.getChildren().add(base);
@@ -134,12 +133,14 @@ public class Build implements CustomScene {
         SpaceshipComponentFactory chosenComponentF;
         Mount myMount;
         Pane spaceshipView;
+        Label componentDesc;
         SpaceshipBuilder builder;
 
-        public MountClickHandler(Pane p, SpaceshipBuilder b, SpaceshipComponentFactory factory, Mount m) {
+        public MountClickHandler(Pane p, Label l, SpaceshipBuilder b, SpaceshipComponentFactory factory, Mount m) {
             chosenComponentF = factory;
             myMount = m;
             spaceshipView = p;
+            componentDesc = l;
             builder = b;
         }
 
@@ -173,6 +174,11 @@ public class Build implements CustomScene {
             ImageView componentImage = chosenComponent.getImage();
             positionComponent(chosenComponent, componentImage);
             spaceshipView.getChildren().add(componentImage);
+
+            final SpaceshipComponent chosenComponentCpy = chosenComponent;
+
+            componentImage.setOnMouseClicked(mouseEvent -> componentDesc.setText(chosenComponentCpy.getDescription()));
+            componentDesc.setText(chosenComponent.getDescription());
 
             shiftView(chosenComponent);
 
@@ -213,7 +219,8 @@ public class Build implements CustomScene {
                 }
             }
 
-            if (myMount.getPositionX() - chosenComponent.getWidth() <= 10) {
+            if ((myMount.getDirection() == Mount.Direction.RIGHT || myMount.getDirection() == Mount.Direction.LEFT)
+                    && myMount.getPositionX() - chosenComponent.getWidth() - myMount.getWidth() <= 10) {
                 for (Node n : spaceshipView.getChildren()) {
                     n.setLayoutX(n.getLayoutX() + chosenComponent.getWidth());
                 }
