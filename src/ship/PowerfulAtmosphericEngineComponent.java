@@ -7,7 +7,7 @@ import utility.Mount;
 public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;
 
-    private double maxThrust = 8000.0*1000*1000; // N;
+    private double maxThrust = 20000.0*1000; // N;
 
     public PowerfulAtmosphericEngineComponent() {
         img = new ImageView(new Image("file:images/atmEngine.png"));

@@ -7,7 +7,7 @@ import utility.Mount;
 public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;
 
-    private double maxThrust = 1000.0*1000*1000;
+    private double maxThrust = 6000.0*1000;
 
     public HighEfficiencyVaccumEngineComponent() {
         img = new ImageView(new Image("file:images/vacEngine.png"));

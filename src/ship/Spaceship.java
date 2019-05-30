@@ -36,7 +36,6 @@ public class Spaceship {
     public double getAngleOnPlanet(){
         return angleOnPlanet;
     }
-    //TODO: change to distance to center of planet
     private double distToBottom;
 
     private SolarSystem solarSystem;
@@ -48,14 +47,17 @@ public class Spaceship {
     private double vel_x; // to parent [m/s]
     private double vel_y; // to parent [m/s]
 
-    Rotate rotate = new Rotate();
+    private Rotate rotate = new Rotate();
+    private double turnModifier = 0;
 
     public void info(){
         System.out.println("pos_x: "  + getAbsPos_x());
         System.out.println("pos_y: "  + getAbsPos_y());
         System.out.println("vel: " + Math.sqrt(vel_x*vel_x + vel_y*vel_y));
+
         System.out.println("gravity_x: "  + getGravityInfluence().getX());
         System.out.println("gravity_y: "  + getGravityInfluence().getY());
+        System.out.println(throttle + " / 100");
     }
 
     private Point convertCoordinates(Point point) {
@@ -91,6 +93,15 @@ public class Spaceship {
         System.out.println(distToBottom);
     }
 
+    //TODO: make it with respect to "rotate"
+    private double calculateDistToBottom(){
+        double minY = 1000000000.0; // almost infinity
+        for (Point v : getVertices()) {
+            if (v.getY() < minY) minY = v.getY();
+        }
+        distToBottom = Math.abs(minY);
+        return distToBottom;
+    }
     public void placeSpaceship(CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem){
         this.solarSystem = solarSystem;
         this.parent = parent;
@@ -118,15 +129,23 @@ public class Spaceship {
             rotate.setAngle(-angleOnPlanet + 90);
         }
         else{
+            updateTurn();
+
             Point gravityVel = getGravityInfluence();
-            vel_x += gravityVel.getX();
-            vel_y += gravityVel.getY();
+            Point engineVel = getEngineInfluence();
+            Point aeroVel = genAeroInfluence();
+
+            vel_x += (gravityVel.getX() + engineVel.getX() + aeroVel.getX());
+            vel_y += (gravityVel.getY() + engineVel.getY() + aeroVel.getY());
             rel_pos_x = rel_pos_x + vel_x* Time.deltaTIME;
             rel_pos_y = rel_pos_y + vel_y* Time.deltaTIME;
-
             updateAngleOnPlanet();
             updateParent();
             distToBottom = Math.sqrt(rel_pos_x*rel_pos_x + rel_pos_y*rel_pos_y) - parent.radius;
+
+            //detect collisions
+            if(distToBottom < 0)
+                attemptLanding();
         }
         setPrintScale();
     }
@@ -146,6 +165,24 @@ public class Spaceship {
         return new Point(x, y);
     }
 
+    private Point getEngineInfluence(){ // [m/s]
+        double Fx = Math.cos(Math.toRadians(-rotate.getAngle() + 90)) * getTotalThrust();
+        double Fy = Math.sin(Math.toRadians(-rotate.getAngle() + 90)) * getTotalThrust();
+        return new Point(Fx*Time.deltaTIME/getTotalMass(), Fy*Time.deltaTIME/getTotalMass());
+    }
+
+    private Point genAeroInfluence() {
+        double Dx = 0;
+        double Dy = 0;
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                Dx-=(0.5*0.75*parent.getAtmDensity(distToBottom)*4*Math.PI*vel_x*vel_x);
+                Dx-=(0.5*0.75*parent.getAtmDensity(distToBottom)*4*Math.PI*vel_y*vel_y);
+            }
+        }
+        return new Point(Dx*Time.deltaTIME/getTotalMass(), Dy*Time.deltaTIME/getTotalMass());
+    }
+
     void attemptLiftOff(){
         System.out.println("LIFT OFF");
 
@@ -159,10 +196,27 @@ public class Spaceship {
         landed = false;
     }
 
-    //TODO: attemptLanding (artur)
     void attemptLanding(){
-        // if (stable time > cos)
-        // SET DIST TO BOTTOM !!!!!!!!!!!!!
+        Point v =  parent.getPlanetVelocity();
+        double delta_x = v.getX() - vel_x;
+        double delta_y = v.getY() - vel_y;
+        double velocity = Math.sqrt(delta_x*delta_x + delta_y*delta_y);
+        if(velocity > 10){
+            System.out.println("CRASH !!!");
+        }
+        else{
+            System.out.println("LANDED SUCCESSFULLY !!!");
+        }
+        vel_x = 0;
+        vel_y = 0;
+        distToBottom = calculateDistToBottom();
+        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
+        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
+
+        landed = true;
+
+        //TODO: reset only radial velocity and calculate prograde on friciton force
+        // if (stable time > cos) ---> LANDED
     }
 
     private boolean enginesPresent(){
@@ -187,8 +241,9 @@ public class Spaceship {
         double dy = (y - origin.getY());
 
         origin = new Point(x, y);
+        //TODO: make it better
         img.setX(x - 25);
-        img.setY(y - 25);
+        img.setY(y - 46);
 
         for (List<SpaceshipComponent> stage : stages) {
             for (SpaceshipComponent comp : stage) {
@@ -339,6 +394,14 @@ public class Spaceship {
             else if(throttle > 100)
                 throttle = 100;
         }
+    }
+
+    public void setTurnModifier(double angle){
+        turnModifier = angle;
+    }
+    private void updateTurn(){
+        if(turnModifier != 0)
+            rotate.setAngle(rotate.getAngle() + turnModifier);
     }
 
     private void updateAngleOnPlanet(){

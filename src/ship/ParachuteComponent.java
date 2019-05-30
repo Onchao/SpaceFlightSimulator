@@ -29,7 +29,7 @@ public class ParachuteComponent extends SpaceshipComponent {
 
     @Override
     public int getMass() {
-        return 4000;
+        return 2000;
     }
 
     @Override

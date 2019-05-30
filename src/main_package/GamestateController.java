@@ -88,23 +88,33 @@ public class GamestateController {
                 }
 
                 if (e.getCode() == KeyCode.W || e.getCode() == KeyCode.SHIFT) {
-                    spaceship.setThrottleModifier(10);
+                    spaceship.setThrottleModifier(1);
                 }
                 else if (e.getCode() == KeyCode.S || e.getCode() == KeyCode.CONTROL) {
-                    spaceship.setThrottleModifier(-10);
+                    spaceship.setThrottleModifier(-1);
+                }
+
+                if (e.getCode() == KeyCode.A) {
+                    spaceship.setTurnModifier(-1);
+                }
+                else if (e.getCode() == KeyCode.D) {
+                    spaceship.setTurnModifier(1);
                 }
 
                 // INFO
                 if (e.getCode() == KeyCode.I) {
                     spaceship.info();
                 }
-
             });
 
             SC.setOnKeyReleased(e-> {
                 if (e.getCode() == KeyCode.W || e.getCode() == KeyCode.SHIFT
                     || e.getCode() == KeyCode.S || e.getCode() == KeyCode.CONTROL) {
                     spaceship.setThrottleModifier(0);
+                }
+
+                if (e.getCode() == KeyCode.A || e.getCode() == KeyCode.D) {
+                    spaceship.setTurnModifier(0);
                 }
             });
 

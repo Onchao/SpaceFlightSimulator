@@ -20,7 +20,7 @@ public class CelestialBody {
     boolean atmExist;
     double A;
     double B;
-    double atmDensity(double height){
+    public double getAtmDensity(double height){
         return A*exp(B*height);
     }
     public Circle planet;
