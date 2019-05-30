@@ -7,8 +7,7 @@ import utility.Mount;
 public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;
 
-    private double thrust = 8000*1000; // N
-    private double maxThrust;
+    private double maxThrust = 8000.0*1000*1000; // N;
 
     public PowerfulAtmosphericEngineComponent() {
         img = new ImageView(new Image("file:images/atmEngine.png"));
@@ -48,7 +47,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     @Override
     public double getThrust() {
-        return thrust;
+        return maxThrust;
     }
 
     @Override
@@ -58,7 +57,6 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     @Override
     public void setThrust(double val) {
-        if (val > maxThrust) val = maxThrust;
-        thrust = val;
+        maxThrust = val;
     }
 }

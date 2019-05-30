@@ -118,14 +118,14 @@ public class CelestialBody {
     }
 
     // relative to planet center
-    public Point getShipPosFromAngle(double angle){
-        return new Point(radius*Math.cos(Math.toRadians(angle)), radius*Math.sin(Math.toRadians(angle)));
+    public Point getShipPosFromAngle(double angle, double distToBottom){
+        return new Point((radius+distToBottom)*Math.cos(Math.toRadians(angle)), radius*Math.sin(Math.toRadians(angle)));
     }
-    public double getShipPosFromAngle_x(double angle){
-        return radius*Math.cos(Math.toRadians(angle));
+    public double getShipPosFromAngle_x(double angle, double distToBottom){
+        return (radius+distToBottom)*Math.cos(Math.toRadians(angle));
     }
-    public double getShipPosFromAngle_y(double angle){
-        return radius*Math.sin(Math.toRadians(angle));
+    public double getShipPosFromAngle_y(double angle, double distToBottom){
+        return (radius+distToBottom)*Math.sin(Math.toRadians(angle));
     }
 
     public Point getPlanetVelocity(){

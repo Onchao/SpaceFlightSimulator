@@ -17,7 +17,6 @@ import java.util.List;
 public class Spaceship {
     private List<List<SpaceshipComponent>> stages;
     private Group drawable;
-    private double distToBottom;
     public Node getDrawable(){ return drawable; }
     public ImageView img = new ImageView(new Image("file:images/smallRocket.png"));
 
@@ -37,6 +36,8 @@ public class Spaceship {
     public double getAngleOnPlanet(){
         return angleOnPlanet;
     }
+    //TODO: change to distance to center of planet
+    private double distToBottom;
 
     private SolarSystem solarSystem;
 
@@ -94,8 +95,11 @@ public class Spaceship {
         this.solarSystem = solarSystem;
         this.parent = parent;
         this.angleOnPlanet = angleOnPlanet;
-        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
-        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet);
+        System.out.println("distToBottom: " + distToBottom);
+        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
+        //System.out.println(parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom));
+        //System.out.println(parent.getShipPosFromAngle_x(angleOnPlanet, 0));
+        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
 
         drawable.getTransforms().add(rotate);
         img.getTransforms().add(rotate);
@@ -109,8 +113,8 @@ public class Spaceship {
 
         if(landed){
             updateAngleOnPlanet();
-            rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet);
-            rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet);
+            rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
+            rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
             rotate.setAngle(-angleOnPlanet + 90);
         }
         else{
@@ -122,6 +126,7 @@ public class Spaceship {
 
             updateAngleOnPlanet();
             updateParent();
+            distToBottom = Math.sqrt(rel_pos_x*rel_pos_x + rel_pos_y*rel_pos_y) - parent.radius;
         }
         setPrintScale();
     }
@@ -157,6 +162,7 @@ public class Spaceship {
     //TODO: attemptLanding (artur)
     void attemptLanding(){
         // if (stable time > cos)
+        // SET DIST TO BOTTOM !!!!!!!!!!!!!
     }
 
     private boolean enginesPresent(){
@@ -202,8 +208,8 @@ public class Spaceship {
         return Collections.unmodifiableList(stages.get(i));
     }
 
-    public int getStageMass (int i) {
-        int ret = 0;
+    public long getStageMass (int i) {
+        long ret = 0;
 
         List<SpaceshipComponent> curStage = stages.get(i);
 
@@ -211,6 +217,15 @@ public class Spaceship {
             ret += comp.getMass();
         }
 
+        return ret;
+    }
+
+    public long getTotalMass(){
+        long ret = 0;
+        for (int j = 0; j < stages.size(); ++ j) {
+            long smass = getStageMass(j);
+            ret += smass;
+        }
         return ret;
     }
 
@@ -240,7 +255,7 @@ public class Spaceship {
 
         for (int j = 0; j < stages.size(); ++ j) {
             Point scom = getStageCenterOfMass(j);
-            int smass = getStageMass(j);
+            long smass = getStageMass(j);
 
             xs += scom.getX() * smass;
             ys += scom.getY() * smass;
@@ -266,6 +281,19 @@ public class Spaceship {
         }
 
         return convertCoordinates(new Point(xs/d, ys/d));
+    }
+
+    public double getTotalThrust () {
+        double d = 0;
+
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                if (comp instanceof Engine) {
+                    d += ((Engine) comp).getThrust();
+                }
+            }
+        }
+        return d * throttle / 100;
     }
 
     public double getMomentOfInertia () {

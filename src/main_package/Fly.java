@@ -78,8 +78,8 @@ public class Fly implements CustomScene{
                 B.planet.setRadius(0);
             }
 
-            double u = (spaceship.getAbsPos_x() - origin.getOrigin_x()) * Scale.SCALE;
-            double v = (spaceship.getAbsPos_y() - origin.getOrigin_y()) * Scale.SCALE;
+            double u = (spaceship.getAbsPos_x() - origin.getOrigin_x() - spaceship.getDistToBottom()*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            double v = (spaceship.getAbsPos_y() - origin.getOrigin_y() - spaceship.getDistToBottom()*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
             flatPlanet.getPoints().addAll(
                     400 + u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
                     400 + (v - 6000*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet())))*-1,

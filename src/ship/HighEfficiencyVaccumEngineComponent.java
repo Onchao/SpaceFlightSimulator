@@ -7,8 +7,7 @@ import utility.Mount;
 public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent implements Engine {
     private ImageView img;
 
-    private double thrust = 0;
-    private double maxThrust = 1;
+    private double maxThrust = 1000.0*1000*1000;
 
     public HighEfficiencyVaccumEngineComponent() {
         img = new ImageView(new Image("file:images/vacEngine.png"));
@@ -48,7 +47,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public double getThrust() {
-        return thrust;
+        return maxThrust;
     }
 
     @Override
@@ -58,8 +57,6 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public void setThrust(double val) {
-        if (val > maxThrust)
-            val = maxThrust;
-        thrust = val;
+        maxThrust = val;
     }
 }
