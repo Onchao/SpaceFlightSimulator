@@ -1,6 +1,5 @@
 package world;
 
-import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import utility.Point;
@@ -113,8 +112,9 @@ public class CelestialBody {
     }
 
     public Point getPlanetVelocity(){
-        double velocity = 2*parent.orbitalRadius*Math.PI
-                /(parent.orbitalPeriod);
+        System.out.println("wow " + orbitalRadius);
+        double velocity = 2*orbitalRadius*Math.PI/(orbitalPeriod);
+        System.out.println(velocity);
         double vel_x = velocity * Math.cos(Math.toRadians(getOrbitalAngle() + 90));
         double vel_y = velocity * Math.sin(Math.toRadians(getOrbitalAngle() + 90));
         return new Point(vel_x,vel_y);
@@ -123,7 +123,7 @@ public class CelestialBody {
     public double getEscapeRadius(){
         if(parent == null)
             return MAX_VALUE;
-        return 20*radius;
+        return mass/(6e+24)*1e+9;
     }
 
     public double getDistanceTo(double x, double y){

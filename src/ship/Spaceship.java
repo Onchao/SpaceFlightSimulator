@@ -1,6 +1,5 @@
 package ship;
 
-import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -8,7 +7,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import utility.Const;
 import utility.Point;
-import world.*;
+import world.CelestialBody;
+import world.Scale;
+import world.SolarSystem;
+import world.Time;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -410,7 +412,6 @@ public class Spaceship {
         }
     }
 
-    //TODO: BUG HIGHLY ANTICIPATED !!!
     public void updateParent(){
         CelestialBody newParent = solarSystem.bodies.get(0);
         for (CelestialBody B : solarSystem.bodies) {
@@ -420,14 +421,33 @@ public class Spaceship {
             }
         }
         if(newParent != parent){
-            Point velocity = parent.getPlanetVelocity();
-            vel_x += velocity.getX();
-            vel_y += velocity.getY();
-            rel_pos_x = rel_pos_x + parent.getRelPos().getX();
-            rel_pos_y = rel_pos_y + parent.getRelPos().getY();
+            if(parent.parent == newParent ){ // earth.parent-> sun  == sun?
+                System.out.println("OUT");
+                Point velocity = parent.getPlanetVelocity();
+                System.out.println(velocity.getX());
+                System.out.println(velocity.getY());
+                vel_x += velocity.getX();
+                vel_y += velocity.getY();
+                rel_pos_x = rel_pos_x + parent.getRelPos().getX();
+                rel_pos_y = rel_pos_y + parent.getRelPos().getY();
 
-            parent = newParent;
-            System.out.println("NEW PARENT: " + parent.name);
+                parent = newParent;
+                System.out.println("NEW PARENT: " + parent.name);
+            }
+            else{
+                System.out.println("IN");
+                Point velocity = parent.getPlanetVelocity();
+                System.out.println(velocity.getX());
+                System.out.println(velocity.getY());
+                vel_x += velocity.getX();
+                vel_y += velocity.getY();
+                rel_pos_x = rel_pos_x - newParent.getRelPos().getX();
+                rel_pos_y = rel_pos_y - newParent.getRelPos().getY();
+
+                parent = newParent;
+                System.out.println("NEW PARENT: " + parent.name);
+            }
+            System.out.println();
         }
     }
 

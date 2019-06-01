@@ -7,7 +7,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ship.Spaceship;
 import ship.SpaceshipBuilder;
-import utility.Const;
 import world.*;
 
 public class Fly implements CustomScene{

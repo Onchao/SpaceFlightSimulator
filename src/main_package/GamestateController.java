@@ -7,16 +7,17 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import ship.*;
-import utility.Const;
-import world.*;
+import world.Origin;
+import world.Scale;
+import world.Time;
 
 public class GamestateController {
     static Stage stage;
     static CustomScene currentScene;
     static Scene SC;
 
-    GamestateController(Stage stage){
-        this.stage = stage;
+    public static void setup(Stage stage){
+        GamestateController.stage = stage;
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -26,6 +27,7 @@ public class GamestateController {
         };
         timer.start();
     }
+
 
     static void changeScene(Gamestate.gs newGS, SpaceshipBuilder builder){
         if(newGS == Gamestate.gs.MENU){
@@ -122,8 +124,7 @@ public class GamestateController {
             SC.setOnScroll(e -> {
                 double y = e.getDeltaY();
                 Scale.zoom(y);
-
-                System.out.println(Scale.SCALE);
+                //System.out.println(Scale.SCALE);
             });
 
             stage.setScene(SC);

@@ -21,8 +21,8 @@ public class Main extends Application {
     public Stage pubStage;
     @Override
     public void start(Stage stage) throws Exception {
-        GamestateController GC = new GamestateController(stage);
-        GC.changeScene(Gamestate.gs.MENU, null);
+        GamestateController.setup(stage);
+        GamestateController.changeScene(Gamestate.gs.MENU, null);
     }
 
     public static void main(String[] args) {
