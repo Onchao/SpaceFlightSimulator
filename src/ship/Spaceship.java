@@ -6,11 +6,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
 import utility.Const;
+import utility.Force;
 import utility.Point;
-import world.CelestialBody;
-import world.Scale;
-import world.SolarSystem;
-import world.Time;
+import world.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,9 +16,15 @@ import java.util.List;
 
 public class Spaceship {
     private List<List<SpaceshipComponent>> stages;
+    public List<List<SpaceshipComponent>> getStages(){
+        return stages;
+    }
+
     private Group drawable;
     public Node getDrawable(){ return drawable; }
     public ImageView img = new ImageView(new Image("file:images/smallRocket.png"));
+    private ForceInfluence forceInfluence;
+
 
     // where is it?
     private CelestialBody parent;
@@ -46,9 +50,19 @@ public class Spaceship {
     private int throttle; // [0,100]
     private int throttleModifier;
     private double vel_x; // to parent [m/s]
+    public double getVel_x(){
+        return vel_x;
+    }
     private double vel_y; // to parent [m/s]
+    public double getVel_y(){
+        return vel_y;
+    }
+
 
     private Rotate rotate = new Rotate();
+    public Rotate getRotate(){
+        return rotate;
+    }
     private double turnModifier = 0;
 
     public void info(){
@@ -56,8 +70,8 @@ public class Spaceship {
         System.out.println("pos_y: "  + getAbsPos().getY());
         System.out.println("vel: " + Math.sqrt(vel_x*vel_x + vel_y*vel_y));
 
-        System.out.println("gravity_x: "  + getGravityInfluence().getX());
-        System.out.println("gravity_y: "  + getGravityInfluence().getY());
+        //System.out.println("gravity_x: "  + getGravityInfluence().getX());
+        //System.out.println("gravity_y: "  + getGravityInfluence().getY());
         System.out.println(throttle + " / 100");
     }
 
@@ -88,6 +102,7 @@ public class Spaceship {
         distToBottom = Math.abs(minY);
         System.out.println("distToBottom: " + distToBottom);
 
+        forceInfluence = new ForceInfluence(this, solarSystem);
         this.parent = parent;
         this.angleOnPlanet = angleOnPlanet;
         this.solarSystem = solarSystem;
@@ -123,15 +138,13 @@ public class Spaceship {
         }
         else{
             updateTurn();
-
-            Point gravityVel = getGravityInfluence();
-            Point engineVel = getEngineInfluence();
-            Point aeroVel = genAeroInfluence();
-
-            vel_x += (gravityVel.getX() + engineVel.getX() + aeroVel.getX());
-            vel_y += (gravityVel.getY() + engineVel.getY() + aeroVel.getY());
+            Force F = forceInfluence.getCombinedForces();
+            //TODO: add momentum
+            vel_x += F.getFx()*Time.deltaTIME/getTotalMass();
+            vel_y += F.getFy()*Time.deltaTIME/getTotalMass();
             rel_pos_x = rel_pos_x + vel_x* Time.deltaTIME;
             rel_pos_y = rel_pos_y + vel_y* Time.deltaTIME;
+
             updateAngleOnPlanet();
             updateParent();
             distToBottom = Math.sqrt(rel_pos_x*rel_pos_x + rel_pos_y*rel_pos_y) - parent.radius;
@@ -143,38 +156,7 @@ public class Spaceship {
         setPrintScale();
     }
 
-    private Point getGravityInfluence(){ // [m/s]
-        double x = 0;
-        double y = 0;
-        for (CelestialBody B : solarSystem.bodies) {
-            double r = B.getDistanceTo(getAbsPos().getX(),getAbsPos().getY());
-            double velocity = Const.G * B.mass * Time.deltaTIME / r/r;
-            double angle = Math.toDegrees(Math.atan2(getAbsPos().getY() - B.getAbsPos().getY(),
-                    getAbsPos().getX() - B.getAbsPos().getX()));
-            //if(B.name.equals("Earth")) System.out.println(angle);
-            x -= velocity * Math.cos(Math.toRadians(angle));
-            y -= velocity * Math.sin(Math.toRadians(angle));
-        }
-        return new Point(x, y);
-    }
 
-    private Point getEngineInfluence(){ // [m/s]
-        double Fx = Math.cos(Math.toRadians(-rotate.getAngle() + 90)) * getTotalThrust();
-        double Fy = Math.sin(Math.toRadians(-rotate.getAngle() + 90)) * getTotalThrust();
-        return new Point(Fx*Time.deltaTIME/getTotalMass(), Fy*Time.deltaTIME/getTotalMass());
-    }
-
-    private Point genAeroInfluence() {
-        double Dx = 0;
-        double Dy = 0;
-        for (List<SpaceshipComponent> stage : stages) {
-            for (SpaceshipComponent comp : stage) {
-                Dx-=(0.5*0.75*parent.getAtmDensity(distToBottom)*4*Math.PI*vel_x*vel_x);
-                Dx-=(0.5*0.75*parent.getAtmDensity(distToBottom)*4*Math.PI*vel_y*vel_y);
-            }
-        }
-        return new Point(Dx*Time.deltaTIME/getTotalMass(), Dy*Time.deltaTIME/getTotalMass());
-    }
 
     void attemptLiftOff(){
         System.out.println("LIFT OFF");
@@ -421,33 +403,19 @@ public class Spaceship {
             }
         }
         if(newParent != parent){
+            Point velocity = parent.getPlanetVelocity();
+            vel_x += velocity.getX();
+            vel_y += velocity.getY();
             if(parent.parent == newParent ){ // earth.parent-> sun  == sun?
-                System.out.println("OUT");
-                Point velocity = parent.getPlanetVelocity();
-                System.out.println(velocity.getX());
-                System.out.println(velocity.getY());
-                vel_x += velocity.getX();
-                vel_y += velocity.getY();
                 rel_pos_x = rel_pos_x + parent.getRelPos().getX();
                 rel_pos_y = rel_pos_y + parent.getRelPos().getY();
-
-                parent = newParent;
-                System.out.println("NEW PARENT: " + parent.name);
             }
             else{
-                System.out.println("IN");
-                Point velocity = parent.getPlanetVelocity();
-                System.out.println(velocity.getX());
-                System.out.println(velocity.getY());
-                vel_x += velocity.getX();
-                vel_y += velocity.getY();
                 rel_pos_x = rel_pos_x - newParent.getRelPos().getX();
                 rel_pos_y = rel_pos_y - newParent.getRelPos().getY();
-
-                parent = newParent;
-                System.out.println("NEW PARENT: " + parent.name);
             }
-            System.out.println();
+            parent = newParent;
+            System.out.println("NEW PARENT: " + parent.name);
         }
     }
 
