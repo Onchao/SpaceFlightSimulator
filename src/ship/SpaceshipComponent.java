@@ -18,6 +18,7 @@ public abstract class SpaceshipComponent {
     public abstract int getHeight();
     public abstract int getWidth();
     public abstract int getMass();
+    public abstract double getDragCoefficient();
 
     public Mount getUpperMount() {
         return upperMount;

@@ -59,4 +59,9 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     public void setThrust(double val) {
         maxThrust = val;
     }
+
+    @Override
+    public double getDragCoefficient() {
+        return 1.0;
+    }
 }

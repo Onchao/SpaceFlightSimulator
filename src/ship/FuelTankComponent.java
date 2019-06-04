@@ -45,4 +45,9 @@ public class FuelTankComponent extends SpaceshipComponent {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public double getDragCoefficient() {
+        return 1.0;
+    }
 }

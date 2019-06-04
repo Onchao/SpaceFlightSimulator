@@ -40,4 +40,9 @@ public class AerodynamicNoseConeComponent extends SpaceshipComponent {
     public String toString() {
         return getName();
     }
+
+    @Override
+    public double getDragCoefficient() {
+        return 0.5;
+    }
 }
