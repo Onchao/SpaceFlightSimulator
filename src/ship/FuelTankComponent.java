@@ -50,4 +50,9 @@ public class FuelTankComponent extends SpaceshipComponent {
     public double getDragCoefficient() {
         return 1.0;
     }
+
+    @Override
+    public double getFrontAvgSurface(){
+        return 2*Math.PI*2*(2+4)/4;
+    }
 }

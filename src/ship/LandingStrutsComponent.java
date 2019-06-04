@@ -54,4 +54,9 @@ public class LandingStrutsComponent extends SpaceshipComponent {
     public double getDragCoefficient() {
         return 0;
     }
+
+    @Override
+    public double getFrontAvgSurface(){
+        return 0;
+    }
 }

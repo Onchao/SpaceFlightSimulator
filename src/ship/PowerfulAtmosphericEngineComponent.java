@@ -64,4 +64,9 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     public double getDragCoefficient() {
         return 1.0;
     }
+
+    @Override
+    public double getFrontAvgSurface(){
+        return 2*Math.PI*1.2*(1.2+4)/4;
+    }
 }

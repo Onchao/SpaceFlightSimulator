@@ -54,4 +54,9 @@ public class RadialDecouplerComponent extends SpaceshipComponent {
     public double getDragCoefficient() {
         return 1.0;
     }
+
+    @Override
+    public double getFrontAvgSurface(){
+        return 2*(0.8*1.6 + 0.8*4 + 1.6*4)/4;
+    }
 }

@@ -44,6 +44,11 @@ public class ParachuteComponent extends SpaceshipComponent {
 
     @Override
     public double getDragCoefficient() {
-        return 0.5;
+        return 0;
+    }
+
+    @Override
+    public double getFrontAvgSurface(){
+        return 0;
     }
 }

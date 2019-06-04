@@ -45,4 +45,9 @@ public class AerodynamicNoseConeComponent extends SpaceshipComponent {
     public double getDragCoefficient() {
         return 0.5;
     }
+
+    @Override
+    public double getFrontAvgSurface(){
+        return Math.PI*2*(2+Math.sqrt(4*4+2*2))/4;
+    }
 }
