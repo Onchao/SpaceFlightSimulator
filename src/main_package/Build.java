@@ -241,6 +241,10 @@ public class Build implements CustomScene {
                 componentImage.setLayoutX(myMount.getPositionX() + (myMount.getWidth() - chosenComponent.getWidth())/2 - 40);
                 componentImage.setLayoutY(myMount.getPositionY() - 10 - 40);
             }
+
+            if (chosenComponentF.getComponentClass() == LandingStrutsComponent.class) {
+                componentImage.setLayoutY(componentImage.getLayoutY() + 100);
+            }
         }
     }
 }
