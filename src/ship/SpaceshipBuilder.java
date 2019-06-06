@@ -64,6 +64,11 @@ public class SpaceshipBuilder {
         stages.get(c.getStageNumber()).add(c);
     }
 
+    public void removeComponent (SpaceshipComponent c) {
+        for (List<SpaceshipComponent> stage : stages) stage.remove(c);
+        components.remove(c);
+    }
+
     public Spaceship spaceship;
     public Spaceship build(CelestialBody parent, double angleOnPlanet,SolarSystem solarSystem) {
         //TODO: sanity checks

@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ship.*;
@@ -26,6 +27,7 @@ public class Build implements CustomScene {
     private Pane root = new Pane();
     private ScrollPane scroller = new ScrollPane();
     private ListView<SpaceshipComponentFactory> componentList;
+    private VBox componentProperties;
     private Label componentDesc;
 
     private int nextComponentPosition;
@@ -60,6 +62,9 @@ public class Build implements CustomScene {
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
+        componentProperties = new VBox();
+        componentProperties.setLayoutX(610);
+        componentProperties.setLayoutY(400);
         componentDesc = new Label();
         componentDesc.setText("");
         componentDesc.setLayoutX(610);
@@ -72,7 +77,7 @@ public class Build implements CustomScene {
 
         root.setPrefSize(850, 850);
         nextComponentPosition = 800;
-        root.getChildren().addAll(componentList, componentDesc);
+        root.getChildren().addAll(componentList, componentProperties);
 
         Button flyButton = new Button("Let's fly!");
         // TODO: event handler for this one
@@ -109,7 +114,7 @@ public class Build implements CustomScene {
                 MountImg img = getMountPointImg(m);
                 spaceshipView.getChildren().add(0, img);
 
-                img.setOnMouseClicked(new MountClickHandler(spaceshipView, componentDesc, builder, factory, m));
+                img.setOnMouseClicked(new MountClickHandler(spaceshipView, componentProperties, builder, factory, m));
             }
         });
 
@@ -133,14 +138,14 @@ public class Build implements CustomScene {
         SpaceshipComponentFactory chosenComponentF;
         Mount myMount;
         Pane spaceshipView;
-        Label componentDesc;
+        VBox componentProperties;
         SpaceshipBuilder builder;
 
-        public MountClickHandler(Pane p, Label l, SpaceshipBuilder b, SpaceshipComponentFactory factory, Mount m) {
+        public MountClickHandler(Pane p, VBox properties, SpaceshipBuilder b, SpaceshipComponentFactory factory, Mount m) {
             chosenComponentF = factory;
             myMount = m;
             spaceshipView = p;
-            componentDesc = l;
+            componentProperties = properties;
             builder = b;
         }
 
@@ -158,11 +163,7 @@ public class Build implements CustomScene {
                 } else {
                     chosenComponent = chosenComponentF.getInstance();
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
+            } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                 e.printStackTrace();
             }
 
@@ -177,8 +178,30 @@ public class Build implements CustomScene {
 
             final SpaceshipComponent chosenComponentCpy = chosenComponent;
 
-            componentImage.setOnMouseClicked(mouseEvent -> componentDesc.setText(chosenComponentCpy.getDescription()));
-            componentDesc.setText(chosenComponent.getDescription());
+            componentImage.setOnMouseClicked(mouseEvent -> {
+                componentProperties.getChildren().clear();
+                componentProperties.getChildren().add(new Label(chosenComponentCpy.getDescription()));
+                Button deleteComponent = new Button("Delete component");
+                componentProperties.getChildren().add(deleteComponent);
+                deleteComponent.setOnAction(e -> {
+                    if (chosenComponentCpy.getUpperMount() != null && chosenComponentCpy.getUpperMount().isUsed()) {
+                        chosenComponentCpy.getUpperMount().getAttached().getLowerMount().setUsed(false, null);
+                    }
+                    if (chosenComponentCpy.getLowerMount() != null && chosenComponentCpy.getLowerMount().isUsed()) {
+                        chosenComponentCpy.getLowerMount().getAttached().getUpperMount().setUsed(false, null);
+                    }
+                    if (chosenComponentCpy.getRightMount() != null && chosenComponentCpy.getRightMount().isUsed()) {
+                        chosenComponentCpy.getRightMount().getAttached().getLeftMount().setUsed(false, null);
+                    }
+                    if (chosenComponentCpy.getLeftMount() != null && chosenComponentCpy.getLeftMount().isUsed()) {
+                        chosenComponentCpy.getLeftMount().getAttached().getRightMount().setUsed(false, null);
+                    }
+
+                    spaceshipView.getChildren().remove(componentImage);
+                    builder.removeComponent(chosenComponentCpy);
+                    componentProperties.getChildren().clear();
+                });
+            });
 
             shiftView(chosenComponent);
 

@@ -56,6 +56,10 @@ public class Mount {
         return width;
     }
 
+    public SpaceshipComponent getAttached() {
+        return attached;
+    }
+
     public SpaceshipComponent getParent() {
         return parent;
     }
