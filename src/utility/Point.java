@@ -21,4 +21,10 @@ public class Point {
     public double getY() {
         return y;
     }
+
+    public Point rotate(double angle) {
+        PolarPoint pp = new PolarPoint(this);
+        pp.setPhi(pp.getPhi() + angle);
+        return new Point(pp);
+    }
 }

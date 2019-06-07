@@ -15,6 +15,25 @@ import java.util.Collections;
 import java.util.List;
 
 public class Spaceship {
+
+    public static class ComponentWithCenter {
+        private SpaceshipComponent component;
+        private Point center;
+
+        public ComponentWithCenter (SpaceshipComponent comp, Point p) {
+            component = comp;
+            center = p;
+        }
+
+        public SpaceshipComponent getComponent() {
+            return component;
+        }
+
+        public Point getCenter() {
+            return center;
+        }
+    }
+
     private List<List<SpaceshipComponent>> stages;
     public List<List<SpaceshipComponent>> getStages(){
         return stages;
@@ -352,12 +371,12 @@ public class Spaceship {
         return ret;
     }
 
-    public List<Point> getComponentCenters () {
-        List<Point> ret = new ArrayList<>();
+    public List<ComponentWithCenter> getComponentCenters () {
+        List<ComponentWithCenter> ret = new ArrayList<>();
 
         for (List <SpaceshipComponent> stage : stages)
             for (SpaceshipComponent comp : stage)
-                ret.add(convertCoordinates(comp.getGeoCenter()));
+                ret.add(new ComponentWithCenter(comp, convertCoordinates(comp.getGeoCenter())));
         return ret;
     }
 
