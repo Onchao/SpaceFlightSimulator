@@ -14,6 +14,7 @@ public abstract class SpaceshipComponent {
     protected Mount leftMount = null;
 
     protected int stageNumber;
+    protected int componentId;
 
     public abstract int getHeight();
     public abstract int getWidth();
@@ -49,6 +50,10 @@ public abstract class SpaceshipComponent {
     }
 
     public abstract ImageView getImage();
+
+    public Point getGeoCenter () {
+        return new Point(getImage().getLayoutX() + getWidth()/2 + 40, getImage().getLayoutY() + getHeight()/2 + 40);
+    }
 
     public double getCenterOfMassX () {
         return getImage().getLayoutX() + 40 + getWidth()/2;

@@ -352,6 +352,15 @@ public class Spaceship {
         return ret;
     }
 
+    public List<Point> getComponentCenters () {
+        List<Point> ret = new ArrayList<>();
+
+        for (List <SpaceshipComponent> stage : stages)
+            for (SpaceshipComponent comp : stage)
+                ret.add(convertCoordinates(comp.getGeoCenter()));
+        return ret;
+    }
+
     //TODO: make this based on moment and time
     public void maxThrottle(){
         throttle = 100;

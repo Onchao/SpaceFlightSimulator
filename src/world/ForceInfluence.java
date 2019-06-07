@@ -4,7 +4,6 @@ import ship.Spaceship;
 import ship.SpaceshipComponent;
 import utility.Const;
 import utility.Force;
-import utility.Point;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class ForceInfluence {
         //TODO: add momentum
         Force gravity = getGravityInfluence();
         Force engine = getEngineInfluence();
-        Force aero = genAeroInfluence();
+        Force aero = getAeroInfluence();
         Force combined = new Force(0,0,
                 gravity.getFx() + engine.getFx() + aero.getFx(),
                 gravity.getFy() + engine.getFy() + aero.getFy()
@@ -51,7 +50,7 @@ public class ForceInfluence {
         return new Force(spaceship.getThrustCenter().getX(), spaceship.getThrustCenter().getY(), Fx, Fy);
     }
 
-    private Force genAeroInfluence() {
+    private Force getAeroInfluence() {
         double Dx = 0;
         double Dy = 0;
         for (List<SpaceshipComponent> stage : spaceship.getStages()) {
