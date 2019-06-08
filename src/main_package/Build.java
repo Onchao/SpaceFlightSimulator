@@ -7,15 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ship.*;
-import ship.components.LandingStrutsComponent;
-import ship.components.RadialDecouplerComponent;
-import ship.components.SpaceshipComponent;
-import ship.components.SpaceshipComponentFactory;
+import ship.components.*;
 import utility.Boundaries;
 import utility.Direction;
 import utility.Mount;
@@ -185,6 +183,15 @@ public class Build implements CustomScene {
             componentImage.setOnMouseClicked(mouseEvent -> {
                 componentProperties.getChildren().clear();
                 componentProperties.getChildren().add(new Label(chosenComponentCpy.getDescription()));
+                if (chosenComponentCpy instanceof ActiveComponent) {
+                    TextField numInput =
+                            new TextField(Integer.toString(((ActiveComponent) chosenComponentCpy).getActivationNumber()));
+                    componentProperties.getChildren().add(new HBox(new Label("Activation number: "), numInput));
+                    Button saveProperties = new Button("Save");
+                    componentProperties.getChildren().add(saveProperties);
+                    saveProperties.setOnAction(actionEvent1 ->
+                            ((ActiveComponent) chosenComponentCpy).setActivationNumber(Integer.parseInt(numInput.getCharacters().toString())));
+                }
                 Button deleteComponent = new Button("Delete component");
                 componentProperties.getChildren().add(deleteComponent);
                 deleteComponent.setOnAction(e -> {
