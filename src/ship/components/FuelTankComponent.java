@@ -1,4 +1,4 @@
-package ship;
+package ship.components;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

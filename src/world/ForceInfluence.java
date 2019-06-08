@@ -1,7 +1,7 @@
 package world;
 
 import ship.Spaceship;
-import ship.SpaceshipComponent;
+import ship.components.SpaceshipComponent;
 import utility.Const;
 import utility.Force;
 import utility.Point;

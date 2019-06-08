@@ -1,5 +1,6 @@
 package ship;
 
+import ship.components.*;
 import utility.Mount;
 import world.CelestialBody;
 import world.SolarSystem;

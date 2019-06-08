@@ -1,33 +1,35 @@
-package ship;
+package ship.components;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import utility.Mount;
 
-public class ExampleComponent extends SpaceshipComponent {
-    private String name;
+public class ParachuteComponent extends SpaceshipComponent {
     private ImageView img;
 
-    public ExampleComponent() {
-        img = new ImageView(new Image("file:images/example_component.png"));
+    public ParachuteComponent() {
+        img = new ImageView(new Image("file:images/parachute.png"));
+
+        super.lowerMount = new Mount(40, -10, 50, 200, Mount.Direction.LOWER, this);
     }
 
     public static String getName() {
-        return "Example";
+        return "Parachute";
     }
 
     @Override
     public int getHeight() {
-        return 50;
+        return 40;
     }
 
     @Override
     public int getWidth() {
-        return 100;
+        return 40;
     }
 
     @Override
     public int getMass() {
-        return 150;
+        return 2000;
     }
 
     @Override
@@ -42,10 +44,11 @@ public class ExampleComponent extends SpaceshipComponent {
 
     @Override
     public double getDragCoefficient() {
-        return 100000;
+        return 0;
     }
+
     @Override
     public double getFrontAvgSurface(){
-        return 100000;
+        return 0;
     }
 }

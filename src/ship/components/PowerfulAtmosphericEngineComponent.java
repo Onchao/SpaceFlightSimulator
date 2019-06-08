@@ -1,4 +1,4 @@
-package ship;
+package ship.components;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -93,9 +93,10 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     }
 
     @Override
-    public void activate() {
+    public ComponentAction activate() {
         isActive = true;
         detectTanks();
+        return new ComponentAction(ComponentAction.ActionType.ACTIVATE_ENGINE, stageNumber);
     }
 
     @Override

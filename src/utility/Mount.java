@@ -1,6 +1,6 @@
 package utility;
 
-import ship.SpaceshipComponent;
+import ship.components.SpaceshipComponent;
 
 public class Mount {
     public double getPositionX() {

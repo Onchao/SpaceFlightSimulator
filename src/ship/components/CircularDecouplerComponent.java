@@ -1,11 +1,12 @@
-package ship;
+package ship.components;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.Mount;
 
-public class CircularDecouplerComponent extends SpaceshipComponent {
+public class CircularDecouplerComponent extends SpaceshipComponent implements ActiveComponent {
     private ImageView img;
+    private boolean isActive = false;
 
     public CircularDecouplerComponent() {
         img = new ImageView(new Image("file:images/circularDec.png"));
@@ -51,5 +52,16 @@ public class CircularDecouplerComponent extends SpaceshipComponent {
     @Override
     public double getFrontAvgSurface(){
         return 2*Math.PI*2*(2+0.8)/4;
+    }
+
+    @Override
+    public ComponentAction activate() {
+        isActive = true;
+        return new ComponentAction(ComponentAction.ActionType.DETACH_STAGE, stageNumber);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 }

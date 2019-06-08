@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import ship.*;
+import ship.components.*;
 import world.Origin;
 import world.Scale;
 import world.Time;

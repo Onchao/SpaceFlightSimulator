@@ -1,12 +1,13 @@
-package ship;
+package ship.components;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.Direction;
 import utility.Mount;
 
-public class RadialDecouplerComponent extends SpaceshipComponent {
+public class RadialDecouplerComponent extends SpaceshipComponent implements ActiveComponent {
     private ImageView img;
+    private boolean isActive = false;
     private Direction direction;
 
     public RadialDecouplerComponent(Direction dir) {
@@ -62,5 +63,16 @@ public class RadialDecouplerComponent extends SpaceshipComponent {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    @Override
+    public ComponentAction activate() {
+        isActive = true;
+        return new ComponentAction(ComponentAction.ActionType.DETACH_STAGE, stageNumber);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 }

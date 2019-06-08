@@ -1,6 +1,6 @@
-package ship;
+package ship.components;
 
 public interface ActiveComponent {
-    void activate ();
+    ComponentAction activate ();
     boolean isActive();
 }

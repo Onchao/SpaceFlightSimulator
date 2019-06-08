@@ -1,4 +1,4 @@
-package ship;
+package ship.components;
 
 import java.lang.reflect.InvocationTargetException;
 

@@ -1,4 +1,4 @@
-package ship;
+package ship.components;
 
 public interface Engine {
     double getThrust();
