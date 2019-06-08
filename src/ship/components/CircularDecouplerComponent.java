@@ -7,6 +7,7 @@ import utility.Mount;
 public class CircularDecouplerComponent extends SpaceshipComponent implements ActiveComponent {
     private ImageView img;
     private boolean isActive = false;
+    private int activationNumber = 0;
 
     public CircularDecouplerComponent() {
         img = new ImageView(new Image("file:images/circularDec.png"));
@@ -63,5 +64,15 @@ public class CircularDecouplerComponent extends SpaceshipComponent implements Ac
     @Override
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    public void setActivationNumber(int num) {
+        activationNumber = num;
+    }
+
+    @Override
+    public int getActivationNumber() {
+        return activationNumber;
     }
 }

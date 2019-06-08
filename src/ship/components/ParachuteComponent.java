@@ -4,8 +4,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.Mount;
 
-public class ParachuteComponent extends SpaceshipComponent {
+public class ParachuteComponent extends SpaceshipComponent implements ActiveComponent {
     private ImageView img;
+    private boolean isActive;
+    private int activationNumber = 0;
 
     public ParachuteComponent() {
         img = new ImageView(new Image("file:images/parachute.png"));
@@ -50,5 +52,27 @@ public class ParachuteComponent extends SpaceshipComponent {
     @Override
     public double getFrontAvgSurface(){
         return 0;
+    }
+
+    @Override
+    public ComponentAction activate() {
+        isActive = true;
+        // TODO
+        return new ComponentAction(ComponentAction.ActionType.OPEN_PARACHUTE, stageNumber);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
+    }
+
+    @Override
+    public void setActivationNumber(int num) {
+        activationNumber = num;
+    }
+
+    @Override
+    public int getActivationNumber() {
+        return activationNumber;
     }
 }

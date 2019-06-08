@@ -8,6 +8,7 @@ import utility.Mount;
 public class RadialDecouplerComponent extends SpaceshipComponent implements ActiveComponent {
     private ImageView img;
     private boolean isActive = false;
+    private int activationNumber = 0;
     private Direction direction;
 
     public RadialDecouplerComponent(Direction dir) {
@@ -74,5 +75,15 @@ public class RadialDecouplerComponent extends SpaceshipComponent implements Acti
     @Override
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    public void setActivationNumber(int num) {
+        activationNumber = num;
+    }
+
+    @Override
+    public int getActivationNumber() {
+        return activationNumber;
     }
 }

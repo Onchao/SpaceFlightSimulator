@@ -11,6 +11,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     private double curThrust = 0.0;
     private final double maxFuelConsumption = 1600.0;
     private boolean isActive;
+    private int activationNumber = 0;
 
     private void detectTanks() {
         //TODO
@@ -99,5 +100,15 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     @Override
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    public void setActivationNumber(int num) {
+        activationNumber = num;
+    }
+
+    @Override
+    public int getActivationNumber() {
+        return activationNumber;
     }
 }

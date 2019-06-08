@@ -13,6 +13,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     private final double fuelConsumption = 1600;  // kg/s
     private boolean isActive;
+    private int activationNumber = 0;
 
     private List<List<FuelTankComponent>> availableTanks;
 
@@ -102,5 +103,15 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     @Override
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    public void setActivationNumber(int num) {
+        activationNumber = num;
+    }
+
+    @Override
+    public int getActivationNumber() {
+        return activationNumber;
     }
 }
