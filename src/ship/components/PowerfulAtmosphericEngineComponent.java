@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.Mount;
 
-import java.util.List;
+import java.util.*;
 
 public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine, ActiveComponent {
     private ImageView img;
@@ -15,10 +15,49 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     private boolean isActive;
     private int activationNumber = 0;
 
-    private List<List<FuelTankComponent>> availableTanks;
+    private SortedMap<Integer, List<FuelTankComponent>> availableTanks;
 
     private void detectTanks() {
-        //TODO
+        availableTanks = new TreeMap<>(Collections.reverseOrder());
+        class QueueElem {
+            public SpaceshipComponent component;
+            public int height;
+            public QueueElem (SpaceshipComponent component, int height) {
+                this.component = component;
+                this.height = height;
+            }
+        }
+        Set<SpaceshipComponent> visited = new HashSet<>();
+        List<QueueElem> queue = new ArrayList<>();
+        queue.add(new QueueElem(this, 0));
+
+        while (!queue.isEmpty()) {
+            QueueElem e = queue.get(0);
+            queue.remove(0);
+            if ((e.component instanceof CircularDecouplerComponent) || e.component instanceof RadialDecouplerComponent)
+                continue;
+
+            if (e.component instanceof FuelTankComponent) {
+                if (!availableTanks.containsKey(e.height)) availableTanks.put(e.height, new ArrayList<>());
+                availableTanks.get(e.height).add((FuelTankComponent) e.component);
+            }
+
+            if (e.component.getLeftMount() != null && e.component.getLeftMount().isUsed()
+                    && !visited.contains(e.component.getLeftMount().getAttached())) {
+                queue.add(new QueueElem(e.component.getLeftMount().getAttached(), e.height));
+                visited.add(e.component.getLeftMount().getAttached());
+            }
+            if (e.component.getRightMount() != null && e.component.getRightMount().isUsed()
+                    && !visited.contains(e.component.getRightMount().getAttached())) {
+                queue.add(new QueueElem(e.component.getRightMount().getAttached(), e.height));
+                visited.add(e.component.getRightMount().getAttached());
+            }
+            if (e.component.getUpperMount() != null && e.component.getUpperMount().isUsed()
+                    && !visited.contains(e.component.getUpperMount().getAttached())) {
+                queue.add(new QueueElem(e.component.getUpperMount().getAttached(), e.height + 1));
+                visited.add(e.component.getUpperMount().getAttached());
+            }
+        }
     }
 
     public PowerfulAtmosphericEngineComponent() {
@@ -89,8 +128,22 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     @Override
     public double burnFuel(double amount) {
-        //TODO
-        return amount;
+        double leftToBurn = amount;
+
+        for (Map.Entry<Integer, List<FuelTankComponent>> entry : availableTanks.entrySet()) {
+            double fuelLeft = entry.getValue().get(0).getFuelState();
+            if (fuelLeft * entry.getValue().size() > amount) {
+                double sub = amount/entry.getValue().size();
+                for (FuelTankComponent tank : entry.getValue()) tank.setFuelState(tank.getFuelState() - sub);
+                leftToBurn = 0;
+                break;
+            } else {
+                leftToBurn -= fuelLeft*entry.getValue().size();
+                for (FuelTankComponent tank : entry.getValue()) tank.setFuelState(0);
+            }
+        }
+
+        return amount - leftToBurn;  // == 0 if we're out of fuel
     }
 
     @Override
