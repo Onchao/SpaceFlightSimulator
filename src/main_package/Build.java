@@ -228,7 +228,7 @@ public class Build implements CustomScene {
             spaceshipView.getChildren().add(componentImage);
             shiftView(chosenComponent);
 
-            builder.addComponent(chosenComponent, myMount);
+            builder.addComponent(chosenComponent);
         }
 
         private void fillMounts(SpaceshipComponent chosenComponent) throws InvalidPositionException {
@@ -249,8 +249,11 @@ public class Build implements CustomScene {
                         || (compBoundaries.getLeft() < myBoundaries.getRight() && compBoundaries.getLeft() > myBoundaries.getLeft());
                 boolean fitsVertically = myBoundaries.getUpper() == compBoundaries.getUpper()
                         && myBoundaries.getLower() == compBoundaries.getLower();
-                boolean fitsHorizontally = myBoundaries.getLeft() == compBoundaries.getLeft()
-                        && myBoundaries.getRight() == compBoundaries.getRight();
+                if (chosenComponent instanceof LandingStrutsComponent) {
+                    fitsVertically = myBoundaries.getUpper() - 100 == compBoundaries.getUpper()
+                            && myBoundaries.getLower() - 100 == compBoundaries.getLower();
+                }
+                boolean fitsHorizontally = (myBoundaries.getLeft()+myBoundaries.getRight())/2 == (compBoundaries.getLeft()+compBoundaries.getRight())/2;
 
                 if ((intersectsHorizontally && intersectsVertically)
                         || (fitsHorizontally && intersectsVertically)
@@ -277,15 +280,15 @@ public class Build implements CustomScene {
             }
             if (componentsToAttatch [1] != null) {
                 componentsToAttatch [1].getRightMount().setUsed(true, chosenComponent);
-                chosenComponent.getLeftMount().setUsed(true, componentsToAttatch [0]);
+                chosenComponent.getLeftMount().setUsed(true, componentsToAttatch [1]);
             }
             if (componentsToAttatch [2] != null) {
                 componentsToAttatch [2].getUpperMount().setUsed(true, chosenComponent);
-                chosenComponent.getLowerMount().setUsed(true, componentsToAttatch [0]);
+                chosenComponent.getLowerMount().setUsed(true, componentsToAttatch [2]);
             }
             if (componentsToAttatch [3] != null) {
                 componentsToAttatch [3].getLeftMount().setUsed(true, chosenComponent);
-                chosenComponent.getRightMount().setUsed(true, componentsToAttatch [0]);
+                chosenComponent.getRightMount().setUsed(true, componentsToAttatch [3]);
             }
         }
 

@@ -74,7 +74,8 @@ public class Mount {
 
     public void setUsed(boolean used, SpaceshipComponent a) {
         if (used) {
-            this.used = used;
+            if (a == null) this.used = false;
+            else this.used = true;
             attached = a;
         } else {
             this.used = false;

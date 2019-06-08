@@ -1,6 +1,8 @@
 package ship;
 
 import ship.components.*;
+import utility.Direction;
+import utility.Graph;
 import utility.Mount;
 import world.CelestialBody;
 import world.SolarSystem;
@@ -11,12 +13,11 @@ import java.util.List;
 
 public class SpaceshipBuilder {
 
-    List<SpaceshipComponent> components;
-    List<List<SpaceshipComponent>> stages;
+    private List<SpaceshipComponent> components;
+    private Graph<SpaceshipComponent> componentGraph = null;
 
     public SpaceshipBuilder() {
         components = new ArrayList<>();
-        stages = new ArrayList<>();
     }
 
     public List<Mount> getMountPoints (SpaceshipComponentFactory fact) {
@@ -50,20 +51,8 @@ public class SpaceshipBuilder {
         return ret;
     }
 
-    public void addComponent (SpaceshipComponent c, Mount mount) {
-        if (mount.getParent() == null) {
-            c.setStageNumber(0);
-        } else if (!(mount.getParent() instanceof RadialDecouplerComponent) && !(mount.getParent() instanceof CircularDecouplerComponent)) {
-            c.setStageNumber(mount.getParent().getStageNumber());
-        } else {
-            c.setStageNumber(mount.getParent().getStageNumber() + 1);
-        }
-
-        if (c.getStageNumber() >= stages.size()) {
-            stages.add(new ArrayList<>());
-        }
+    public void addComponent (SpaceshipComponent c) {
         components.add(c);
-        stages.get(c.getStageNumber()).add(c);
     }
 
     public List<SpaceshipComponent> getComponents() {
@@ -71,14 +60,103 @@ public class SpaceshipBuilder {
     }
 
     public void removeComponent (SpaceshipComponent c) {
-        for (List<SpaceshipComponent> stage : stages) stage.remove(c);
         components.remove(c);
+    }
+
+    private void makeComponentGraph () {
+        componentGraph = new Graph<>();
+        for (SpaceshipComponent comp : components) {
+            componentGraph.addVertex(comp);
+            if (comp.getLeftMount() != null && comp.getLeftMount().isUsed()) {
+                componentGraph.addEdge(comp, comp.getLeftMount().getAttached());
+            }
+            if (comp.getRightMount() != null && comp.getRightMount().isUsed()) {
+                componentGraph.addEdge(comp, comp.getRightMount().getAttached());
+            }
+            if (comp.getUpperMount() != null && comp.getUpperMount().isUsed()) {
+                componentGraph.addEdge(comp, comp.getUpperMount().getAttached());
+            }
+            if (comp.getLowerMount() != null && comp.getLowerMount().isUsed()) {
+                componentGraph.addEdge(comp, comp.getLowerMount().getAttached());
+            }
+        }
+    }
+
+    private boolean isConnected () {
+        return componentGraph.getCC().size() == 1;
+    }
+
+    private List<List<SpaceshipComponent>> divideIntoStages () {
+        Graph<SpaceshipComponent> stagesGraph = new Graph<>();
+        for (SpaceshipComponent comp : components) {
+            if ((comp instanceof CircularDecouplerComponent) || (comp instanceof RadialDecouplerComponent))
+                continue;
+            stagesGraph.addVertex(comp);
+            if (comp.getLeftMount() != null
+                    && comp.getLeftMount().isUsed()
+                    && !(comp.getLeftMount().getAttached() instanceof RadialDecouplerComponent)) {
+                stagesGraph.addEdge(comp, comp.getLeftMount().getAttached());
+            }
+            if (comp.getRightMount() != null
+                    && comp.getRightMount().isUsed()
+                    && !(comp.getRightMount().getAttached() instanceof RadialDecouplerComponent)) {
+                stagesGraph.addEdge(comp, comp.getRightMount().getAttached());
+            }
+            if (comp.getUpperMount() != null
+                    && comp.getUpperMount().isUsed()
+                    && !(comp.getUpperMount().getAttached() instanceof CircularDecouplerComponent)) {
+                stagesGraph.addEdge(comp, comp.getUpperMount().getAttached());
+            }
+            if (comp.getLowerMount() != null
+                    && comp.getLowerMount().isUsed()
+                    && !(comp.getLowerMount().getAttached() instanceof CircularDecouplerComponent)) {
+                stagesGraph.addEdge(comp, comp.getLowerMount().getAttached());
+            }
+        }
+
+        List<List<SpaceshipComponent>> ret = stagesGraph.getCC();
+
+        for (int id = 0; id < ret.size(); ++ id) {
+            for (SpaceshipComponent comp : ret.get(id)) comp.setStageNumber(id);
+        }
+
+        for (SpaceshipComponent comp : components) {
+            if (comp instanceof CircularDecouplerComponent) {
+                if (comp.getLowerMount().isUsed()) {
+                    ret.get(comp.getLowerMount().getAttached().getStageNumber()).add(comp);
+                    comp.setStageNumber(comp.getLowerMount().getAttached().getStageNumber());
+                } else {
+                    ret.add(new ArrayList<>());
+                    ret.get(ret.size()-1).add(comp);
+                    comp.setStageNumber(ret.size()-1);
+                }
+            }
+            if (comp instanceof RadialDecouplerComponent) {
+                if (((RadialDecouplerComponent) comp).getDirection() == Direction.RIGHT && comp.getRightMount().isUsed()) {
+                    ret.get(comp.getRightMount().getAttached().getStageNumber()).add(comp);
+                    comp.setStageNumber(comp.getRightMount().getAttached().getStageNumber());
+                } else if (((RadialDecouplerComponent) comp).getDirection() == Direction.LEFT && comp.getLeftMount().isUsed()) {
+                    ret.get(comp.getLeftMount().getAttached().getStageNumber()).add(comp);
+                    comp.setStageNumber(comp.getLeftMount().getAttached().getStageNumber());
+                } else {
+                    ret.add(new ArrayList<>());
+                    ret.get(ret.size()-1).add(comp);
+                    comp.setStageNumber(ret.size()-1);
+                }
+            }
+        }
+
+        return ret;
     }
 
     public Spaceship spaceship;
     public Spaceship build(CelestialBody parent, double angleOnPlanet,SolarSystem solarSystem) {
-        //TODO: sanity checks
-        spaceship =  new Spaceship(stages, parent, angleOnPlanet, solarSystem);
+        makeComponentGraph();
+        if (!isConnected()) {
+            System.out.println("Opsss...");
+            return null;
+        }
+        spaceship =  new Spaceship(divideIntoStages(), parent, angleOnPlanet, solarSystem);
         return spaceship;
     }
     public Spaceship getSpaceship(){
