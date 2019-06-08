@@ -371,6 +371,32 @@ public class Spaceship {
         return ret;
     }
 
+    public double getFuelInStage (int stageNo) {
+        int numTanks = 0;
+        double fuelStatesSum = 0.0;
+        for (SpaceshipComponent comp : stages.get(stageNo)) {
+            if (comp instanceof FuelTankComponent) {
+                ++ numTanks;
+                fuelStatesSum += ((FuelTankComponent) comp).getFuelState();
+            }
+        }
+        return fuelStatesSum/numTanks;
+    }
+
+    public double getFuelTotal () {
+        int numTanks = 0;
+        double fuelStatesSum = 0.0;
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                if (comp instanceof FuelTankComponent) {
+                    ++numTanks;
+                    fuelStatesSum += ((FuelTankComponent) comp).getFuelState();
+                }
+            }
+        }
+        return fuelStatesSum/numTanks;
+    }
+
     public List<ComponentWithCenter> getComponentCenters () {
         List<ComponentWithCenter> ret = new ArrayList<>();
 

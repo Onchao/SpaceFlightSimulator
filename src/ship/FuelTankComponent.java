@@ -6,6 +6,7 @@ import utility.Mount;
 
 public class FuelTankComponent extends SpaceshipComponent {
     private ImageView img;
+    private double fuelState = 1.0;
 
     public FuelTankComponent() {
         img = new ImageView(new Image("file:images/tank.png"));
@@ -33,7 +34,7 @@ public class FuelTankComponent extends SpaceshipComponent {
     // fuel 100*1000 kg
     @Override
     public int getMass() {
-        return 110*1000; // [kg]
+        return 10*1000 + (int) (100*1000*fuelState); // [kg]
     }
 
     @Override
@@ -54,5 +55,13 @@ public class FuelTankComponent extends SpaceshipComponent {
     @Override
     public double getFrontAvgSurface(){
         return 2*Math.PI*2*(2+4)/4;
+    }
+
+    public double getFuelState() {
+        return fuelState;
+    }
+
+    public void setFuelState(double newState) {
+        fuelState = newState;
     }
 }
