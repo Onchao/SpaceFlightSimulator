@@ -4,10 +4,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.Mount;
 
-public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent implements Engine {
+public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent implements Engine, ActiveComponent {
     private ImageView img;
 
-    private double maxThrust = 6000.0*1000;
+    private final double maxThrust = 6000.0*1000;
+    private double curThrust = 0.0;
+    private final double maxFuelConsumption = 1600.0;
+    private boolean isActive;
+
+    private void detectTanks() {
+        //TODO
+    }
 
     public HighEfficiencyVaccumEngineComponent() {
         img = new ImageView(new Image("file:images/vacEngine.png"));
@@ -47,7 +54,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public double getThrust() {
-        return maxThrust;
+        return curThrust;
     }
 
     @Override
@@ -57,7 +64,19 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public void setThrust(double val) {
-        maxThrust = val;
+        if (val > maxThrust) return;
+        curThrust = val;
+    }
+
+    @Override
+    public double getFuelConsumption() {
+        return maxFuelConsumption * (getThrust()/maxThrust());
+    }
+
+    @Override
+    public double burnFuel(double amount) {
+        //TODO
+        return amount;
     }
 
     @Override
@@ -68,5 +87,16 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     @Override
     public double getFrontAvgSurface(){
         return 2*Math.PI*1.2*(1.2+1.6)/4;
+    }
+
+    @Override
+    public void activate() {
+        isActive = true;
+        detectTanks();
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 }

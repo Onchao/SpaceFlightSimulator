@@ -4,10 +4,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utility.Mount;
 
-public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine {
+import java.util.List;
+
+public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine, ActiveComponent {
     private ImageView img;
 
     private double maxThrust = 20000.0*1000; // N;
+
+    private final double fuelConsumption = 1600;  // kg/s
+    private boolean isActive;
+
+    private List<List<FuelTankComponent>> availableTanks;
+
+    private void detectTanks() {
+        //TODO
+    }
 
     public PowerfulAtmosphericEngineComponent() {
         img = new ImageView(new Image("file:images/atmEngine.png"));
@@ -68,5 +79,27 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     @Override
     public double getFrontAvgSurface(){
         return 2*Math.PI*1.2*(1.2+4)/4;
+    }
+
+    @Override
+    public double getFuelConsumption() {
+        return fuelConsumption;
+    }
+
+    @Override
+    public double burnFuel(double amount) {
+        //TODO
+        return amount;
+    }
+
+    @Override
+    public void activate() {
+        isActive = true;
+        detectTanks();
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 }
