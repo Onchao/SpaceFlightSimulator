@@ -4,10 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -15,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ship.*;
+import utility.Boundaries;
 import utility.Direction;
 import utility.Mount;
 import utility.MountImg;
@@ -135,6 +133,9 @@ public class Build implements CustomScene {
     }
 
     private static class MountClickHandler implements EventHandler<MouseEvent> {
+
+        static class InvalidPositionException extends Exception {  }
+
         SpaceshipComponentFactory chosenComponentF;
         Mount myMount;
         Pane spaceshipView;
@@ -174,7 +175,6 @@ public class Build implements CustomScene {
 
             ImageView componentImage = chosenComponent.getImage();
             positionComponent(chosenComponent, componentImage);
-            spaceshipView.getChildren().add(componentImage);
 
             final SpaceshipComponent chosenComponentCpy = chosenComponent;
 
@@ -203,8 +203,6 @@ public class Build implements CustomScene {
                 });
             });
 
-            shiftView(chosenComponent);
-
             ArrayList<Node> toRemove = new ArrayList<>();
             for (Node n : spaceshipView.getChildren()) {
                 if (n instanceof MountImg) {
@@ -213,25 +211,77 @@ public class Build implements CustomScene {
             }
             spaceshipView.getChildren().removeAll(toRemove.toArray(new Node[toRemove.size()]));
 
-            fillMounts(chosenComponent);
+            try {
+                fillMounts(chosenComponent);
+            } catch (InvalidPositionException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Invalid component position");
+                alert.showAndWait();
+                return;
+            }
+
+            spaceshipView.getChildren().add(componentImage);
+            shiftView(chosenComponent);
 
             builder.addComponent(chosenComponent, myMount);
         }
 
-        private void fillMounts(SpaceshipComponent chosenComponent) {
-            myMount.setUsed(true, chosenComponent);
-            switch (myMount.getDirection()) {
-                case LOWER:
-                    chosenComponent.getUpperMount().setUsed(true, myMount.getParent());
-                    break;
-                case UPPER:
-                    chosenComponent.getLowerMount().setUsed(true, myMount.getParent());
-                    break;
-                case LEFT:
-                    chosenComponent.getRightMount().setUsed(true, myMount.getParent());
-                    break;
-                case RIGHT:
-                    chosenComponent.getLeftMount().setUsed(true, myMount.getParent());
+        private void fillMounts(SpaceshipComponent chosenComponent) throws InvalidPositionException {
+            SpaceshipComponent componentsToAttatch [] = { null, null, null, null };
+            Boundaries myBoundaries = chosenComponent.getBoundaries();
+
+            for (SpaceshipComponent comp : builder.getComponents()) {
+                Boundaries compBoundaries = comp.getBoundaries();
+                boolean intersectsVertically =
+                        (myBoundaries.getUpper() < compBoundaries.getLower() && myBoundaries.getUpper() > compBoundaries.getUpper())
+                        || (myBoundaries.getLower() < compBoundaries.getLower() && myBoundaries.getLower() > compBoundaries.getUpper())
+                        || (compBoundaries.getUpper() < myBoundaries.getLower() && compBoundaries.getUpper() > myBoundaries.getUpper())
+                        || (compBoundaries.getLower() < myBoundaries.getLower() && compBoundaries.getLower() > myBoundaries.getUpper());
+                boolean intersectsHorizontally =
+                        (myBoundaries.getLeft() < compBoundaries.getRight() && myBoundaries.getLeft() > compBoundaries.getLeft())
+                        || (myBoundaries.getRight() < compBoundaries.getRight() && myBoundaries.getRight() > compBoundaries.getLeft())
+                        || (compBoundaries.getRight() < myBoundaries.getRight() && compBoundaries.getRight() > myBoundaries.getLeft())
+                        || (compBoundaries.getLeft() < myBoundaries.getRight() && compBoundaries.getLeft() > myBoundaries.getLeft());
+                boolean fitsVertically = myBoundaries.getUpper() == compBoundaries.getUpper()
+                        && myBoundaries.getLower() == compBoundaries.getLower();
+                boolean fitsHorizontally = myBoundaries.getLeft() == compBoundaries.getLeft()
+                        && myBoundaries.getRight() == compBoundaries.getRight();
+
+                if ((intersectsHorizontally && intersectsVertically)
+                        || (fitsHorizontally && intersectsVertically)
+                        || (intersectsHorizontally && fitsVertically))
+                    throw new InvalidPositionException();
+
+                if (fitsVertically && myBoundaries.getLeft() == compBoundaries.getRight()
+                        && chosenComponent.getLeftMount() != null && comp.getRightMount() != null)
+                    componentsToAttatch [1] = comp;
+                else if (fitsVertically && myBoundaries.getRight() == compBoundaries.getLeft()
+                        && chosenComponent.getRightMount() != null && comp.getLeftMount() != null)
+                    componentsToAttatch [3] = comp;
+                else if (fitsHorizontally && myBoundaries.getUpper() == compBoundaries.getLower()
+                        && chosenComponent.getUpperMount() != null && chosenComponent.getLowerMount() != null)
+                    componentsToAttatch [0] = comp;
+                else if (fitsHorizontally && myBoundaries.getLower() == compBoundaries.getUpper()
+                        && chosenComponent.getLowerMount() != null && comp.getUpperMount() != null)
+                    componentsToAttatch [2] = comp;
+            }
+
+            if (componentsToAttatch [0] != null) {
+                componentsToAttatch [0].getLowerMount().setUsed(true, chosenComponent);
+                chosenComponent.getUpperMount().setUsed(true, componentsToAttatch [0]);
+            }
+            if (componentsToAttatch [1] != null) {
+                componentsToAttatch [1].getRightMount().setUsed(true, chosenComponent);
+                chosenComponent.getLeftMount().setUsed(true, componentsToAttatch [0]);
+            }
+            if (componentsToAttatch [2] != null) {
+                componentsToAttatch [2].getUpperMount().setUsed(true, chosenComponent);
+                chosenComponent.getLowerMount().setUsed(true, componentsToAttatch [0]);
+            }
+            if (componentsToAttatch [3] != null) {
+                componentsToAttatch [3].getLeftMount().setUsed(true, chosenComponent);
+                chosenComponent.getRightMount().setUsed(true, componentsToAttatch [0]);
             }
         }
 

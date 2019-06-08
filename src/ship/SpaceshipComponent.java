@@ -1,6 +1,7 @@
 package ship;
 
 import javafx.scene.image.ImageView;
+import utility.Boundaries;
 import utility.Mount;
 import utility.Point;
 
@@ -76,10 +77,16 @@ public abstract class SpaceshipComponent {
 
         ret.add(new Point(getImage().getLayoutX() + 40, getImage().getLayoutY() + 40));
         ret.add(new Point(getImage().getLayoutX() + 40 + getWidth(), getImage().getLayoutY() + 40));
-        ret.add(new Point(getImage().getLayoutX() + 40, getImage().getLayoutY() + 40 + getHeight()));
         ret.add(new Point(getImage().getLayoutX() + 40 + getWidth(), getImage().getLayoutY() + 40 + getHeight()));
+        ret.add(new Point(getImage().getLayoutX() + 40, getImage().getLayoutY() + 40 + getHeight()));
 
         return ret;
+    }
+
+    public Boundaries getBoundaries () {
+        List<Point> vert = getVertices();
+
+        return new Boundaries(vert.get(0).getY(), vert.get(3).getY(), vert.get(0).getX(), vert.get(1).getX());
     }
 
     public String getDescription() {

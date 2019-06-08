@@ -5,6 +5,7 @@ import world.CelestialBody;
 import world.SolarSystem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SpaceshipBuilder {
@@ -62,6 +63,10 @@ public class SpaceshipBuilder {
         }
         components.add(c);
         stages.get(c.getStageNumber()).add(c);
+    }
+
+    public List<SpaceshipComponent> getComponents() {
+        return Collections.unmodifiableList(components);
     }
 
     public void removeComponent (SpaceshipComponent c) {
