@@ -193,6 +193,7 @@ public class Spaceship {
                     }
                 }
                 shipDebris.add (new Debris(createdDebris));
+                recalculateOrigin();
             }
         }
         activationQueue.remove(0);
