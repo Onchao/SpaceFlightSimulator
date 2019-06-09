@@ -44,6 +44,7 @@ public class ExampleComponent extends SpaceshipComponent {
     public double getDragCoefficient() {
         return 100000;
     }
+
     @Override
     public double getFrontAvgSurface(){
         return 100000;

@@ -455,6 +455,11 @@ public class Spaceship {
         }
     }
 
+    public int getThrottle(){
+        return throttle;
+    }
+
+
     public void setTurnModifier(double angle){
         turnModifier = angle;
     }
