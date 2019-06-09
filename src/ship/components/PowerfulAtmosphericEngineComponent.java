@@ -98,6 +98,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     @Override
     public double getThrust() {
+        if (!isActive) return 0.0;
         return maxThrust;
     }
 

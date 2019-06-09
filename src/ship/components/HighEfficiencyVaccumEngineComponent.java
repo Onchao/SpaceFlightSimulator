@@ -151,6 +151,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     public ComponentAction activate() {
         isActive = true;
         detectTanks();
+        setThrust(maxThrust);
         return new ComponentAction(ComponentAction.ActionType.ACTIVATE_ENGINE, stageNumber);
     }
 
