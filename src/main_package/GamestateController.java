@@ -99,10 +99,10 @@ public class GamestateController {
                 }
 
                 if (e.getCode() == KeyCode.A) {
-                    spaceship.setTurnModifier(-1);
+                    spaceship.setTurnMomentum(-5e+7);
                 }
                 else if (e.getCode() == KeyCode.D) {
-                    spaceship.setTurnModifier(1);
+                    spaceship.setTurnMomentum(5e7);
                 }
 
                 if (e.getCode() == KeyCode.SPACE) {
@@ -122,7 +122,7 @@ public class GamestateController {
                 }
 
                 if (e.getCode() == KeyCode.A || e.getCode() == KeyCode.D) {
-                    spaceship.setTurnModifier(0);
+                    spaceship.setTurnMomentum(0);
                 }
             });
 
