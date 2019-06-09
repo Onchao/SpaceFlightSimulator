@@ -17,6 +17,7 @@ import world.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class Spaceship {
 
@@ -39,7 +40,9 @@ public class Spaceship {
     }
 
     private List<List<SpaceshipComponent>> stages;
+    private List<List<ActiveComponent>> activationQueue;
     private DiGraph<Integer> stagesGraph;
+    private List<Debris> shipDebris;
     private int finalStage;
     public List<List<SpaceshipComponent>> getStages(){
         return stages;
@@ -54,7 +57,7 @@ public class Spaceship {
     // where is it?
     private CelestialBody parent;
     public CelestialBody getParent(){ return parent; }
-    public Point origin;
+    private Point origin;
     private double distToBottom;
     private double rel_pos_x; // to parent [m]
     private double rel_pos_y; // to parent [m]
@@ -114,8 +117,10 @@ public class Spaceship {
         return new Point(r*Math.cos(angle), r*Math.sin(angle));
     }
 
-    public Spaceship (List<List<SpaceshipComponent>> stages, CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem) {
+    public Spaceship (List<List<SpaceshipComponent>> stages, List<List<ActiveComponent>> activationQueue, CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem) {
         this.stages = stages;
+        this.activationQueue = activationQueue;
+        shipDebris = new ArrayList<>();
 
         stagesGraph = new DiGraph<>();
         for (int i = 0; i < this.stages.size(); ++ i) stagesGraph.addVertex(i);
@@ -158,6 +163,39 @@ public class Spaceship {
         drawable.getTransforms().add(rotate);
         img.getTransforms().add(rotate);
         rotate.setAngle(-angleOnPlanet + 90);
+    }
+
+    public void activateNext () {
+        for (ActiveComponent comp : activationQueue.get(0)) {
+            ComponentAction action = comp.activate();
+            if (action.getType() == ComponentAction.ActionType.DETACH_STAGE) {
+                Integer u = ((SpaceshipComponent) comp).getStageNumber();
+                Integer v = null;
+                if ((comp instanceof CircularDecouplerComponent) && ((CircularDecouplerComponent) comp).getUpperMount().isUsed()) {
+                    v = ((CircularDecouplerComponent) comp).getUpperMount().getAttached().getStageNumber();
+                } else if (comp instanceof RadialDecouplerComponent) {
+                    if (((RadialDecouplerComponent) comp).getDirection() == Direction.RIGHT
+                            && ((RadialDecouplerComponent) comp).getLeftMount().isUsed()) {
+                        v = ((RadialDecouplerComponent) comp).getLeftMount().getAttached().getStageNumber();
+                    } else if (((RadialDecouplerComponent) comp).getDirection() == Direction.LEFT
+                            && ((RadialDecouplerComponent) comp).getRightMount().isUsed()) {
+                        v = ((RadialDecouplerComponent) comp).getRightMount().getAttached().getStageNumber();
+                    }
+                }
+                stagesGraph.removeEdge(v, u);
+                Set<Integer> stillAttached = stagesGraph.getReachable(finalStage);
+                List <SpaceshipComponent> createdDebris = new ArrayList<>();
+                for (int i = 0; i < stages.size(); ++ i) {
+                    if (!stillAttached.contains(i)) {
+                        createdDebris.addAll(stages.get(i));
+                        for (SpaceshipComponent toRemove : stages.get(i)) drawable.getChildren().remove(toRemove.getImage());
+                        stages.get(i).clear();
+                    }
+                }
+                shipDebris.add (new Debris(createdDebris));
+            }
+        }
+        activationQueue.remove(0);
     }
 
     public void update(){

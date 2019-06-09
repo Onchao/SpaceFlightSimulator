@@ -5,7 +5,7 @@ import java.util.*;
 public class DiGraph<T> {
     private Map<T, Integer> vertices;
     private Map<T, Integer> inDeg;
-    private List <Set<T>> adj;
+    private List <List<T>> adj;
 
     private void dfs (T v, Set<T> visited) {
         if (visited.contains(v)) return;
@@ -27,12 +27,12 @@ public class DiGraph<T> {
         if (vertices.containsKey(v)) return;
         vertices.put(v, adj.size());
         inDeg.put(v, 0);
-        adj.add(new HashSet<>());
+        adj.add(new ArrayList<>());
     }
 
     public void removeVertex(T v) {
         if (!vertices.containsKey(v)) return;
-        for (Set<T> neigh : adj) neigh.remove(v);
+        for (List<T> neigh : adj) neigh.remove(v);
         adj.remove((int) vertices.get(v));
         vertices.remove(v);
     }

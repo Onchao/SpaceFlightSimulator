@@ -105,6 +105,10 @@ public class GamestateController {
                     spaceship.setTurnModifier(1);
                 }
 
+                if (e.getCode() == KeyCode.SPACE) {
+                    spaceship.activateNext();
+                }
+
                 // INFO
                 if (e.getCode() == KeyCode.I) {
                     spaceship.info();

@@ -9,6 +9,7 @@ import world.SolarSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SpaceshipBuilder {
@@ -149,6 +150,18 @@ public class SpaceshipBuilder {
         return ret;
     }
 
+    private List<List<ActiveComponent>> makeActivationQueue () {
+        List <List<ActiveComponent>> ret = new LinkedList<>();
+        for (SpaceshipComponent comp : components) {
+            if (comp instanceof ActiveComponent) {
+                int aNum = ((ActiveComponent) comp).getActivationNumber();
+                while (ret.size() <= aNum) ret.add(new ArrayList<>());
+                ret.get(aNum).add((ActiveComponent) comp);
+            }
+        }
+        return ret;
+    }
+
     public Spaceship spaceship;
     public Spaceship build(CelestialBody parent, double angleOnPlanet,SolarSystem solarSystem) {
         makeComponentGraph();
@@ -156,7 +169,7 @@ public class SpaceshipBuilder {
             System.out.println("Opsss...");
             return null;
         }
-        spaceship =  new Spaceship(divideIntoStages(), parent, angleOnPlanet, solarSystem);
+        spaceship =  new Spaceship(divideIntoStages(), makeActivationQueue(), parent, angleOnPlanet, solarSystem);
         return spaceship;
     }
     public Spaceship getSpaceship(){
