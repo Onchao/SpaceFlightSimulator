@@ -52,7 +52,7 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
 
     @Override
     public double getFrontAvgSurface(){
-        if (isActive) return 8.0;
+        if (isActive) return Math.PI*8*8;
         return 0;
     }
 
