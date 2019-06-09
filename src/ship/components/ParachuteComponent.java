@@ -46,18 +46,24 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
 
     @Override
     public double getDragCoefficient() {
+        if (isActive) return 1.75;
         return 0;
     }
 
     @Override
     public double getFrontAvgSurface(){
+        if (isActive) return 8.0;
         return 0;
     }
 
     @Override
     public ComponentAction activate() {
         isActive = true;
-        // TODO
+        double oldX = getImage().getLayoutX();
+        double oldY = getImage().getLayoutY();
+        img = new ImageView(new Image("file:images/parachute2.png"));
+        img.setLayoutX(oldX - 360);
+        img.setLayoutY(oldY - 760);
         return new ComponentAction(ComponentAction.ActionType.OPEN_PARACHUTE, stageNumber);
     }
 

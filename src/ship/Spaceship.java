@@ -204,6 +204,8 @@ public class Spaceship {
                 }
                 shipDebris.add (new Debris(createdDebris, getVel_x(), getVel_y()));
                 recalculateOrigin();
+            } else if (action.getType() == ComponentAction.ActionType.OPEN_PARACHUTE) {
+                drawable.getChildren().add(((SpaceshipComponent) comp).getImage());
             }
         }
         activationQueue.remove(0);
@@ -306,6 +308,8 @@ public class Spaceship {
         double dy = (y - origin.getY());
 
         origin = new Point(x, y);
+        redCircle.setCenterX(x);
+        redCircle.setCenterY(y);
         //TODO: make it better
         img.setX(x - 25);
         img.setY(y - 46);
