@@ -103,8 +103,18 @@ public class Spaceship {
         System.out.println(throttle + " / 100");
     }
 
+    private Circle redCircle;
     private void recalculateOrigin () {
         origin =  new Point(drawable.getBoundsInLocal().getCenterX(),drawable.getBoundsInLocal().getCenterY());
+
+        if (redCircle == null) {
+            redCircle = new Circle();
+            redCircle.setFill(Color.RED);
+            redCircle.setRadius(5);
+            drawable.getChildren().add(redCircle);
+        }
+        redCircle.setCenterX(origin.getX());
+        redCircle.setCenterY(origin.getY());
     }
 
     private Point convertCoordinates(Point point) {
@@ -192,7 +202,7 @@ public class Spaceship {
                         stages.get(i).clear();
                     }
                 }
-                shipDebris.add (new Debris(createdDebris));
+                shipDebris.add (new Debris(createdDebris, getVel_x(), getVel_y()));
                 recalculateOrigin();
             }
         }
@@ -228,6 +238,13 @@ public class Spaceship {
                 attemptLanding();
         }
         setPrintScale();
+
+        List<Debris> toRemove = new ArrayList<>();
+        for (Debris debris : shipDebris) {
+            debris.update();
+            if (debris.getNumIterations() > 1000) toRemove.add(debris);
+        }
+        shipDebris.removeAll(toRemove);
     }
 
 
@@ -301,14 +318,6 @@ public class Spaceship {
         }
         rotate.setPivotX(x);
         rotate.setPivotY(y);
-
-        Circle redCircle;
-        redCircle = new Circle();
-        redCircle.setFill(Color.RED);
-        redCircle.setRadius(5);
-        redCircle.setCenterX(origin.getX());
-        redCircle.setCenterY(origin.getY());
-        drawable.getChildren().add(redCircle);
     }
 
     /*
