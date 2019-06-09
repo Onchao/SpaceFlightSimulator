@@ -5,9 +5,9 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
-import ship.components.Engine;
-import ship.components.FuelTankComponent;
-import ship.components.SpaceshipComponent;
+import ship.components.*;
+import utility.DiGraph;
+import utility.Direction;
 import utility.Force;
 import utility.Point;
 import world.*;
@@ -37,6 +37,8 @@ public class Spaceship {
     }
 
     private List<List<SpaceshipComponent>> stages;
+    private DiGraph<Integer> stagesGraph;
+    private int finalStage;
     public List<List<SpaceshipComponent>> getStages(){
         return stages;
     }
@@ -108,6 +110,23 @@ public class Spaceship {
 
     public Spaceship (List<List<SpaceshipComponent>> stages, CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem) {
         this.stages = stages;
+
+        stagesGraph = new DiGraph<>();
+        for (int i = 0; i < this.stages.size(); ++ i) {
+            for (SpaceshipComponent comp : this.stages.get(i)) {
+                if (comp instanceof CircularDecouplerComponent && comp.getUpperMount().isUsed()) {
+                    stagesGraph.addEdge(comp.getUpperMount().getAttached().getStageNumber(), comp.getStageNumber());
+                }
+                if (comp instanceof RadialDecouplerComponent) {
+                    if (((RadialDecouplerComponent) comp).getDirection() == Direction.RIGHT && comp.getLeftMount().isUsed()) {
+                        stagesGraph.addEdge(comp.getLeftMount().getAttached().getStageNumber(), comp.getStageNumber());
+                    } else if (((RadialDecouplerComponent) comp).getDirection() == Direction.LEFT && comp.getRightMount().isUsed()) {
+                        stagesGraph.addEdge(comp.getRightMount().getAttached().getStageNumber(), comp.getStageNumber());
+                    }
+                }
+            }
+        }
+        finalStage = stagesGraph.getRoot();
 
         drawable = new Group();
         for (List<SpaceshipComponent> stage : stages) {
