@@ -13,10 +13,10 @@ public class LandingStrutsComponent extends SpaceshipComponent {
         direction = dir;
 
         if (direction == Direction.LEFT) {
-            img = new ImageView(new Image("file:images/strut.png"));
+            img = new ImageView(new Image(getClass().getResourceAsStream("/images/strut.png")));
             super.rightMount = new Mount(130, 40, 200, 50, Mount.Direction.RIGHT, this);
         } else {
-            img = new ImageView(new Image("file:images/strut_r.png"));
+            img = new ImageView(new Image(getClass().getResourceAsStream("/images/strut_r.png")));
             super.leftMount = new Mount(-20, 40, 200, 50, Mount.Direction.RIGHT, this);
         }
     }

@@ -10,7 +10,7 @@ public class CircularDecouplerComponent extends SpaceshipComponent implements Ac
     private int activationNumber = 0;
 
     public CircularDecouplerComponent() {
-        img = new ImageView(new Image("file:images/circularDec.png"));
+        img = new ImageView(new Image(getClass().getResourceAsStream("/images/circularDec.png")));
 
         super.lowerMount = new Mount(40, 140, 50, 200, Mount.Direction.LOWER, this);
         super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);

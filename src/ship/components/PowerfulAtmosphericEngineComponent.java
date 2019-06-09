@@ -61,7 +61,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     }
 
     public PowerfulAtmosphericEngineComponent() {
-        img = new ImageView(new Image("file:images/atmEngine.png"));
+        img = new ImageView(new Image(getClass().getResourceAsStream("/images/atmEngine.png")));
 
         super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
         super.lowerMount = new Mount(40, 250, 50, 200, Mount.Direction.LOWER, this);

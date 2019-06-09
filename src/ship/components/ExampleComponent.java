@@ -8,7 +8,7 @@ public class ExampleComponent extends SpaceshipComponent {
     private ImageView img;
 
     public ExampleComponent() {
-        img = new ImageView(new Image("file:images/example_component.png"));
+        img = new ImageView(new Image(getClass().getResourceAsStream("/images/example_component.png")));
     }
 
     public static String getName() {

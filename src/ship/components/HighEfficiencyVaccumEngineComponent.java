@@ -61,7 +61,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     }
 
     public HighEfficiencyVaccumEngineComponent() {
-        img = new ImageView(new Image("file:images/vacEngine.png"));
+        img = new ImageView(new Image(getClass().getResourceAsStream("/images/vacEngine.png")));
 
         super.upperMount = new Mount(40, -20, 50, 200, Mount.Direction.UPPER, this);
         super.lowerMount = new Mount(40, 130, 50, 200, Mount.Direction.LOWER, this);

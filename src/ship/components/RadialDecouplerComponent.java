@@ -15,9 +15,9 @@ public class RadialDecouplerComponent extends SpaceshipComponent implements Acti
         direction = dir;
 
         if (direction == Direction.LEFT)
-            img = new ImageView(new Image("file:images/radialDec.png"));
+            img = new ImageView(new Image(getClass().getResourceAsStream("/images/radialDec.png")));
         else
-            img = new ImageView(new Image("file:images/radialDec_r.png"));
+            img = new ImageView(new Image(getClass().getResourceAsStream("/images/radialDec_r.png")));
 
         super.leftMount = new Mount(-20, 40, 200, 50, Mount.Direction.LEFT, this);
         super.rightMount = new Mount(90, 40, 200, 50, Mount.Direction.RIGHT, this);

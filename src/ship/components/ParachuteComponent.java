@@ -10,7 +10,7 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
     private int activationNumber = 0;
 
     public ParachuteComponent() {
-        img = new ImageView(new Image("file:images/parachute.png"));
+        img = new ImageView(new Image(getClass().getResourceAsStream("/images/parachute.png")));
 
         super.lowerMount = new Mount(40, -10, 50, 200, Mount.Direction.LOWER, this);
     }
@@ -61,7 +61,7 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
         isActive = true;
         double oldX = getImage().getLayoutX();
         double oldY = getImage().getLayoutY();
-        img = new ImageView(new Image("file:images/parachute2.png"));
+        img = new ImageView(new Image(getClass().getResourceAsStream("/images/parachute2.png")));
         img.setLayoutX(oldX - 360);
         img.setLayoutY(oldY - 760);
         return new ComponentAction(ComponentAction.ActionType.OPEN_PARACHUTE, stageNumber);
