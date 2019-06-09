@@ -4,6 +4,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 import ship.components.*;
 import utility.DiGraph;
@@ -52,7 +54,8 @@ public class Spaceship {
     // where is it?
     private CelestialBody parent;
     public CelestialBody getParent(){ return parent; }
-    private Point origin;
+    public Point origin;
+    private double distToBottom;
     private double rel_pos_x; // to parent [m]
     private double rel_pos_y; // to parent [m]
     public Point getAbsPos(){
@@ -64,7 +67,6 @@ public class Spaceship {
     public double getAngleOnPlanet(){
         return angleOnPlanet;
     }
-    private double distToBottom;
 
     private SolarSystem solarSystem;
 
@@ -98,12 +100,16 @@ public class Spaceship {
         System.out.println(throttle + " / 100");
     }
 
+    private void recalculateOrigin () {
+        origin =  new Point(drawable.getBoundsInLocal().getCenterX(),drawable.getBoundsInLocal().getCenterY());
+    }
+
     private Point convertCoordinates(Point point) {
         double dx = (point.getX() - origin.getX())/50; // 1m == 50px
         double dy = (point.getY() - origin.getY())/50;
 
         double r = Math.sqrt(dx*dx + dy*dy);
-        double angle = Math.atan2(dy, dx) + (rotate.getAngle()*(2*Math.PI))/360;
+        double angle = Math.atan2(dy, dx) + Math.toRadians(rotate.getAngle());// (rotate.getAngle()*(2*Math.PI))/360;
 
         return new Point(r*Math.cos(angle), r*Math.sin(angle));
     }
@@ -112,6 +118,7 @@ public class Spaceship {
         this.stages = stages;
 
         stagesGraph = new DiGraph<>();
+        for (int i = 0; i < this.stages.size(); ++ i) stagesGraph.addVertex(i);
         for (int i = 0; i < this.stages.size(); ++ i) {
             for (SpaceshipComponent comp : this.stages.get(i)) {
                 if (comp instanceof CircularDecouplerComponent && comp.getUpperMount().isUsed()) {
@@ -134,18 +141,16 @@ public class Spaceship {
                 drawable.getChildren().add(comp.getImage());
             }
         }
-        origin =  new Point(drawable.getLayoutBounds().getCenterX(),drawable.getLayoutBounds().getCenterY());
-        double minY = 1000000000.0; // almost infinity
-        for (Point v : getVertices()) {
-            if (v.getY() < minY) minY = v.getY();
-        }
-        distToBottom = Math.abs(minY);
-        System.out.println("distToBottom: " + distToBottom);
+
+        //origin =  new Point(drawable.getLayoutBounds().getCenterX(),drawable.getLayoutBounds().getCenterY());
+        recalculateOrigin();
+        calculateDistToBottom();
 
         forceInfluence = new ForceInfluence(this, solarSystem);
         this.parent = parent;
         this.angleOnPlanet = angleOnPlanet;
         this.solarSystem = solarSystem;
+
 
         rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
         rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
@@ -153,16 +158,6 @@ public class Spaceship {
         drawable.getTransforms().add(rotate);
         img.getTransforms().add(rotate);
         rotate.setAngle(-angleOnPlanet + 90);
-    }
-
-    //TODO: make it with respect to "rotate"
-    private double calculateDistToBottom(){
-        double minY = 1000000000.0; // almost infinity
-        for (Point v : getVertices()) {
-            if (v.getY() < minY) minY = v.getY();
-        }
-        distToBottom = Math.abs(minY);
-        return distToBottom;
     }
 
     public void update(){
@@ -224,7 +219,6 @@ public class Spaceship {
         }
         vel_x = 0;
         vel_y = 0;
-        distToBottom = calculateDistToBottom();
         rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
         rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
 
@@ -268,6 +262,14 @@ public class Spaceship {
         }
         rotate.setPivotX(x);
         rotate.setPivotY(y);
+
+        Circle redCircle;
+        redCircle = new Circle();
+        redCircle.setFill(Color.RED);
+        redCircle.setRadius(5);
+        redCircle.setCenterX(origin.getX());
+        redCircle.setCenterY(origin.getY());
+        drawable.getChildren().add(redCircle);
     }
 
     /*
@@ -301,42 +303,36 @@ public class Spaceship {
         return ret;
     }
 
-    public Point getStageCenterOfMass (int i) {
-        double xs = 0;
-        double ys = 0;
-        double d = 0;
-
-        List<SpaceshipComponent> curStage = stages.get(i);
-
-        for (int j = 0; j < curStage.size(); ++ j) {
-            SpaceshipComponent comp = curStage.get(j);
-
-            xs += comp.getCenterOfMassX() * comp.getMass();
-            ys += comp.getCenterOfMassY() * comp.getMass();
-
-            d += comp.getMass();
-        }
-
-        return convertCoordinates(new Point(xs/d, ys/d));
-    }
-
+    private Circle yellowCircle = null;
     public Point getCenterOfMass () {
         double xs = 0;
         double ys = 0;
         double d = 0;
 
-        for (int j = 0; j < stages.size(); ++ j) {
-            Point scom = getStageCenterOfMass(j);
-            long smass = getStageMass(j);
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                xs += comp.getCenterOfMassX()*comp.getMass();
+                ys += comp.getCenterOfMassY()*comp.getMass();
 
-            xs += scom.getX() * smass;
-            ys += scom.getY() * smass;
-            d += smass;
+                d += comp.getMass();
+            }
         }
 
-        return convertCoordinates(new Point(xs/d, ys/d));
+        Point ret = convertCoordinates(new Point(xs/d, ys/d));
+
+        if (yellowCircle == null) {
+            yellowCircle = new Circle();
+            yellowCircle.setFill(Color.YELLOW);
+            yellowCircle.setRadius(7);
+            drawable.getChildren().add(yellowCircle);
+        }
+        yellowCircle.setCenterX(xs/d);
+        yellowCircle.setCenterY(ys/d);
+
+        return ret;
     }
 
+    private Circle blueCircle = null;
     public Point getThrustCenter () {
         double xs = 0;
         double ys = 0;
@@ -351,8 +347,18 @@ public class Spaceship {
                 }
             }
         }
+        if (blueCircle == null) {
+            blueCircle = new Circle();
+            blueCircle.setFill(Color.BLUE);
+            blueCircle.setRadius(7);
+            drawable.getChildren().add(blueCircle);
+        }
+        blueCircle.setCenterX(xs/d);
+        blueCircle.setCenterY(ys/d);
 
-        return convertCoordinates(new Point(xs/d, ys/d));
+        Point ret = convertCoordinates(new Point(xs/d, ys/d));
+
+        return ret;
     }
 
     public double getTotalThrust () {
@@ -492,6 +498,15 @@ public class Spaceship {
             parent = newParent;
             System.out.println("NEW PARENT: " + parent.name);
         }
+    }
+
+    public void calculateDistToBottom() {
+        double minY = 1000000000.0; // almost infinity
+        for (Point v : getVertices()) {
+            if (v.getY() < minY) minY = v.getY();
+        }
+        System.out.println(Math.abs(minY));
+        distToBottom = Math.abs(minY);
     }
 
     public double getDistToBottom() {
