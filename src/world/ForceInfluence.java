@@ -23,26 +23,33 @@ public class ForceInfluence {
 
     public Force getCombinedForces(){
         LinkedList<Force> forces = new LinkedList<>();
-        //allForces.add(getPartialAeroForces();
+        forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
         //forces.add(getFrictionInfluence());
-
-        for(Force f : forces){
-            f.moveOrigin(-spaceship.getCenterOfMass().getX(), -spaceship.getCenterOfMass().getY());
-        }
 
         double momentum = 0;
         LinkedList<Force> centerForces = new LinkedList<>();
         for(Force f : forces){
             f.moveOrigin(-spaceship.getCenterOfMass().getX(), -spaceship.getCenterOfMass().getY());
+            //System.out.println(spaceship.getCenterOfMass().getX());
+            //System.out.println(spaceship.getThrustCenter().getX());
 
-            momentum += f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getVectorAngle()-f.getPointAngle()));
-            double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getVectorAngle()-f.getPointAngle()));
+            //System.out.println(f.getPointDist());
+            //System.out.println(f.getVectorLength());
+            //System.out.println(f.getPointAngle());
+            //System.out.println(f.getVectorAngle());
+            //System.out.println(f.getPointAngle() - f.getVectorAngle());
+            //System.out.println();
+
+            momentum += f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
+            double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
             Force F = new Force(0,0,
                     Math.cos(Math.toDegrees(f.getPointAngle()))*val,
                     Math.sin(Math.toDegrees(f.getPointAngle()))*val);
             centerForces.add(f);
         }
+        //System.out.println(momentum);
+        spaceship.setForceMomentum(momentum);
 
         centerForces.add(getGravityInfluence());
         double totalForceX = 0;
@@ -53,6 +60,8 @@ public class ForceInfluence {
         }
         return new Force(0, 0, totalForceX, totalForceY);
     }
+
+
 
     private Force getGravityInfluence(){ // [m/s]
         double Fx = 0;
@@ -74,7 +83,6 @@ public class ForceInfluence {
         double Fx = Math.cos(Math.toRadians(- spaceship.getRotate().getAngle() + 90)) * spaceship.getTotalThrust() * spaceship.getThrottle()/100;
         double Fy = Math.sin(Math.toRadians(- spaceship.getRotate().getAngle() + 90)) * spaceship.getTotalThrust() * spaceship.getThrottle()/100;
         return new Force(spaceship.getThrustCenter().getX(), spaceship.getThrustCenter().getY(), Fx, Fy);
-        //return new Force(spaceship.getCenterOfMass().getX(), spaceship.getCenterOfMass().getY(), Fx, Fy);
     }
 
     private List<Force> getPartialAeroForces() {

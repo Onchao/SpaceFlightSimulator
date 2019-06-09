@@ -91,7 +91,11 @@ public class Spaceship {
     public Rotate getRotate(){
         return rotate;
     }
-    private double turnModifier = 0;
+    private double turnMomentum = 0;
+    private double forceMomentum = 0;
+    private double turnSpeed = 0; // deg/s
+
+
 
     public void info(){
         System.out.println("pos_x: "  + getAbsPos().getX());
@@ -213,7 +217,7 @@ public class Spaceship {
         else{
             updateTurn();
             Force F = forceInfluence.getCombinedForces();
-            //TODO: add momentum
+
             vel_x += F.getFx()*Time.deltaTIME/getTotalMass();
             vel_y += F.getFy()*Time.deltaTIME/getTotalMass();
             rel_pos_x = rel_pos_x + vel_x* Time.deltaTIME;
@@ -498,14 +502,22 @@ public class Spaceship {
         return throttle;
     }
 
-
-    public void setTurnModifier(double angle){
-        turnModifier = angle;
+    public void setForceMomentum(double m){
+        forceMomentum = m;
+    }
+    public void setTurnMomentum(double angle){
+        turnMomentum = angle;
     }
     private void updateTurn(){
-        if(turnModifier != 0)
-            rotate.setAngle(rotate.getAngle() + turnModifier);
+        double totalMomentum = turnMomentum + forceMomentum;
+        double angleAcceleration = Math.toDegrees(totalMomentum / getMomentOfInertia());
+        double turnDelta = angleAcceleration*Time.deltaTIME;
+        turnSpeed +=turnDelta;
+        //System.out.println(turnDelta);
+        rotate.setAngle(rotate.getAngle() + turnSpeed);
     }
+
+
 
     private void updateAngleOnPlanet(){
         if(landed) {
