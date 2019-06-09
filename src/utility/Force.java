@@ -25,4 +25,22 @@ public class Force {
     public double getFy() {
         return Fy;
     }
+
+    public void moveOrigin(double mx, double my){
+        x+=mx;
+        y+=my;
+    }
+
+    public double getPointDist(){
+        return Math.sqrt(x*x+y*y);
+    }
+    public double getVectorLength(){
+        return Math.sqrt(Fx*Fx+Fy*Fy);
+    }
+    public double getPointAngle(){
+        return Math.toDegrees(Math.atan2(y,x));
+    }
+    public double getVectorAngle(){
+        return Math.toDegrees(Math.atan2(Fy,Fx));
+    }
 }

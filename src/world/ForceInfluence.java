@@ -1,7 +1,6 @@
 package world;
 
 import ship.Spaceship;
-import ship.components.SpaceshipComponent;
 import utility.Const;
 import utility.Force;
 import utility.Point;
@@ -23,15 +22,36 @@ public class ForceInfluence {
 
 
     public Force getCombinedForces(){
-        //TODO: add momentum
-        Force gravity = getGravityInfluence();
-        Force engine = getEngineInfluence();
-        Force aero = getAeroInfluence();
-        Force combined = new Force(0,0,
-                gravity.getFx() + engine.getFx() + aero.getFx(),
-                gravity.getFy() + engine.getFy() + aero.getFy()
-                );
-        return combined;
+        LinkedList<Force> forces = new LinkedList<>();
+        //allForces.add(getPartialAeroForces();
+        forces.add(getEngineInfluence());
+        //forces.add(getFrictionInfluence());
+
+        for(Force f : forces){
+            f.moveOrigin(-spaceship.getCenterOfMass().getX(), -spaceship.getCenterOfMass().getY());
+        }
+
+        double momentum = 0;
+        LinkedList<Force> centerForces = new LinkedList<>();
+        for(Force f : forces){
+            f.moveOrigin(-spaceship.getCenterOfMass().getX(), -spaceship.getCenterOfMass().getY());
+
+            momentum += f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getVectorAngle()-f.getPointAngle()));
+            double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getVectorAngle()-f.getPointAngle()));
+            Force F = new Force(0,0,
+                    Math.cos(Math.toDegrees(f.getPointAngle()))*val,
+                    Math.sin(Math.toDegrees(f.getPointAngle()))*val);
+            centerForces.add(f);
+        }
+
+        centerForces.add(getGravityInfluence());
+        double totalForceX = 0;
+        double totalForceY = 0;
+        for (Force f :centerForces){
+            totalForceX += f.getFx();
+            totalForceY += f.getFy();
+        }
+        return new Force(0, 0, totalForceX, totalForceY);
     }
 
     private Force getGravityInfluence(){ // [m/s]
@@ -46,13 +66,15 @@ public class ForceInfluence {
             Fx -= F * Math.cos(Math.toRadians(angle));
             Fy -= F * Math.sin(Math.toRadians(angle));
         }
-        return new Force(spaceship.getCenterOfMass().getX(),spaceship.getCenterOfMass().getY(), Fx, Fy);
+        //return new Force(spaceship.getCenterOfMass().getX(),spaceship.getCenterOfMass().getY(), Fx, Fy);
+        return new Force(0,0, Fx, Fy);
     }
 
     private Force getEngineInfluence(){ // [m/s]
-        double Fx = Math.cos(Math.toRadians(- spaceship.getRotate().getAngle() + 90)) * spaceship.getTotalThrust();
-        double Fy = Math.sin(Math.toRadians(- spaceship.getRotate().getAngle() + 90)) * spaceship.getTotalThrust();
+        double Fx = Math.cos(Math.toRadians(- spaceship.getRotate().getAngle() + 90)) * spaceship.getTotalThrust() * spaceship.getThrottle()/100;
+        double Fy = Math.sin(Math.toRadians(- spaceship.getRotate().getAngle() + 90)) * spaceship.getTotalThrust() * spaceship.getThrottle()/100;
         return new Force(spaceship.getThrustCenter().getX(), spaceship.getThrustCenter().getY(), Fx, Fy);
+        //return new Force(spaceship.getCenterOfMass().getX(), spaceship.getCenterOfMass().getY(), Fx, Fy);
     }
 
     private List<Force> getPartialAeroForces() {
@@ -126,18 +148,7 @@ public class ForceInfluence {
         return ret;
     }
 
-    private Force getAeroInfluence() {
-        double Dx = 0;
-        double Dy = 0;
-        for (List<SpaceshipComponent> stage : spaceship.getStages()) {
-            for (SpaceshipComponent comp : stage) {
-                Dx-=(0.5*0.75* spaceship.getParent().getAtmDensity(spaceship.getDistToBottom())*4*Math.PI*spaceship.getVel_x()*spaceship.getVel_x());
-                Dy-=(0.5*0.75* spaceship.getParent().getAtmDensity(spaceship.getDistToBottom())*4*Math.PI*spaceship.getVel_y()*spaceship.getVel_y());
-            }
-        }
-        return new Force(0, 0, Dx, Dy);
-    }
-
+    //TODO:
     private Force getFrictionInfluence(){
         return new Force(0,0,0,0);
     }

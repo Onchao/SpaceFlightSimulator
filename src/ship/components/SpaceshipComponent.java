@@ -57,10 +57,13 @@ public abstract class SpaceshipComponent {
     }
 
     public double getCenterOfMassX () {
+        //System.out.println(getImage().getLayoutX() + 40 + getWidth()/2);
+
         return getImage().getLayoutX() + 40 + getWidth()/2;
     }
 
     public double getCenterOfMassY () {
+        //System.out.println(getImage().getLayoutY() + 40 + getHeight()/2);
         return getImage().getLayoutY() + 40 + getHeight()/2;
     }
 
