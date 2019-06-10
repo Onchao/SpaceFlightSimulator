@@ -3,13 +3,12 @@ package main_package;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ship.*;
@@ -57,6 +56,9 @@ public class Build implements CustomScene {
         scroller.setPannable(true);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+
+        spaceshipView.setMinSize(600, 850);
+        spaceshipView.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         componentProperties = new VBox();
         componentProperties.setLayoutX(610);
