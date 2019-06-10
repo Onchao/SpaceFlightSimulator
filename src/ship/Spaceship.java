@@ -111,6 +111,9 @@ public class Spaceship {
     private void recalculateOrigin () {
         origin =  new Point(drawable.getBoundsInLocal().getCenterX(),drawable.getBoundsInLocal().getCenterY());
 
+        rotate.setPivotX(origin.getX());
+        rotate.setPivotY(origin.getY());
+
         if (redCircle == null) {
             redCircle = new Circle();
             redCircle.setFill(Color.RED);
@@ -207,9 +210,14 @@ public class Spaceship {
                     }
                 }
                 shipDebris.add (new Debris(createdDebris, getVel_x(), getVel_y()));
+                setPrintPosition(400, 400);
                 recalculateOrigin();
+                setPrintPosition(400, 400);
             } else if (action.getType() == ComponentAction.ActionType.OPEN_PARACHUTE) {
                 drawable.getChildren().add(((SpaceshipComponent) comp).getImage());
+                setPrintPosition(400, 400);
+                recalculateOrigin();
+                setPrintPosition(400, 400);
             }
         }
         activationQueue.remove(0);
@@ -403,6 +411,9 @@ public class Spaceship {
                 }
             }
         }
+
+        if (d == 0) return new Point(0, 0);
+
         if (blueCircle == null) {
             blueCircle = new Circle();
             blueCircle.setFill(Color.BLUE);
@@ -412,9 +423,7 @@ public class Spaceship {
         blueCircle.setCenterX(xs/d);
         blueCircle.setCenterY(ys/d);
 
-        Point ret = convertCoordinates(new Point(xs/d, ys/d));
-
-        return ret;
+        return convertCoordinates(new Point(xs/d, ys/d));
     }
 
     public double getTotalThrust () {
