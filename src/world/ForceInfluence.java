@@ -23,7 +23,7 @@ public class ForceInfluence {
 
     public Force getCombinedForces(){
         LinkedList<Force> forces = new LinkedList<>();
-        forces.addAll(getPartialAeroForces());
+        //forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
         //forces.add(getFrictionInfluence());
 
@@ -32,7 +32,7 @@ public class ForceInfluence {
         for(Force f : forces){
             f.moveOrigin(-spaceship.getCenterOfMass().getX(), -spaceship.getCenterOfMass().getY());
             //System.out.println(spaceship.getCenterOfMass().getX());
-            //System.out.println(spaceship.getThrustCenter().getX());
+            //System.out.println(spaceship.getThrustCenter().getY());
 
             //System.out.println(f.getPointDist());
             //System.out.println(f.getVectorLength());
@@ -42,6 +42,9 @@ public class ForceInfluence {
             //System.out.println();
 
             momentum += f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
+            //System.out.println(f.getX() + " " + f.getY() + " " + f.getFx() + " " + f.getFx());
+            //System.out.println(Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle())));
+
             double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
             Force F = new Force(0,0,
                     Math.cos(Math.toDegrees(f.getPointAngle()))*val,
@@ -49,7 +52,7 @@ public class ForceInfluence {
             centerForces.add(f);
         }
         //System.out.println(momentum);
-        spaceship.setForceMomentum(momentum);
+        //spaceship.setForceMomentum(momentum);
 
         centerForces.add(getGravityInfluence());
         double totalForceX = 0;
@@ -71,11 +74,9 @@ public class ForceInfluence {
             double F = Const.G * B.mass * Time.deltaTIME * spaceship.getTotalMass()/ r/r;
             double angle = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY() - B.getAbsPos().getY(),
                     spaceship.getAbsPos().getX() - B.getAbsPos().getX()));
-            //if(B.name.equals("Earth")) System.out.println(angle);
             Fx -= F * Math.cos(Math.toRadians(angle));
             Fy -= F * Math.sin(Math.toRadians(angle));
         }
-        //return new Force(spaceship.getCenterOfMass().getX(),spaceship.getCenterOfMass().getY(), Fx, Fy);
         return new Force(0,0, Fx, Fy);
     }
 

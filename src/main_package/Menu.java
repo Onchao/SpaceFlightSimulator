@@ -5,10 +5,13 @@ import java.lang.Math;
 
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.shape.Rectangle;
+import utility.ControlBox;
 
 
 public class Menu implements CustomScene {
@@ -21,6 +24,11 @@ public class Menu implements CustomScene {
     Menu(){
         root.setPrefSize(600, 600);
 
+        Rectangle background = new Rectangle(0, 0, 3840, 2160);
+        background.setFill(Color.rgb(8, 8, 32));
+        root.getChildren().add(background);
+
+
         root.getChildren().add(new Circle(450, 150, 40, Color.LIMEGREEN));
         root.getChildren().add(orbitmoon);
 
@@ -30,6 +38,10 @@ public class Menu implements CustomScene {
         Button buttonTestFlight = new Button("Test flight");
         root.getChildren().add(buttonTestFlight);
         buttonTestFlight.setTranslateY(30);
+
+        VBox controls = ControlBox.createControlBox();
+        controls.setTranslateY(60);
+        root.getChildren().add(controls);
 
         //Button buttonContinueGame = new Button("Continue journey");
         //buttonContinueGame.setTranslateY(30);
@@ -51,6 +63,7 @@ public class Menu implements CustomScene {
         };
         buttonTestFlight.setOnAction(eventTestFlight);
     }
+
 
     @Override
     public Pane getRoot(){
