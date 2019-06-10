@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SpaceshipComponent {
+    private static int nextId = 0;
+    private int id;
     protected Mount upperMount = null;
     protected Mount lowerMount = null;
     protected Mount rightMount = null;
@@ -16,6 +18,11 @@ public abstract class SpaceshipComponent {
 
     protected int stageNumber;
     protected int componentId;
+
+    SpaceshipComponent () {
+        id = nextId;
+        nextId ++;
+    }
 
     public abstract int getHeight();
     public abstract int getWidth();
@@ -40,6 +47,10 @@ public abstract class SpaceshipComponent {
 
     public Mount getLeftMount() {
         return leftMount;
+    }
+
+    public int getId () {
+        return id;
     }
 
     public void setStageNumber (int n) {
@@ -97,6 +108,9 @@ public abstract class SpaceshipComponent {
 
         builder.append(toString());
         builder.append("\n\n");
+        builder.append("Id: ");
+        builder.append(id);
+        builder.append('\n');
         builder.append("Mass: ");
         builder.append(getMass());
         builder.append("kg\n");
@@ -106,8 +120,6 @@ public abstract class SpaceshipComponent {
         builder.append("Width: ");
         builder.append(getWidth()/50);
         builder.append("m\n");
-        builder.append("Stage number: ");
-        builder.append(getStageNumber());
 
         return builder.toString();
     }

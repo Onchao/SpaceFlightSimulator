@@ -32,7 +32,6 @@ public class Build implements CustomScene {
 
     private int nextComponentPosition;
     private Rectangle nextComponent;
-    private Rectangle base;
 
     private SpaceshipBuilder builder;
 
@@ -84,10 +83,6 @@ public class Build implements CustomScene {
 
         root.getChildren().add(flyButton);
 
-        base = new Rectangle(600, 20);
-        base.setLayoutX(0);
-        base.setLayoutY(820);
-
         nextComponent = new Rectangle( 200, 50);
         nextComponent.setArcHeight(10);
         nextComponent.setArcWidth(10);
@@ -120,8 +115,6 @@ public class Build implements CustomScene {
 
         EventHandler<ActionEvent> eventFly = e -> GamestateController.changeScene(Gamestate.gs.FLY, builder);
         flyButton.setOnAction(eventFly);
-
-        spaceshipView.getChildren().add(base);
     }
 
     @Override
