@@ -251,6 +251,15 @@ public class Spaceship {
             if(distToBottom < 0)
                 attemptLanding();
         }
+
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                if ((comp instanceof Engine) && ((Engine) comp).getThrust() != 0) {
+                    ((Engine) comp).burnFuel(((Engine) comp).getFuelConsumption()*throttle/100*Time.deltaTIME);
+                }
+            }
+        }
+
         setPrintScale();
 
         List<Debris> toRemove = new ArrayList<>();

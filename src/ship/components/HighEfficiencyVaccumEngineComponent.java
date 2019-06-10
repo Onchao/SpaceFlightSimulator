@@ -134,6 +134,8 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
             }
         }
 
+        if (leftToBurn > amount/2) curThrust = 0;
+
         return amount - leftToBurn;  // == 0 if we're out of fuel
     }
 

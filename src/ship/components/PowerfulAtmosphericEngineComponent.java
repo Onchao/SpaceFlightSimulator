@@ -144,6 +144,9 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
             }
         }
 
+        if (leftToBurn > amount/2)
+            maxThrust = 0;
+
         return amount - leftToBurn;  // == 0 if we're out of fuel
     }
 
