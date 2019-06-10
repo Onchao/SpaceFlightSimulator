@@ -50,7 +50,7 @@ public class Spaceship {
 
     private Group drawable;
     public Node getDrawable(){ return drawable; }
-    public ImageView img = new ImageView(new Image("file:images/smallRocket.png"));
+    public ImageView img = new ImageView(new Image(getClass().getResourceAsStream("/images/smallRocket.png")));
     private ForceInfluence forceInfluence;
 
 
