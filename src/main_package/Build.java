@@ -28,10 +28,7 @@ public class Build implements CustomScene {
     private ScrollPane scroller = new ScrollPane();
     private ListView<SpaceshipComponentFactory> componentList;
     private VBox componentProperties;
-    private Label componentDesc;
-
-    private int nextComponentPosition;
-    private Rectangle nextComponent;
+    private VBox activationOrder;
 
     private SpaceshipBuilder builder;
 
@@ -64,10 +61,9 @@ public class Build implements CustomScene {
         componentProperties = new VBox();
         componentProperties.setLayoutX(610);
         componentProperties.setLayoutY(400);
-        componentDesc = new Label();
-        componentDesc.setText("");
-        componentDesc.setLayoutX(610);
-        componentDesc.setLayoutY(400);
+
+        activationOrder = new VBox();
+        activationOrder.setLayoutX(900);
 
         componentList = new ListView<>();
         componentList.setItems(availableComponents);
@@ -75,21 +71,12 @@ public class Build implements CustomScene {
         componentList.setLayoutX(600);
 
         root.setPrefSize(850, 850);
-        nextComponentPosition = 800;
-        root.getChildren().addAll(componentList, componentProperties);
+        root.getChildren().addAll(componentList, componentProperties, activationOrder);
 
         Button flyButton = new Button("Let's fly!");
         // TODO: event handler for this one
 
         root.getChildren().add(flyButton);
-
-        nextComponent = new Rectangle( 200, 50);
-        nextComponent.setArcHeight(10);
-        nextComponent.setArcWidth(10);
-        nextComponent.setFill(Color.LIMEGREEN);
-
-        nextComponent.setLayoutX(150);
-        nextComponent.setLayoutY(nextComponentPosition - nextComponent.getHeight());
 
         componentList.setOnMouseClicked(mouseEvent -> {
             ArrayList<Node> toRemove = new ArrayList<>();
@@ -117,9 +104,27 @@ public class Build implements CustomScene {
         flyButton.setOnAction(eventFly);
     }
 
+    private void refreshActivationOrder () {
+        List<List<ActiveComponent>> curQueue = builder.makeActivationQueue();
+
+        activationOrder.getChildren().clear();
+        int activationNumber = 0;
+
+        for (List<ActiveComponent> stage : curQueue) {
+            HBox items = new HBox();
+
+            items.getChildren().add(new Label(activationNumber + ":    "));
+            for (ActiveComponent comp : stage) {
+                items.getChildren().add(new Label(((SpaceshipComponent) comp).getId() + "   "));
+            }
+             ++ activationNumber;
+            activationOrder.getChildren().add(items);
+        }
+    }
+
     @Override
     public void update() {
-
+        refreshActivationOrder();
     }
 
     @Override
@@ -127,9 +132,9 @@ public class Build implements CustomScene {
         return root;
     }
 
-    private static class MountClickHandler implements EventHandler<MouseEvent> {
+    private class MountClickHandler implements EventHandler<MouseEvent> {
 
-        static class InvalidPositionException extends Exception {  }
+        class InvalidPositionException extends Exception {  }
 
         SpaceshipComponentFactory chosenComponentF;
         Mount myMount;
@@ -182,8 +187,10 @@ public class Build implements CustomScene {
                     componentProperties.getChildren().add(new HBox(new Label("Activation number: "), numInput));
                     Button saveProperties = new Button("Save");
                     componentProperties.getChildren().add(saveProperties);
-                    saveProperties.setOnAction(actionEvent1 ->
-                            ((ActiveComponent) chosenComponentCpy).setActivationNumber(Integer.parseInt(numInput.getCharacters().toString())));
+                    saveProperties.setOnAction(actionEvent1 -> {
+                        ((ActiveComponent) chosenComponentCpy).setActivationNumber(Integer.parseInt(numInput.getCharacters().toString()));
+                        update();
+                    });
                 }
                 Button deleteComponent = new Button("Delete component");
                 componentProperties.getChildren().add(deleteComponent);
@@ -229,6 +236,7 @@ public class Build implements CustomScene {
             shiftView(chosenComponent);
 
             builder.addComponent(chosenComponent);
+            update();
         }
 
         private void fillMounts(SpaceshipComponent chosenComponent) throws InvalidPositionException {

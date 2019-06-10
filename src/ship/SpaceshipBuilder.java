@@ -150,7 +150,7 @@ public class SpaceshipBuilder {
         return ret;
     }
 
-    private List<List<ActiveComponent>> makeActivationQueue () {
+    public List<List<ActiveComponent>> makeActivationQueue () {
         List <List<ActiveComponent>> ret = new LinkedList<>();
         for (SpaceshipComponent comp : components) {
             if (comp instanceof ActiveComponent) {
