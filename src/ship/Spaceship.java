@@ -164,7 +164,6 @@ public class Spaceship {
             }
         }
 
-        //origin =  new Point(drawable.getLayoutBounds().getCenterX(),drawable.getLayoutBounds().getCenterY());
         recalculateOrigin();
         calculateDistToBottom();
 
@@ -183,6 +182,7 @@ public class Spaceship {
     }
 
     public void activateNext () {
+        if (activationQueue.isEmpty()) return;
         for (ActiveComponent comp : activationQueue.get(0)) {
             ComponentAction action = comp.activate();
             if (action.getType() == ComponentAction.ActionType.DETACH_STAGE) {
@@ -421,13 +421,17 @@ public class Spaceship {
             }
         }
 
-        if (d == 0) return new Point(0, 0);
-
         if (blueCircle == null) {
             blueCircle = new Circle();
             blueCircle.setFill(Color.BLUE);
             blueCircle.setRadius(7);
             drawable.getChildren().add(blueCircle);
+        }
+
+        if (d == 0) {
+            drawable.getChildren().remove(blueCircle);
+            blueCircle = null;
+            return new Point(0, 0);
         }
         blueCircle.setCenterX(xs/d);
         blueCircle.setCenterY(ys/d);
