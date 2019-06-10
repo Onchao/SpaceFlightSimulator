@@ -13,6 +13,8 @@ public class ControlBox {
         VBox box = new VBox();
         box.getChildren().addAll(
                 nameBox("  Controls:"),
+                singleControlBox("A","turn left"),
+                singleControlBox("D","turn right"),
                 singleControlBox("Z","full throttle"),
                 singleControlBox("X","cut throttle"),
                 singleControlBox("SHIFT  ,  W","increase throttle"),
@@ -25,7 +27,7 @@ public class ControlBox {
                 intervalBox(),
                 singleControlBox("+","time warp increase"),
                 singleControlBox("-","time warp decrease"),
-                singleControlBox("ESC","pause")        );
+                singleControlBox("ESC","pause"));
         return box;
     }
 

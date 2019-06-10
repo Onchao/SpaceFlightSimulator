@@ -22,7 +22,7 @@ public class Menu implements CustomScene {
     double rad = 0;
 
     Menu(){
-        root.setPrefSize(600, 600);
+        root.setPrefSize(800, 800);
 
         Rectangle background = new Rectangle(0, 0, 3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));
