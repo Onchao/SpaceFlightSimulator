@@ -57,7 +57,7 @@ public class GamestateController {
             stage.setScene(SC);
             stage.show();
         }
-        else //if(newGS == Gamestate.gs.FLY)
+        else if(newGS == Gamestate.gs.FLY)
         {
             Gamestate.setGamestateFLY();
             currentScene = new Fly(builder);
@@ -131,6 +131,22 @@ public class GamestateController {
                 Scale.zoom(y);
                 //System.out.println(Scale.SCALE);
             });
+
+            stage.setScene(SC);
+            stage.show();
+        }
+        else if(newGS == Gamestate.gs.HELP) {
+            Gamestate.setGamestateHELP();
+            currentScene = new Help();
+            SC = new Scene(currentScene.getRoot());
+
+            stage.setScene(SC);
+            stage.show();
+        }
+        else { //if(newGS == Gamestate.gs.CONTROLS)
+            Gamestate.setGamestateCONTROLS();
+            currentScene = new Controls();
+            SC = new Scene(currentScene.getRoot());
 
             stage.setScene(SC);
             stage.show();

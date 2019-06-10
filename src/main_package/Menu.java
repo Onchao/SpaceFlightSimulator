@@ -74,6 +74,5 @@ public class Menu implements CustomScene {
         orbitmoon.setCenterX(Math.cos(rad)*100 + 450);
         orbitmoon.setCenterY(Math.sin(rad)*100 + 150);
         rad += 0.04;
-
     }
 }

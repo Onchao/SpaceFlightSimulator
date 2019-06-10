@@ -5,8 +5,9 @@ public class Gamestate {
         MENU,
         BUILD,
         FLY,
-        // FAIL, // ???
-        // SUCCEED // ???
+        HELP,
+        CONTROLS
+        //TODO: crashed
     }
     public static gs GS;
     public static gs getGS(){
@@ -21,5 +22,11 @@ public class Gamestate {
     };
     public static void setGamestateFLY(){
         GS = gs.FLY;
+    };
+    public static void setGamestateHELP(){
+        GS = gs.HELP;
+    };
+    public static void setGamestateCONTROLS(){
+        GS = gs.CONTROLS;
     };
 }
