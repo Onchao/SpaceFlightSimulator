@@ -8,8 +8,11 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ship.Spaceship;
 import ship.SpaceshipBuilder;
+import utility.LinearFunction;
 import utility.Point;
 import world.*;
+
+import java.util.LinkedList;
 
 public class Fly implements CustomScene{
     private Pane root = new Pane();
@@ -23,7 +26,6 @@ public class Fly implements CustomScene{
     Polygon polygon;
     Circle redCircle;
     Polygon flatPlanet;
-    Line line = new Line(0,0,0,0);
 
     Fly(SpaceshipBuilder builder){
         root.setPrefSize(800, 800);
@@ -48,8 +50,7 @@ public class Fly implements CustomScene{
         root.getChildren().add(spaceship.img);
         System.out.println(this.spaceship.getThrustCenter().getX() +  " " + this.spaceship.getThrustCenter().getY());
 
-        this.orbitPrediction = new OrbitPrediction(spaceship);
-        root.getChildren().add(line);
+        this.orbitPrediction = new OrbitPrediction(spaceship, origin, this);
         update();
     }
 
@@ -109,12 +110,14 @@ public class Fly implements CustomScene{
             spaceship.img.setVisible(false);
             spaceship.getDrawable().setVisible(true);
         }
-
+/*
         line.setStartX(convertAbsX(spaceship.getAbsPos().getX()));
         line.setStartY(convertAbsY(spaceship.getAbsPos().getY()));
         line.setEndX(convertAbsX(spaceship.getParent().getAbsPos().getX()));
         line.setEndY(convertAbsY(spaceship.getParent().getAbsPos().getY()));
         line.setStroke(Color.WHITE);
+*/
+        orbitPrediction.getLines();
     }
 
     public double convertAbsX(double x){
