@@ -86,7 +86,6 @@ public class Spaceship {
         return vel_y;
     }
 
-
     private Rotate rotate = new Rotate();
     public Rotate getRotate(){
         return rotate;

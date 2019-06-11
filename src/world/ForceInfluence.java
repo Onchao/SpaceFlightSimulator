@@ -64,8 +64,6 @@ public class ForceInfluence {
         return new Force(0, 0, totalForceX, totalForceY);
     }
 
-
-
     private Force getGravityInfluence(){ // [m/s]
         double Fx = 0;
         double Fy = 0;
