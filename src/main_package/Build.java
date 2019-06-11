@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -13,10 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ship.*;
 import ship.components.*;
-import utility.Boundaries;
-import utility.Direction;
-import utility.Mount;
-import utility.MountImg;
+import utility.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -48,6 +46,10 @@ public class Build implements CustomScene {
     Build (ObservableList<SpaceshipComponentFactory> availableComponents) {
         builder = new SpaceshipBuilder();
 
+        Rectangle background = new Rectangle(0, 0, 3840, 2160);
+        background.setFill(Color.rgb(8, 8, 32));
+        root.getChildren().add(background);
+
         root.getChildren().add(scroller);
         Pane spaceshipView = new Pane();
         scroller.setContent(spaceshipView);
@@ -63,11 +65,12 @@ public class Build implements CustomScene {
         componentProperties = new VBox();
         componentProperties.setLayoutX(610);
         componentProperties.setLayoutY(400);
+        componentProperties.setAlignment(Pos.CENTER);
 
         activationOrder = new VBox();
         activationOrder.setLayoutX(900);
 
-        componentList = new ListView<>();
+        componentList = CustomWidgets.customListView();
         componentList.setItems(availableComponents);
 
         componentList.setLayoutX(600);
@@ -75,7 +78,7 @@ public class Build implements CustomScene {
         root.setPrefSize(850, 850);
         root.getChildren().addAll(componentList, componentProperties, activationOrder);
 
-        Button flyButton = new Button("Let's fly!");
+        Button flyButton = CustomWidgets.customButton("Let's fly!");
         // TODO: event handler for this one
 
         root.getChildren().add(flyButton);
@@ -114,10 +117,11 @@ public class Build implements CustomScene {
 
         for (List<ActiveComponent> stage : curQueue) {
             HBox items = new HBox();
+            items.setAlignment(Pos.CENTER_LEFT);
 
-            items.getChildren().add(new Label(activationNumber + ":    "));
+            items.getChildren().add(CustomWidgets.customLabel(activationNumber + ":    ", 15));
             for (ActiveComponent comp : stage) {
-                items.getChildren().add(new Label(((SpaceshipComponent) comp).getId() + "   "));
+                items.getChildren().add(CustomWidgets.customLabel(((SpaceshipComponent) comp).getId() + "   ", 12));
             }
              ++ activationNumber;
             activationOrder.getChildren().add(items);
@@ -182,19 +186,22 @@ public class Build implements CustomScene {
 
             componentImage.setOnMouseClicked(mouseEvent -> {
                 componentProperties.getChildren().clear();
-                componentProperties.getChildren().add(new Label(chosenComponentCpy.getDescription()));
+                componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.toString(), 20));
+                componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.getDescription(), 14));
                 if (chosenComponentCpy instanceof ActiveComponent) {
                     TextField numInput =
-                            new TextField(Integer.toString(((ActiveComponent) chosenComponentCpy).getActivationNumber()));
-                    componentProperties.getChildren().add(new HBox(new Label("Activation number: "), numInput));
-                    Button saveProperties = new Button("Save");
+                            CustomWidgets.customTextField(Integer.toString(((ActiveComponent) chosenComponentCpy).getActivationNumber()));
+                    HBox actNo = new HBox(CustomWidgets.customLabel("Activation number: ", 12), numInput);
+                    actNo.setAlignment(Pos.CENTER_LEFT);
+                    componentProperties.getChildren().add(actNo);
+                    Button saveProperties = CustomWidgets.customButton("Save");
                     componentProperties.getChildren().add(saveProperties);
                     saveProperties.setOnAction(actionEvent1 -> {
                         ((ActiveComponent) chosenComponentCpy).setActivationNumber(Integer.parseInt(numInput.getCharacters().toString()));
                         update();
                     });
                 }
-                Button deleteComponent = new Button("Delete component");
+                Button deleteComponent = CustomWidgets.customButton("Delete component");
                 componentProperties.getChildren().add(deleteComponent);
                 deleteComponent.setOnAction(e -> {
                     if (chosenComponentCpy.getUpperMount() != null && chosenComponentCpy.getUpperMount().isUsed()) {
