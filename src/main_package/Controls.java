@@ -2,7 +2,6 @@ package main_package;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -22,15 +21,24 @@ public class Controls implements CustomScene {
         root.getChildren().add(background);
 
         Button buttonBack = new Button(" <-- back  ");
-        buttonBack.setStyle("-fx-padding: 7;" + "-fx-border-style: solid inside;"
+        String iddleButton = "-fx-padding: 7;" + "-fx-border-style: solid inside;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 4;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
                 + "-fx-background-color: rgba(0, 255, 255, 0.3);"
                 + "-fx-background-radius: 5;" + "-fx-background-insets: 4;"
-                + "-fx-font-size: 16px;"
-        );
+                + "-fx-font-size: 16px;";
+        String hoveredButton = "-fx-padding: 7;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 4;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
+                + "-fx-background-color: rgba(0, 255, 255, 0.5);"
+                + "-fx-background-radius: 5;" + "-fx-background-insets: 4;"
+                + "-fx-font-size: 16px;";
+        buttonBack.setStyle(iddleButton);
+        buttonBack.setOnMouseEntered(e -> buttonBack.setStyle(hoveredButton));
+        buttonBack.setOnMouseExited(e -> buttonBack.setStyle(iddleButton));
         buttonBack.setTextFill(Color.rgb(0,255,255,0.8));
-
+        buttonBack.setTranslateX(600);
+        buttonBack.setTranslateY(700);
         root.getChildren().add(buttonBack);
 
         VBox controls = ControlBox.createControlBox();

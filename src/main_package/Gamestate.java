@@ -6,7 +6,8 @@ public class Gamestate {
         BUILD,
         FLY,
         HELP,
-        CONTROLS
+        CONTROLS,
+        EXIT
         //TODO: crashed
     }
     public static gs GS;
@@ -28,5 +29,8 @@ public class Gamestate {
     };
     public static void setGamestateCONTROLS(){
         GS = gs.CONTROLS;
+    };
+    public static void setGamestateEXIT(){
+        GS = gs.EXIT;
     };
 }

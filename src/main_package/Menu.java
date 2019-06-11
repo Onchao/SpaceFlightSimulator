@@ -3,24 +3,21 @@ package main_package;
 import java.lang.Math;
 
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.shape.Rectangle;
-import utility.ControlBox;
-
 
 public class Menu implements CustomScene {
     private Pane root = new Pane();
 
-
-    Circle orbitmoon = new Circle(16, Color.SLATEGRAY);
-    double rad = 0;
-
+    //TODO: set title of game
     Menu(){
         root.setPrefSize(800, 800);
 
@@ -28,20 +25,19 @@ public class Menu implements CustomScene {
         background.setFill(Color.rgb(8, 8, 32));
         root.getChildren().add(background);
 
+        Button buttonNewGame = customButton("New game");
+        Button buttonHelp = customButton("Tips and tricks");
+        Button buttonControls = customButton("Controls");
+        Button buttonExit = customButton("Exit");
 
-        root.getChildren().add(new Circle(450, 150, 40, Color.LIMEGREEN));
-        root.getChildren().add(orbitmoon);
+        VBox box = new VBox();
+        box.getChildren().addAll(buttonNewGame, buttonHelp, buttonControls, buttonExit);
+        box.setAlignment(Pos.CENTER);
+        VBox.setVgrow(box, Priority.ALWAYS);
+        box.prefWidthProperty().bind(root.widthProperty());
+        box.prefHeightProperty().bind(root.heightProperty());
+        root.getChildren().add(box);
 
-        Button buttonNewGame = new Button("New game");
-        root.getChildren().add(buttonNewGame);
-
-        Button buttonHelp = new Button("Help");
-        buttonHelp.setTranslateY(30);
-        root.getChildren().add(buttonHelp);
-
-        Button buttonControls = new Button("Controls");
-        buttonControls.setTranslateY(60);
-        root.getChildren().add(buttonControls);
 
         EventHandler<ActionEvent> eventNewGame = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
@@ -66,6 +62,14 @@ public class Menu implements CustomScene {
             }
         };
         buttonControls.setOnAction(eventControls);
+
+        EventHandler<ActionEvent> eventExit = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                GamestateController.changeScene(Gamestate.gs.EXIT, null);
+            }
+        };
+        buttonExit.setOnAction(eventExit);
     }
 
 
@@ -75,8 +79,29 @@ public class Menu implements CustomScene {
     }
     @Override
     public void update() {
-        orbitmoon.setCenterX(Math.cos(rad)*100 + 450);
-        orbitmoon.setCenterY(Math.sin(rad)*100 + 150);
-        rad += 0.04;
     }
+
+    private Button customButton(String name){
+        Button button = new Button(name);
+        String iddleButton = "-fx-padding: 7;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 10;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
+                + "-fx-background-color: rgba(0, 255, 255, 0.3);"
+                + "-fx-background-radius: 5;" + "-fx-background-insets: 10;"
+                + "-fx-font-size: 24px;" + "-fx-font-weight: bold;";
+        String hoveredButton = "-fx-padding: 7;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 10;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
+                + "-fx-background-color: rgba(0, 255, 255, 0.5);"
+                + "-fx-background-radius: 5;" + "-fx-background-insets: 10;"
+                + "-fx-font-size: 24px;" + "-fx-font-weight: bold;";
+
+        button.setStyle(iddleButton);
+        button.setOnMouseEntered(e -> button.setStyle(hoveredButton));
+        button.setOnMouseExited(e -> button.setStyle(iddleButton));
+        button.setTextFill(Color.rgb(0,255,255,0.8));
+
+        return button;
+    }
+
 }

@@ -143,13 +143,17 @@ public class GamestateController {
             stage.setScene(SC);
             stage.show();
         }
-        else { //if(newGS == Gamestate.gs.CONTROLS)
+        else if(newGS == Gamestate.gs.CONTROLS)
+        {
             Gamestate.setGamestateCONTROLS();
             currentScene = new Controls();
             SC = new Scene(currentScene.getRoot());
 
             stage.setScene(SC);
             stage.show();
+        }
+        else{ // exit
+            stage.close();
         }
     }
 }

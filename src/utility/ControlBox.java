@@ -1,5 +1,6 @@
 package utility;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -12,7 +13,7 @@ public class ControlBox {
     public static VBox createControlBox(){
         VBox box = new VBox();
         box.getChildren().addAll(
-                nameBox("  Controls:"),
+                nameBox("  Controls"),
                 singleControlBox("A","turn left"),
                 singleControlBox("D","turn right"),
                 singleControlBox("Z","full throttle"),
@@ -71,8 +72,9 @@ public class ControlBox {
 
     private static HBox nameBox(String name){
         Label nameL = new Label(name);
-        nameL.setStyle("-fx-font-size: 22px;" + "-fx-font-weight: bold;");
+        nameL.setStyle("-fx-font-size: 24px;" + "-fx-font-weight: bold;");
         nameL.setTextFill(Color.rgb(0,255,255,0.8));
+        nameL.setPadding(new Insets(0, 0, 10, 0));
         return new HBox(nameL);
     }
 }

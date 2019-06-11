@@ -2,21 +2,19 @@ package main_package;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import utility.ControlBox;
 
 
 public class Help implements CustomScene {
     private Pane root = new Pane();
-
-
-    Circle orbitmoon = new Circle(16, Color.SLATEGRAY);
-    double rad = 0;
 
     Help(){
         root.setPrefSize(800, 800);
@@ -25,40 +23,69 @@ public class Help implements CustomScene {
         background.setFill(Color.rgb(8, 8, 32));
         root.getChildren().add(background);
 
+        VBox box = new VBox();
 
-        root.getChildren().add(new Circle(450, 150, 40, Color.LIMEGREEN));
-        root.getChildren().add(orbitmoon);
+        Label nameL = new Label("  Tips and tricks");
+        nameL.setStyle("-fx-font-size: 24px;" + "-fx-font-weight: bold;");
+        nameL.setPadding(new Insets(0, 0, 10, 0));
+        nameL.setTextFill(Color.rgb(0,255,255,0.8));
+        box.getChildren().add(nameL);
 
-        Button buttonNewGame = new Button("New game");
-        root.getChildren().add(buttonNewGame);
+        box.getChildren().addAll(
+                customHBox("eterg    wfawfawf fawfaw awf awe fwa  w feef f awf wfw fawawfawfa wf faw faw w a waefwf aw aw aw w a    wfaw fwa wf wfawefawerger"),
+                customHBox("ugag fasfagvgawf w fawe aw faw wff awaa fww aw awf aw"),
+                customHBox("hsafaswa awf wae fawf awa wf awawe aw faw fawf aw afw waf wfawe")
 
-        Button buttonTestFlight = new Button("Test flight");
-        root.getChildren().add(buttonTestFlight);
-        buttonTestFlight.setTranslateY(30);
+        );
+        box.setTranslateX(100);
+        box.setTranslateY(50);
+        root.getChildren().add(box);
 
-        VBox controls = ControlBox.createControlBox();
-        controls.setTranslateY(60);
-        root.getChildren().add(controls);
+        Button buttonBack = new Button(" <-- back  ");
+        String iddleButton = "-fx-padding: 7;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 4;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
+                + "-fx-background-color: rgba(0, 255, 255, 0.3);"
+                + "-fx-background-radius: 5;" + "-fx-background-insets: 4;"
+                + "-fx-font-size: 16px;";
+        String hoveredButton = "-fx-padding: 7;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 4;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
+                + "-fx-background-color: rgba(0, 255, 255, 0.5);"
+                + "-fx-background-radius: 5;" + "-fx-background-insets: 4;"
+                + "-fx-font-size: 16px;";
+        buttonBack.setStyle(iddleButton);
+        buttonBack.setOnMouseEntered(e -> buttonBack.setStyle(hoveredButton));
+        buttonBack.setOnMouseExited(e -> buttonBack.setStyle(iddleButton));
+        buttonBack.setTextFill(Color.rgb(0,255,255,0.8));
+        buttonBack.setTranslateX(600);
+        buttonBack.setTranslateY(700);
+        root.getChildren().add(buttonBack);
 
-        //Button buttonContinueGame = new Button("Continue journey");
-        //buttonContinueGame.setTranslateY(30);
-        //root.getChildren().add(buttonContinueGame);
-
-        EventHandler<ActionEvent> eventNewGame = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> eventBack= new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                GamestateController.changeScene(Gamestate.gs.BUILD, null);
+                GamestateController.changeScene(Gamestate.gs.MENU, null);
             }
         };
-        buttonNewGame.setOnAction(eventNewGame);
+        buttonBack.setOnAction(eventBack);
+    }
 
-        EventHandler<ActionEvent> eventTestFlight = new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e)
-            {
-                GamestateController.changeScene(Gamestate.gs.FLY, null);
-            }
-        };
-        buttonTestFlight.setOnAction(eventTestFlight);
+    private HBox customHBox(String text){
+        HBox box = new HBox();
+        box.setStyle("-fx-padding: 7;" + "-fx-border-style: solid inside;"
+                + "-fx-border-width: 2;" + "-fx-border-insets: 10 0 10 0;"
+                + "-fx-border-radius: 5;" + "-fx-border-color: rgba(0, 255, 255, 0.8);"
+                + "-fx-background-color: rgba(0, 255, 255, 0.2);"
+                + "-fx-background-radius: 5;" + "-fx-background-insets: 10 0 10 0;"
+        );
+
+        Label textL = new Label(text);
+        textL.setWrapText(true);
+        textL.setTextFill(Color.rgb(0,255,255,0.8));
+        box.getChildren().add(textL);
+        box.setMaxWidth(600);
+        return box;
     }
 
 
@@ -68,8 +95,6 @@ public class Help implements CustomScene {
     }
     @Override
     public void update() {
-        orbitmoon.setCenterX(Math.cos(rad)*100 + 450);
-        orbitmoon.setCenterY(Math.sin(rad)*100 + 150);
-        rad += 0.04;
+
     }
 }
