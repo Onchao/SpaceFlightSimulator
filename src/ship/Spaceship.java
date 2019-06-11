@@ -107,23 +107,6 @@ public class Spaceship {
         System.out.println(throttle + " / 100");
     }
 
-    private Circle redCircle;
-    private void recalculateOrigin () {
-        origin =  new Point(drawable.getBoundsInLocal().getCenterX(),drawable.getBoundsInLocal().getCenterY());
-
-        rotate.setPivotX(origin.getX());
-        rotate.setPivotY(origin.getY());
-
-        if (redCircle == null) {
-            redCircle = new Circle();
-            redCircle.setFill(Color.RED);
-            redCircle.setRadius(5);
-            drawable.getChildren().add(redCircle);
-        }
-        redCircle.setCenterX(origin.getX());
-        redCircle.setCenterY(origin.getY());
-    }
-
     private Point convertCoordinates(Point point) {
         double dx = (point.getX() - origin.getX())/50; // 1m == 50px
         double dy = (point.getY() - origin.getY())/50;
@@ -164,14 +147,13 @@ public class Spaceship {
             }
         }
 
-        recalculateOrigin();
+        recalculateOrigin(400, 400);
         calculateDistToBottom();
 
         forceInfluence = new ForceInfluence(this, solarSystem);
         this.parent = parent;
         this.angleOnPlanet = angleOnPlanet;
         this.solarSystem = solarSystem;
-
 
         rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
         rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
@@ -210,15 +192,12 @@ public class Spaceship {
                     }
                 }
                 shipDebris.add (new Debris(createdDebris, getVel_x(), getVel_y()));
-                setPrintPosition(400, 400);
-                recalculateOrigin();
-                setPrintPosition(400, 400);
+
             } else if (action.getType() == ComponentAction.ActionType.OPEN_PARACHUTE) {
                 drawable.getChildren().add(((SpaceshipComponent) comp).getImage());
-                setPrintPosition(400, 400);
-                recalculateOrigin();
-                setPrintPosition(400, 400);
             }
+            recalculateOrigin(400, 400);
+
         }
         activationQueue.remove(0);
     }
@@ -268,6 +247,8 @@ public class Spaceship {
             if (debris.getNumIterations() > 1000) toRemove.add(debris);
         }
         shipDebris.removeAll(toRemove);
+
+        recalculateOrigin(400,400);
     }
 
 
@@ -315,41 +296,6 @@ public class Spaceship {
         return true;
     }
 
-    public double getScale() {
-        return drawable.getScaleX();
-    }
-
-    public void setPrintScale() {
-        drawable.setScaleX(Scale.SCALE/50);
-        drawable.setScaleY(Scale.SCALE/50);
-    }
-
-    public void setPrintPosition(double x, double y) {
-        double dx = (x - origin.getX());
-        double dy = (y - origin.getY());
-
-        origin = new Point(x, y);
-        redCircle.setCenterX(x);
-        redCircle.setCenterY(y);
-        //TODO: make it better
-        img.setX(x - 25);
-        img.setY(y - 46);
-
-        for (List<SpaceshipComponent> stage : stages) {
-            for (SpaceshipComponent comp : stage) {
-                comp.getImage().setLayoutX((comp.getImage().getLayoutX() + dx));
-                comp.getImage().setLayoutY((comp.getImage().getLayoutY() + dy));
-            }
-        }
-        rotate.setPivotX(x);
-        rotate.setPivotY(y);
-    }
-
-    /*
-    public Point getPosition () {
-        return origin;
-    }
-    */
 
     public List<SpaceshipComponent> getStage (int i) {
         return Collections.unmodifiableList(stages.get(i));
@@ -376,8 +322,15 @@ public class Spaceship {
         return ret;
     }
 
+
+
     private Circle yellowCircle = null;
-    public Point getCenterOfMass () {
+    private Circle BIGyellowCircle = null;
+    public Point getCenterOfMass(){
+        return convertCoordinates(getPixelCenterOfMass());
+    }
+
+    public Point getPixelCenterOfMass () {
         double xs = 0;
         double ys = 0;
         double d = 0;
@@ -390,20 +343,54 @@ public class Spaceship {
                 d += comp.getMass();
             }
         }
+        return new Point(xs/d, ys/d);
+    }
 
-        Point ret = convertCoordinates(new Point(xs/d, ys/d));
+    public void setPrintScale() {
+        drawable.setScaleX(Scale.SCALE/50);
+        drawable.setScaleY(Scale.SCALE/50);
+    }
 
+    public void recalculateOrigin (double x, double y) {
+        origin = new Point(x, y);
+
+        Point center = getPixelCenterOfMass();
         if (yellowCircle == null) {
             yellowCircle = new Circle();
-            yellowCircle.setFill(Color.YELLOW);
+            yellowCircle.setFill(Color.rgb(255, 255, 0, 1));
             yellowCircle.setRadius(7);
             drawable.getChildren().add(yellowCircle);
         }
-        yellowCircle.setCenterX(xs/d);
-        yellowCircle.setCenterY(ys/d);
+        yellowCircle.setCenterX(center.getX());
+        yellowCircle.setCenterY(center.getY());
 
-        return ret;
+        if (BIGyellowCircle == null) {
+            BIGyellowCircle = new Circle();
+            BIGyellowCircle.setFill(Color.rgb(255, 255, 0, 0.2));
+            //TODO: take the farthest point
+            BIGyellowCircle.setRadius(1000);
+            drawable.getChildren().add(BIGyellowCircle);
+        }
+        BIGyellowCircle.setCenterX(center.getX());
+        BIGyellowCircle.setCenterY(center.getY());
+
+        double dx = (x - drawable.getBoundsInLocal().getCenterX());
+        double dy = (y - drawable.getBoundsInLocal().getCenterY());
+
+        //TODO: make it better
+        img.setX(x - 25);
+        img.setY(y - 46);
+
+        for (List<SpaceshipComponent> stage : stages) {
+            for (SpaceshipComponent comp : stage) {
+                comp.getImage().setLayoutX((comp.getImage().getLayoutX() + dx));
+                comp.getImage().setLayoutY((comp.getImage().getLayoutY() + dy));
+            }
+        }
+        rotate.setPivotX(x);
+        rotate.setPivotY(y);
     }
+
 
     private Circle blueCircle = null;
     public Point getThrustCenter () {

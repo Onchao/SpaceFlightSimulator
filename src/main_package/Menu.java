@@ -72,7 +72,6 @@ public class Menu implements CustomScene {
         buttonExit.setOnAction(eventExit);
     }
 
-
     @Override
     public Pane getRoot(){
         return root;
@@ -103,5 +102,4 @@ public class Menu implements CustomScene {
 
         return button;
     }
-
 }

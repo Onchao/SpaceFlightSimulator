@@ -10,8 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import utility.ControlBox;
-
 
 public class Help implements CustomScene {
     private Pane root = new Pane();

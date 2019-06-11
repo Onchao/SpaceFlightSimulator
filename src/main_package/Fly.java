@@ -14,7 +14,6 @@ public class Fly implements CustomScene{
     private SolarSystem solarSystem = new SolarSystem();
     private Time time = new Time(0*3600*24);
     private Rectangle background;
-    //private Ship ship = new Ship(solarSystem.bodies.get(1), 0);
     Spaceship spaceship;
     Origin origin;
 
@@ -43,23 +42,9 @@ public class Fly implements CustomScene{
         //spaceship.placeSpaceship();
         root.getChildren().add(spaceship.getDrawable());
         origin = new Origin(solarSystem.bodies, spaceship);
-
         root.getChildren().add(spaceship.img);
-
-        this.spaceship.setPrintPosition(400,400);
         System.out.println(this.spaceship.getThrustCenter().getX() +  " " + this.spaceship.getThrustCenter().getY());
 
-
-/*
-        //PROTOTYPE SHIP
-        polygon = new Polygon();
-        polygon.setFill(Color.WHITE);
-        redCircle = new Circle();
-        redCircle.setFill(Color.RED);
-        redCircle.setRadius(4);
-        root.getChildren().add(polygon);
-        root.getChildren().add(redCircle);
-*/
         update();
     }
 
@@ -119,7 +104,8 @@ public class Fly implements CustomScene{
         spaceship.update();
         double u = (spaceship.getAbsPos().getX() - origin.getOrigin().getX()) * Scale.SCALE;
         double v = (spaceship.getAbsPos().getY() - origin.getOrigin().getY()) * Scale.SCALE;
-        spaceship.setPrintPosition(400 + u, 400 + -v);
+        //TODO: recalculate MINIATURE origin only
+        spaceship.recalculateOrigin(400 + u, 400 + -v);
 
         if(Scale.SCALE < 1){
             spaceship.img.setVisible(true);
