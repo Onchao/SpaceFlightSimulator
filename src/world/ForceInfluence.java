@@ -23,7 +23,7 @@ public class ForceInfluence {
 
     public Force getCombinedForces(){
         LinkedList<Force> forces = new LinkedList<>();
-        //forces.addAll(getPartialAeroForces());
+        forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
         //forces.add(getFrictionInfluence());
 
@@ -52,7 +52,7 @@ public class ForceInfluence {
             centerForces.add(f);
         }
         //System.out.println(momentum);
-        //spaceship.setForceMomentum(momentum);
+        spaceship.setForceMomentum(momentum);
 
         centerForces.add(getGravityInfluence());
         double totalForceX = 0;

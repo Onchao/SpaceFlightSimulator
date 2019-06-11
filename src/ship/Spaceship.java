@@ -379,7 +379,12 @@ public class Spaceship {
             BIGyellowCircle = new Circle();
             BIGyellowCircle.setFill(Color.rgb(255, 255, 0, 0.2));
             //TODO: take the farthest point
-            BIGyellowCircle.setRadius(1000);
+            double maxDist = 0;
+            Point convCenter = convertCoordinates(center);
+            for (Point p : getVertices()) {
+                maxDist = Math.max(maxDist, p.distFrom(convCenter));
+            }
+            BIGyellowCircle.setRadius(maxDist*50 + 700);
             drawable.getChildren().add(0, BIGyellowCircle);
         }
         BIGyellowCircle.setCenterX(center.getX());
