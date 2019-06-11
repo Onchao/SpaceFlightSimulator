@@ -91,6 +91,7 @@ public class Spaceship {
     public Rotate getRotate(){
         return rotate;
     }
+    private Rotate chuteRotate = new Rotate();
     private double turnMomentum = 0;
     private double forceMomentum = 0;
     private double turnSpeed = 0; // deg/s
@@ -161,6 +162,10 @@ public class Spaceship {
         drawable.getTransforms().add(rotate);
         img.getTransforms().add(rotate);
         rotate.setAngle(-angleOnPlanet + 90);
+
+        chuteRotate.setPivotX(420);
+        chuteRotate.setPivotY(820);
+        chuteRotate.setAngle(0);
     }
 
     public void activateNext () {
@@ -194,7 +199,9 @@ public class Spaceship {
                 shipDebris.add (new Debris(createdDebris, getVel_x(), getVel_y()));
 
             } else if (action.getType() == ComponentAction.ActionType.OPEN_PARACHUTE) {
-                drawable.getChildren().add(((SpaceshipComponent) comp).getImage());
+                ImageView img = ((SpaceshipComponent) comp).getImage();
+                img.getTransforms().add(chuteRotate);
+                drawable.getChildren().add(img);
             }
             recalculateOrigin(400, 400);
 
@@ -203,6 +210,9 @@ public class Spaceship {
     }
 
     public void update(){
+        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
+        System.out.println("Vel: " + vel_x + " " + vel_y + ", Angle: " + Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
+
         updateThrottle();
         if(landed && throttle!=0)
             attemptLiftOff();
