@@ -209,7 +209,7 @@ public class Spaceship {
     }
 
     public void update(){
-        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
+        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel_y, -vel_x)) + 90);
         System.out.println("Vel: " + vel_x + " " + vel_y + ", Angle: " + Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
 
         updateThrottle();
