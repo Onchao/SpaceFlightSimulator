@@ -8,6 +8,8 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
     private ImageView img;
     private boolean isActive;
     private int activationNumber = 0;
+    private int height = 40;
+    private int width = 40;
 
     public ParachuteComponent() {
         img = new ImageView(new Image(getClass().getResourceAsStream("/images/parachute.png")));
@@ -21,12 +23,12 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
 
     @Override
     public int getHeight() {
-        return 40;
+        return height;
     }
 
     @Override
     public int getWidth() {
-        return 40;
+        return width;
     }
 
     @Override
@@ -64,6 +66,8 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
         img = new ImageView(new Image(getClass().getResourceAsStream("/images/parachute2.png")));
         img.setLayoutX(oldX - 360);
         img.setLayoutY(oldY - 760);
+        height = 760;
+        width = 720;
         return new ComponentAction(ComponentAction.ActionType.OPEN_PARACHUTE, stageNumber);
     }
 
