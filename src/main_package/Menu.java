@@ -35,17 +35,13 @@ public class Menu implements CustomScene {
         Button buttonNewGame = new Button("New game");
         root.getChildren().add(buttonNewGame);
 
-        Button buttonTestFlight = new Button("Test flight");
-        root.getChildren().add(buttonTestFlight);
-        buttonTestFlight.setTranslateY(30);
+        Button buttonHelp = new Button("Help");
+        buttonHelp.setTranslateY(30);
+        root.getChildren().add(buttonHelp);
 
-        VBox controls = ControlBox.createControlBox();
-        controls.setTranslateY(60);
-        root.getChildren().add(controls);
-
-        //Button buttonContinueGame = new Button("Continue journey");
-        //buttonContinueGame.setTranslateY(30);
-        //root.getChildren().add(buttonContinueGame);
+        Button buttonControls = new Button("Controls");
+        buttonControls.setTranslateY(60);
+        root.getChildren().add(buttonControls);
 
         EventHandler<ActionEvent> eventNewGame = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
@@ -55,13 +51,21 @@ public class Menu implements CustomScene {
         };
         buttonNewGame.setOnAction(eventNewGame);
 
-        EventHandler<ActionEvent> eventTestFlight = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> eventHelp = new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e)
             {
-                GamestateController.changeScene(Gamestate.gs.FLY, null);
+                GamestateController.changeScene(Gamestate.gs.HELP, null);
             }
         };
-        buttonTestFlight.setOnAction(eventTestFlight);
+        buttonHelp.setOnAction(eventHelp);
+
+        EventHandler<ActionEvent> eventControls = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                GamestateController.changeScene(Gamestate.gs.CONTROLS, null);
+            }
+        };
+        buttonControls.setOnAction(eventControls);
     }
 
 
