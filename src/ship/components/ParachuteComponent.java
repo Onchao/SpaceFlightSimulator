@@ -63,9 +63,10 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
         isActive = true;
         double oldX = getImage().getLayoutX();
         double oldY = getImage().getLayoutY();
+        img = null;
         img = new ImageView(new Image(getClass().getResourceAsStream("/images/parachute2.png")));
         img.setLayoutX(oldX - 360);
-        img.setLayoutY(oldY - 760);
+        img.setLayoutY(oldY - 740);
         height = 760;
         width = 720;
         return new ComponentAction(ComponentAction.ActionType.OPEN_PARACHUTE, stageNumber);

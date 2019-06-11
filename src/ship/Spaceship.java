@@ -167,9 +167,10 @@ public class Spaceship {
         chuteRotate.setAngle(0);
     }
 
-    public void activateNext () {
+    public synchronized void activateNext () {
         if (activationQueue.isEmpty()) return;
         for (ActiveComponent comp : activationQueue.get(0)) {
+            ImageView oldImg = ((SpaceshipComponent) comp).getImage();
             ComponentAction action = comp.activate();
             if (action.getType() == ComponentAction.ActionType.DETACH_STAGE) {
                 Integer u = ((SpaceshipComponent) comp).getStageNumber();
@@ -198,6 +199,7 @@ public class Spaceship {
                 shipDebris.add (new Debris(createdDebris, getVel_x(), getVel_y()));
 
             } else if (action.getType() == ComponentAction.ActionType.OPEN_PARACHUTE) {
+                drawable.getChildren().remove(oldImg);
                 ImageView img = ((SpaceshipComponent) comp).getImage();
                 img.getTransforms().add(chuteRotate);
                 drawable.getChildren().add(img);
@@ -208,9 +210,9 @@ public class Spaceship {
         activationQueue.remove(0);
     }
 
-    public void update(){
-        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
-        System.out.println("Vel: " + vel_x + " " + vel_y + ", Angle: " + Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
+    public synchronized void update(){
+        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel_y, -vel_x)) + 90);
+        //System.out.println("Vel: " + vel_x + " " + vel_y + ", Angle: " + Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
 
         updateThrottle();
         if(landed && throttle!=0)
