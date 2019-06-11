@@ -21,4 +21,11 @@ public class LinearFunction {
         return A*x + B;
     }
 
+    public void print(){
+        System.out.println("y = " + A + "x + " + B);
+    }
+
+    public double getXfromRadius(double r){
+        return Math.abs(r * Math.cos(Math.atan(A)));
+    }
 }

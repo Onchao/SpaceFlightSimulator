@@ -16,13 +16,15 @@ public class OrbitPrediction {
     private Origin origin;
     private Fly fly;
 
-    Line ship_planetL = new Line(0,0,0,0);
+    private Line ship_planetL = new Line(0,0,0,0);
+    private Line shipDirection1L = new Line(0,0,0,0);
+    private Line shipDirection2L = new Line(0,0,0,0);
 
     public OrbitPrediction(Spaceship spaceship, Origin origin, Fly fly){
         this.spaceship = spaceship;
         this.origin = origin;
         this.fly = fly;
-        fly.getRoot().getChildren().addAll(ship_planetL);
+        fly.getRoot().getChildren().addAll(ship_planetL, shipDirection1L, shipDirection2L);
     }
 
     private Force getGravityInfluence(){ // [m/s]
@@ -44,8 +46,32 @@ public class OrbitPrediction {
         ship_planetL.setEndY(convertAbsY(ship_planet.getYforX(spaceship.getParent().getAbsPos().getX())));
         ship_planetL.setStroke(Color.WHITE);
 
-        System.out.println(ship_planetL.getStartX() + " " + ship_planetL.getStartY());
-        System.out.println(ship_planetL.getEndX() + " " + ship_planetL.getEndY());
+        LinearFunction shipDirection = new LinearFunction(spaceship.getAbsPos(), spaceship.getVel_x(), spaceship.getVel_y());
+        shipDirection1L.setStartX(convertAbsX(spaceship.getAbsPos().getX()));
+        shipDirection1L.setStartY(convertAbsY(shipDirection.getYforX(spaceship.getAbsPos().getX())));
+        shipDirection1L.setEndX(convertAbsX(spaceship.getAbsPos().getX() - shipDirection.getXfromRadius(4e7)));
+        shipDirection1L.setEndY(convertAbsY(shipDirection.getYforX(spaceship.getAbsPos().getX() - shipDirection.getXfromRadius(4e7))));
+        shipDirection1L.setStroke(Color.YELLOW);
+
+        shipDirection2L.setStartX(convertAbsX(spaceship.getAbsPos().getX()));
+        shipDirection2L.setStartY(convertAbsY(shipDirection.getYforX(spaceship.getAbsPos().getX())));
+        shipDirection2L.setEndX(convertAbsX(spaceship.getAbsPos().getX() + shipDirection.getXfromRadius(4e7)));
+        shipDirection2L.setEndY(convertAbsY(shipDirection.getYforX(spaceship.getAbsPos().getX() + shipDirection.getXfromRadius(4e7))));
+        shipDirection2L.setStroke(Color.YELLOW);
+
+        if(spaceship.getVel_x() > 0){
+            shipDirection1L.setStrokeWidth(1);
+            shipDirection2L.setStrokeWidth(2);
+        }
+        else{
+            shipDirection1L.setStrokeWidth(2);
+            shipDirection2L.setStrokeWidth(1);
+        }
+
+        shipDirection.print();
+
+        //System.out.println(shipDirectionL.getStartX() + " " + shipDirectionL.getStartY());
+        //System.out.println(shipDirectionL.getEndX() + " " + shipDirectionL.getEndY());
     }
 
     public double convertAbsX(double x){
