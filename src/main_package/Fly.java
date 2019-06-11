@@ -3,10 +3,12 @@ package main_package;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ship.Spaceship;
 import ship.SpaceshipBuilder;
+import utility.Point;
 import world.*;
 
 public class Fly implements CustomScene{
@@ -16,11 +18,12 @@ public class Fly implements CustomScene{
     private Rectangle background;
     Spaceship spaceship;
     Origin origin;
+    private OrbitPrediction orbitPrediction;
 
     Polygon polygon;
     Circle redCircle;
     Polygon flatPlanet;
-
+    Line line = new Line(0,0,0,0);
 
     Fly(SpaceshipBuilder builder){
         root.setPrefSize(800, 800);
@@ -45,6 +48,8 @@ public class Fly implements CustomScene{
         root.getChildren().add(spaceship.img);
         System.out.println(this.spaceship.getThrustCenter().getX() +  " " + this.spaceship.getThrustCenter().getY());
 
+        this.orbitPrediction = new OrbitPrediction(spaceship);
+        root.getChildren().add(line);
         update();
     }
 
@@ -76,18 +81,11 @@ public class Fly implements CustomScene{
         }
         else{
             for (CelestialBody B : solarSystem.bodies) {
-                double x = B.getAbsPos().getX() * Scale.SCALE;
-                double y = B.getAbsPos().getY() * Scale.SCALE;
+                double x = convertAbsX(B.getAbsPos().getX());
+                double y = convertAbsY(B.getAbsPos().getY());
 
-                x -= origin.getOrigin().getX() * Scale.SCALE;
-                y -= origin.getOrigin().getY() * Scale.SCALE;
-
-                y *= -1;
                 double rShade = Math.pow(B.radius * (Math.pow(Scale.SCALE, 0.3)), 1.0 / 4) * 2;
                 double rPlanet = B.radius * Scale.SCALE;
-
-                x += 400;
-                y += 400;
 
                 B.shade.setCenterX(x);
                 B.shade.setCenterY(y);
@@ -95,17 +93,13 @@ public class Fly implements CustomScene{
                 B.planet.setCenterX(x);
                 B.planet.setCenterY(y);
                 B.planet.setRadius(rPlanet);
-
-                //Circle path = new Circle(x, y, 0.5, Color.GREEN);
-                //root.getChildren().add(path);
             }
         }
 
         spaceship.update();
-        double u = (spaceship.getAbsPos().getX() - origin.getOrigin().getX()) * Scale.SCALE;
-        double v = (spaceship.getAbsPos().getY() - origin.getOrigin().getY()) * Scale.SCALE;
         //TODO: recalculate MINIATURE origin only
-        spaceship.recalculateOrigin(400 + u, 400 + -v);
+        spaceship.recalculateOrigin(convertAbsX(spaceship.getAbsPos().getX()),
+                convertAbsY(spaceship.getAbsPos().getY()));
 
         if(Scale.SCALE < 1){
             spaceship.img.setVisible(true);
@@ -115,5 +109,22 @@ public class Fly implements CustomScene{
             spaceship.img.setVisible(false);
             spaceship.getDrawable().setVisible(true);
         }
+
+        line.setStartX(convertAbsX(spaceship.getAbsPos().getX()));
+        line.setStartY(convertAbsY(spaceship.getAbsPos().getY()));
+        line.setEndX(convertAbsX(spaceship.getParent().getAbsPos().getX()));
+        line.setEndY(convertAbsY(spaceship.getParent().getAbsPos().getY()));
+        line.setStroke(Color.WHITE);
+    }
+
+    public double convertAbsX(double x){
+        x -= origin.getOrigin().getX();
+        x *= Scale.SCALE;
+        return x + 400;
+    }
+    public double convertAbsY(double y){
+        y -= origin.getOrigin().getY();
+        y *= Scale.SCALE;
+        return - y + 400;
     }
 }
