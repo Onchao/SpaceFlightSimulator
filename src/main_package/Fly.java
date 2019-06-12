@@ -1,5 +1,6 @@
 package main_package;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -24,9 +25,13 @@ public class Fly implements CustomScene{
     Circle redCircle;
     Polygon flatPlanet;
 
-    ProgressBar throttleState;
-    ProgressBar fuelState;
-    double fuelOnLiftoff;
+    private ProgressBar throttleState;
+    private ProgressBar fuelState;
+    private double fuelOnLiftoff;
+    private Label altitudeWidget;
+    private Label orbitalSpeedWidget;
+    private Label verticalSpeedToSurfaceWidget;
+    private Label horizontalSpeedToSurfaceWidget;
 
     Fly(SpaceshipBuilder builder){
         root.setPrefSize(800, 800);
@@ -50,6 +55,26 @@ public class Fly implements CustomScene{
         Origin.setup(solarSystem.bodies, spaceship);
         root.getChildren().add(spaceship.img);
         System.out.println(this.spaceship.getThrustCenter().getX() +  " " + this.spaceship.getThrustCenter().getY());
+
+        altitudeWidget = CustomWidgets.customLabel("Altitude: " + (int)spaceship.getAltitude() + "m", 15);
+        altitudeWidget.setLayoutX(700);
+        altitudeWidget.setLayoutY(610);
+        root.getChildren().add(altitudeWidget);
+
+        orbitalSpeedWidget = CustomWidgets.customLabel("Orbital speed: " + (int)spaceship.getOrbitalSpeed() + "m/s", 15);
+        orbitalSpeedWidget.setLayoutX(700);
+        orbitalSpeedWidget.setLayoutY(630);
+        root.getChildren().add(orbitalSpeedWidget);
+
+        verticalSpeedToSurfaceWidget = CustomWidgets.customLabel("Vertical speed to surface: " + (int)spaceship.getVerticalOrbitalSpeed() + "m/s", 15);
+        verticalSpeedToSurfaceWidget.setLayoutX(700);
+        verticalSpeedToSurfaceWidget.setLayoutY(650);
+        root.getChildren().add(verticalSpeedToSurfaceWidget);
+
+        horizontalSpeedToSurfaceWidget = CustomWidgets.customLabel("Horizontal speed to surface: " + (int)spaceship.getHorizontalOrbitalSpeed() + "m/s", 15);
+        horizontalSpeedToSurfaceWidget.setLayoutX(700);
+        horizontalSpeedToSurfaceWidget.setLayoutY(670);
+        root.getChildren().add(horizontalSpeedToSurfaceWidget);
 
         VBox throttleWidget = new VBox();
         throttleState = CustomWidgets.customProgressBar("red");
@@ -86,6 +111,10 @@ public class Fly implements CustomScene{
 
         throttleState.setProgress((double)spaceship.getThrottle()/100);
         fuelState.setProgress(spaceship.getFuelTotal()/fuelOnLiftoff);
+        altitudeWidget.setText("Altitude: " + (int)spaceship.getAltitude() + "m");
+        orbitalSpeedWidget.setText("Orbital speed: " + (int)spaceship.getOrbitalSpeed() + "m/s");
+        verticalSpeedToSurfaceWidget.setText("Vertical speed to surface: " + (int)spaceship.getVerticalOrbitalSpeed() + "m/s");
+        horizontalSpeedToSurfaceWidget.setText("Horizontal speed to surface: " + (int)spaceship.getHorizontalOrbitalSpeed() + "m/s");
 
         if (Origin.originIndex == 0 && Scale.SCALE > 0.1){
             for (CelestialBody B : solarSystem.bodies) {

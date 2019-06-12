@@ -8,10 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 import ship.components.*;
-import utility.DiGraph;
-import utility.Direction;
-import utility.Force;
-import utility.Point;
+import utility.*;
 import world.*;
 
 import java.util.ArrayList;
@@ -147,8 +144,14 @@ public class Spaceship {
         double result = parent.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
         result -= parent.radius;
 
+        double angle = Math.toRadians(-getAngleOnPlanet() - rotate.getAngle() + 180);
+        double lowestPointDist = 0;
 
-
+        for (Point p : getVertices()) {
+            Point rp = p.rotate(angle);
+            lowestPointDist = Math.max(lowestPointDist, Math.abs(rp.getY()));
+        }
+        result -= lowestPointDist;
 
         return result;
     }
@@ -445,7 +448,6 @@ public class Spaceship {
         if (BIGyellowCircle == null) {
             BIGyellowCircle = new Circle();
             BIGyellowCircle.setFill(Color.rgb(255, 255, 0, 0.2));
-            //TODO: take the farthest point
             double maxDist = 0;
             Point convCenter = convertCoordinates(center);
             for (Point p : getVertices()) {
