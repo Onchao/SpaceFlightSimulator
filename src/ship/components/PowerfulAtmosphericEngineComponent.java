@@ -11,7 +11,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     private double maxThrust = 20000.0*1000; // N;
 
-    private final double fuelConsumption = 0;//1600;  // kg/s
+    private final double fuelConsumption = 1600;  // kg/s
     private boolean isActive;
     private int activationNumber = 0;
 

@@ -1,12 +1,15 @@
 package main_package;
 
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ship.Spaceship;
 import ship.SpaceshipBuilder;
+import utility.CustomWidgets;
 import world.*;
 
 public class Fly implements CustomScene{
@@ -20,6 +23,10 @@ public class Fly implements CustomScene{
     Polygon polygon;
     Circle redCircle;
     Polygon flatPlanet;
+
+    ProgressBar throttleState;
+    ProgressBar fuelState;
+    double fuelOnLiftoff;
 
     Fly(SpaceshipBuilder builder){
         root.setPrefSize(800, 800);
@@ -44,6 +51,26 @@ public class Fly implements CustomScene{
         root.getChildren().add(spaceship.img);
         System.out.println(this.spaceship.getThrustCenter().getX() +  " " + this.spaceship.getThrustCenter().getY());
 
+        VBox throttleWidget = new VBox();
+        throttleState = CustomWidgets.customProgressBar("red");
+        throttleState.setProgress(0);
+        throttleWidget.setLayoutX(700);
+        throttleWidget.setLayoutY(700);
+        throttleWidget.getChildren().add(CustomWidgets.customLabel("Throttle:", 15));
+        throttleWidget.getChildren().add(throttleState);
+        root.getChildren().add(throttleWidget);
+
+        fuelOnLiftoff = spaceship.getFuelTotal();
+
+        VBox fuelWidget = new VBox();
+        fuelState = CustomWidgets.customProgressBar("green");
+        fuelState.setProgress(1);
+        fuelWidget.setLayoutX(700);
+        fuelWidget.setLayoutY(750);
+        fuelWidget.getChildren().add(CustomWidgets.customLabel("Fuel:", 15));
+        fuelWidget.getChildren().add(fuelState);
+        root.getChildren().add(fuelWidget);
+
         this.orbitPrediction = new OrbitPrediction(spaceship,this);
         update();
     }
@@ -56,6 +83,9 @@ public class Fly implements CustomScene{
     public void update() {
         Time.updateTime();
         flatPlanet.getPoints().clear();
+
+        throttleState.setProgress((double)spaceship.getThrottle()/100);
+        fuelState.setProgress(spaceship.getFuelTotal()/fuelOnLiftoff);
 
         if (Origin.originIndex == 0 && Scale.SCALE > 0.1){
             for (CelestialBody B : solarSystem.bodies) {

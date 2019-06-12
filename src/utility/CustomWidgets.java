@@ -1,10 +1,7 @@
 package utility;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -72,5 +69,21 @@ public class CustomWidgets {
         listView.setStyle(style);
 
         return listView;
+    }
+
+    public static ProgressBar customProgressBar (String color) {
+        ProgressBar progressBar = new ProgressBar();
+
+        String style = "-fx-accent: " + color + ";" +
+                "-fx-background: rgba(0, 255, 255, 0.1);" +
+                "-fx-control-inner-background: rgba(0, 255, 255, 0.1);" +
+                "-fx-border-style: solid inside;" +
+                "-fx-border-radius: 5px;" +
+                "-fx-border-width: 2px;" +
+                "-fx-border-color: " + color + ";";
+
+        progressBar.setStyle(style);
+
+        return progressBar;
     }
 }
