@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -30,13 +31,16 @@ public class Build implements CustomScene {
     private SpaceshipBuilder builder;
 
     private MountImg getMountPointImg(Mount m) {
-        MountImg ret = new MountImg(m.getWidth(), m.getHeight());
+        Image img;
+        if (m.getWidth() > m.getHeight()) {
+            img = new Image(getClass().getResourceAsStream("/images/mountImg.png"));
+        } else {
+            img = new Image(getClass().getResourceAsStream("/images/mountImgVert.png"));
+        }
+        MountImg ret = new MountImg(img);
         double x = m.getPositionX();
         double y = m.getPositionY();
 
-        ret.setArcWidth(10);
-        ret.setArcHeight(10);
-        ret.setFill(Color.LIMEGREEN);
         ret.setLayoutX(x);
         ret.setLayoutY(y);
 
