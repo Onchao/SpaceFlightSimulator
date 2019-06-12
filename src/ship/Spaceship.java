@@ -96,6 +96,9 @@ public class Spaceship {
     private double turnSpeed = 0; // deg/s
 
 
+    public double getSpeed(){
+        return Math.sqrt(vel_x*vel_x + vel_y*vel_y);
+    }
 
     public void info(){
         System.out.println("pos_x: "  + getAbsPos().getX());
@@ -230,8 +233,8 @@ public class Spaceship {
 
             vel_x += F.getFx()*Time.deltaTIME/getTotalMass();
             vel_y += F.getFy()*Time.deltaTIME/getTotalMass();
-            rel_pos_x = rel_pos_x + vel_x* Time.deltaTIME;
-            rel_pos_y = rel_pos_y + vel_y* Time.deltaTIME;
+            rel_pos_x = rel_pos_x + vel_x * Time.deltaTIME;
+            rel_pos_y = rel_pos_y + vel_y * Time.deltaTIME;
 
             updateAngleOnPlanet();
             updateParent();

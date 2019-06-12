@@ -17,6 +17,12 @@ public class LinearFunction {
         B = P.getY() - A*P.getX();
     }
 
+    // passing through 1 point with specified angle
+    public LinearFunction(Point P, double angle){
+        A = Math.tan(angle);
+        B = P.getY() - A*P.getX();
+    }
+
     public double getYforX(double x){
         return A*x + B;
     }
