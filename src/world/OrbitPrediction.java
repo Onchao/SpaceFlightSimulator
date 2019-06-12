@@ -25,15 +25,16 @@ public class OrbitPrediction {
     private Line ship_focusL = new Line(0,0,0,0);
     private Circle c1 = new Circle();
     private Circle c2 = new Circle();
+    private Circle centerC = new Circle();
     private Ellipse orbit = new Ellipse();
-    //private Rotate orbitRotate = new Rotate(45);
+    private Rotate orbitRotate = new Rotate(45);
 
     public OrbitPrediction(Spaceship spaceship, Origin origin, Fly fly){
         this.spaceship = spaceship;
         this.origin = origin;
         this.fly = fly;
-        fly.getRoot().getChildren().addAll(ship_planetL, shipDirection1L, shipDirection2L, ship_focusL, c1, c2, orbit);
-        //orbit.getTransforms().add(orbitRotate);
+        fly.getRoot().getChildren().addAll(ship_planetL, shipDirection1L, shipDirection2L, ship_focusL, c1, c2, orbit, centerC);
+        orbit.getTransforms().add(orbitRotate);
     }
 
     // yellow = bisector of white and red
@@ -89,8 +90,8 @@ public class OrbitPrediction {
 
         Point p1 = new Point(spaceship.getAbsPos().getX() - dx, ship_focus.getYforX(spaceship.getAbsPos().getX() - dx));
         Point p2 = new Point(spaceship.getAbsPos().getX() + dx, ship_focus.getYforX(spaceship.getAbsPos().getX() + dx));
-        c1.setRadius(6);
-        c2.setRadius(6);
+        c1.setRadius(4);
+        c2.setRadius(4);
         c1.setCenterX(convertAbsX(p1.getX()));
         c1.setCenterY(convertAbsY(p1.getY()));
         c2.setCenterX(convertAbsX(p2.getX()));
@@ -98,35 +99,40 @@ public class OrbitPrediction {
         c1.setFill(Color.RED);
         c2.setFill(Color.RED);
 
-        double d1 = spaceship.getParent().getDistanceTo(p1.getX(), p2.getY());
-        double d2 = spaceship.getParent().getDistanceTo(p2.getX(), p2.getY());
-
-        //TODO: not always closest point is FOCI !
-        Point P;
-        if(d1 < d2){
-            P = new Point(p1.getX(), p1.getY());
+        double v1 = shipDirection.getYforX(spaceship.getParent().getAbsPos().getX());
+        double s1 = spaceship.getParent().getAbsPos().getY() - v1;
+        double v2 = shipDirection.getYforX(p1.getX());
+        double s2 = p1.getY() - v2;
+        Point foci2;
+        if(s1 * s2 > 0){
+            foci2 = new Point(p1.getX(), p1.getY());
         }
         else {
-            P = new Point(p2.getX(), p2.getY());
+            foci2 = new Point(p2.getX(), p2.getY());
         }
 
         Point center = new Point(
-                (spaceship.getParent().getAbsPos().getX() + P.getX())/2 ,
-                (spaceship.getParent().getAbsPos().getY() + P.getY())/2);
-        double fociDist = spaceship.getParent().getDistanceTo(P.getX(), P.getY());
+                (spaceship.getParent().getAbsPos().getX() + foci2.getX())/2 ,
+                (spaceship.getParent().getAbsPos().getY() + foci2.getY())/2);
+        centerC.setCenterX(convertAbsX(center.getX()));
+        centerC.setCenterY(convertAbsY(center.getY()));
+        centerC.setFill(Color.GREEN);
+        centerC.setRadius(4);
+
+        double fociDist = spaceship.getParent().getDistanceTo(foci2.getX(), foci2.getY());
         double b = Math.sqrt(a*a - fociDist*fociDist/2/2);
 
-        //orbitRotate.setAngle(Math.toDegrees(Math.atan2(
-        //    spaceship.getParent().getAbsPos().getY() - spaceship.getAbsPos().getY(),
-        //    spaceship.getParent().getAbsPos().getX() - spaceship.getAbsPos().getX())));
-        //orbitRotate.setPivotX(convertAbsX(center.getX()));
-        //orbitRotate.setPivotY(convertAbsY(center.getY()));
-
+        orbitRotate.setAngle(-Math.toDegrees(Math.atan2(
+            spaceship.getParent().getAbsPos().getY() - foci2.getY(),
+            spaceship.getParent().getAbsPos().getX() - foci2.getX())));
+        orbitRotate.setPivotX(convertAbsX(center.getX()));
+        orbitRotate.setPivotY(convertAbsY(center.getY()));
 
         orbit.setCenterX(convertAbsX(center.getX()));
         orbit.setCenterY(convertAbsY(center.getY()));
         orbit.setRadiusX(a * Scale.SCALE);
         orbit.setRadiusY(b * Scale.SCALE);
+
         orbit.setFill(Color.rgb(0,0,0,0));
         orbit.setStrokeWidth(3);
         orbit.setStroke(Color.SPRINGGREEN);
