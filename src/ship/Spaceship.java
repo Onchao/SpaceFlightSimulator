@@ -60,6 +60,10 @@ public class Spaceship {
     private Point origin;
     private double distToBottom;
     private Point pos; // to parent [m]
+    public Point gestPos(){
+        return pos;
+    }
+
     public Point getAbsPos(){
         return new Point(parent.getAbsPos().getX() + pos.getX(),
                 parent.getAbsPos().getY() + pos.getY());
@@ -100,29 +104,29 @@ public class Spaceship {
         return new Point(vel.getX() - p.getX(), vel.getX() - p.getY());
     }
 
-    public double getVerticalSpeed(){
+    //OK
+    public double getVerticalOrbitalSpeed(){
         double alpha = pos.getAngle();
         double beta = vel.getAngle();
         double gamma = beta - alpha;
-        return pos.getModule()*Math.cos(gamma);
+        return vel.getModule()*Math.cos(gamma);
     }
 
+    //OK
     public double getHorizontalOrbitalSpeed(){
         double alpha = pos.getAngle();
         double beta = vel.getAngle();
         double gamma = beta - alpha;
-        return pos.getModule()*Math.cos(gamma);
+        return vel.getModule()*Math.sin(gamma);
     }
+
 
     public double getHorizontalSurfaceSpeed(){
-        double alpha = pos.getAngle();
-        double beta = vel.getAngle();
-        double gamma = beta - alpha;
-        return pos.getModule()*Math.cos(gamma) - parent.getPlanetSurfaceSpeed();
+        return getHorizontalOrbitalSpeed() - parent.getPlanetSurfaceSpeed();
     }
 
-    public Point getVerticalVelocity(){
-        double v = getVerticalSpeed();
+    public Point getVerticalOrbitalVelocity(){
+        double v = getVerticalOrbitalSpeed();
         return new Point(v * Math.cos(pos.getAngle()), v * Math.sin(pos.getAngle()));
     }
 
@@ -139,22 +143,33 @@ public class Spaceship {
                 v * Math.sin(Math.toRadians(Math.toDegrees(pos.getAngle())+90)));
     }
 
-    /*
     public double getAltitude(){
+        double result = parent.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
+        result -= parent.radius;
 
+
+
+
+        return result;
     }
-*/
-    public void info(){
-        System.out.println("pos_x: "  + getAbsPos().getX());
-        System.out.println("pos_y: "  + getAbsPos().getY());
-        System.out.println("vel: " + getOrbitalSpeed());
 
-        System.out.println(getVelocityTakingWind().getX());
-        System.out.println(getVelocityTakingWind().getY());
-        System.out.println(throttle + " / 100");
+    public void info(){
+        System.out.println();
+        System.out.println(getOrbitalSpeed());
+        System.out.println(getHorizontalOrbitalSpeed());
+        System.out.println(parent.getPlanetSurfaceSpeed());
+        System.out.println(getVerticalOrbitalSpeed());
+        System.out.println(vel.getX());
+        System.out.println(vel.getY());
+
+        System.out.println();
         System.out.println(getHorizontalSurfaceSpeed());
-        //System.out.println(getHorizontalOrbitalVelocity().getX());
-        //System.out.println(getHorizontalOrbitalVelocity().getY());
+        System.out.println(getHorizontalOrbitalVelocity().getX());
+        System.out.println(getHorizontalOrbitalVelocity().getY());
+        System.out.println();
+        System.out.println(getVerticalOrbitalVelocity().getX() + " " + getVerticalOrbitalVelocity().getY());
+        System.out.println(getHorizontalSurfaceVelocity().getX() + " " + getHorizontalSurfaceVelocity().getY());
+
     }
 
     private Point convertCoordinates(Point point) {
@@ -322,9 +337,9 @@ public class Spaceship {
         Point p = parent.getPlanetSurfaceVelocity(this);
 
         vel = new Point(p.getX(), p.getY());
+        System.out.println("nice: " + p.getX() + " " + p.getY());
 
         System.out.println(getHorizontalOrbitalSpeed());
-        //System.out.println(u.getX() + " " + u.getY());
         landed = false;
     }
 

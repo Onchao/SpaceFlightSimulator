@@ -129,11 +129,12 @@ public class CelestialBody {
         return 2*radius*Math.PI/(rotationPeriod);
     }
 
+    // sin <-> cos bcs of reductions
     public Point getPlanetSurfaceVelocity(Spaceship spaceship){
-        double angle = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY(), spaceship.getAbsPos().getX()));
+        double angle = Math.atan2(spaceship.gestPos().getY(), spaceship.gestPos().getX());
         double velocity = 2*radius*Math.PI/(rotationPeriod);
-        double x = velocity * Math.cos(Math.toRadians(angle));
-        double y = velocity * Math.sin(Math.toRadians(angle));
+        double x = velocity * Math.sin(angle);
+        double y = velocity * Math.cos(angle);
         return new Point(x,y);
     }
 
@@ -141,11 +142,11 @@ public class CelestialBody {
         if(!atmExist){
             return new Point(0,0);
         }
-        double dist = getDistanceTo(spaceship.getAbsPos().getX(), spaceship.getAbsPos().getY());
-        double angle = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY(), spaceship.getAbsPos().getX()));
+        double dist = getDistanceTo(spaceship.gestPos().getX(), spaceship.gestPos().getY());
+        double angle = Math.atan2(spaceship.gestPos().getY(), spaceship.gestPos().getX());
         double velocity = 2*dist*Math.PI/(rotationPeriod);
-        double x = velocity * Math.cos(Math.toRadians(angle));
-        double y = velocity * Math.sin(Math.toRadians(angle));
+        double x = velocity * Math.sin(angle);
+        double y = velocity * Math.cos(angle);
         return new Point(x,y);
     }
 }
