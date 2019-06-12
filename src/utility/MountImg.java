@@ -1,9 +1,10 @@
 package utility;
 
-import javafx.scene.shape.Rectangle;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
-public class MountImg extends Rectangle {
-    public MountImg(double w, double h) {
-        super(w, h);
+public class MountImg extends ImageView {
+    public MountImg(Image img) {
+        super(img);
     }
 }
