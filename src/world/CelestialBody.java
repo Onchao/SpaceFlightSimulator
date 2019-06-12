@@ -105,12 +105,6 @@ public class CelestialBody {
     public Point getShipPosFromAngle(double angle, double distToBottom){
         return new Point((radius+distToBottom)*Math.cos(Math.toRadians(angle)), radius*Math.sin(Math.toRadians(angle)));
     }
-    public double getShipPosFromAngle_x(double angle, double distToBottom){
-        return (radius+distToBottom)*Math.cos(Math.toRadians(angle));
-    }
-    public double getShipPosFromAngle_y(double angle, double distToBottom){
-        return (radius+distToBottom)*Math.sin(Math.toRadians(angle));
-    }
 
     public double getEscapeRadius(){
         if(parent == null)
@@ -131,7 +125,11 @@ public class CelestialBody {
         return new Point(vel_x,vel_y);
     }
 
-    public Point getPlanetGroundVelocity(Spaceship spaceship){
+    public double getPlanetSurfaceSpeed(){
+        return 2*radius*Math.PI/(rotationPeriod);
+    }
+
+    public Point getPlanetSurfaceVelocity(Spaceship spaceship){
         double angle = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY(), spaceship.getAbsPos().getX()));
         double velocity = 2*radius*Math.PI/(rotationPeriod);
         double x = velocity * Math.cos(Math.toRadians(angle));

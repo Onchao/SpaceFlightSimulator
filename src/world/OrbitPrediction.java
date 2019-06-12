@@ -39,10 +39,10 @@ public class OrbitPrediction {
     }
 
     public void drawHelpersSimple(){
-        LinearFunction shipDirection = new LinearFunction(spaceship.getAbsPos(), spaceship.getVel_x(), spaceship.getVel_y());
+        LinearFunction shipDirection = new LinearFunction(spaceship.getAbsPos(), spaceship.getVel().getX(), spaceship.getVel().getY());
 
         Point arrow;
-        if(spaceship.getVel_x() > 0){
+        if(spaceship.getVel().getX() > 0){
             arrow = shipDirection.getPointInRadius(300, true);
         }
         else{
@@ -60,13 +60,13 @@ public class OrbitPrediction {
             arrowImg.setVisible(false);
         }
 
-        double angleYellow = Math.toDegrees(Math.atan2(spaceship.getVel_y(), spaceship.getVel_x()));
+        double angleYellow = Math.toDegrees(Math.atan2(spaceship.getVel().getY(), spaceship.getVel().getX()));
         double angleWhite = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY() - spaceship.getParent().getAbsPos().getY() , spaceship.getAbsPos().getX() - spaceship.getParent().getAbsPos().getX()));
         //System.out.println(angleYellow + " " + angleWhite);
         LinearFunction ship_focus = new LinearFunction(spaceship.getAbsPos(),Math.toRadians(2*angleYellow - angleWhite));
 
         double r1 = spaceship.getParent().getDistanceTo(spaceship.getAbsPos().getX(), spaceship.getAbsPos().getY());
-        double Etotal = spaceship.getTotalMass() * spaceship.getSpeed() * spaceship.getSpeed() / 2
+        double Etotal = spaceship.getTotalMass() * spaceship.getOrbitalSpeed() * spaceship.getOrbitalSpeed() / 2
                 - Const.G * spaceship.getParent().mass * spaceship.getTotalMass() / r1;
 
         double a = - Const.G * spaceship.getTotalMass() * spaceship.getParent().mass / Etotal / 2;
@@ -122,7 +122,7 @@ public class OrbitPrediction {
         ship_planetL.setEndY(Origin.convertAbsY(ship_planet.getYforX(spaceship.getParent().getAbsPos().getX())));
         ship_planetL.setStroke(Color.WHITE);
 
-        LinearFunction shipDirection = new LinearFunction(spaceship.getAbsPos(), spaceship.getVel_x(), spaceship.getVel_y());
+        LinearFunction shipDirection = new LinearFunction(spaceship.getAbsPos(), spaceship.getVel().getX(), spaceship.getVel().getY());
         shipDirection1L.setStartX(Origin.convertAbsX(spaceship.getAbsPos().getX()));
         shipDirection1L.setStartY(Origin.convertAbsY(shipDirection.getYforX(spaceship.getAbsPos().getX())));
         shipDirection1L.setEndX(Origin.convertAbsX(spaceship.getAbsPos().getX() - shipDirection.getXfromRadius(4e7)));
@@ -135,7 +135,7 @@ public class OrbitPrediction {
         shipDirection2L.setEndY(Origin.convertAbsY(shipDirection.getYforX(spaceship.getAbsPos().getX() + shipDirection.getXfromRadius(4e7))));
         shipDirection2L.setStroke(Color.YELLOW);
 
-        if(spaceship.getVel_x() > 0){
+        if(spaceship.getVel().getX() > 0){
             shipDirection1L.setStrokeWidth(1);
             shipDirection2L.setStrokeWidth(2);
         }
@@ -144,7 +144,7 @@ public class OrbitPrediction {
             shipDirection2L.setStrokeWidth(1);
         }
 
-        double angleYellow = Math.toDegrees(Math.atan2(spaceship.getVel_y(), spaceship.getVel_x()));
+        double angleYellow = Math.toDegrees(Math.atan2(spaceship.getVel().getY(), spaceship.getVel().getX()));
         double angleWhite = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY() - spaceship.getParent().getAbsPos().getY() , spaceship.getAbsPos().getX() - spaceship.getParent().getAbsPos().getX()));
         //System.out.println(angleYellow + " " + angleWhite);
         LinearFunction ship_focus = new LinearFunction(spaceship.getAbsPos(),Math.toRadians(2*angleYellow - angleWhite));
@@ -156,7 +156,7 @@ public class OrbitPrediction {
         ship_focusL.setStroke(Color.RED);
 
         double r1 = spaceship.getParent().getDistanceTo(spaceship.getAbsPos().getX(), spaceship.getAbsPos().getY());
-        double Etotal = spaceship.getTotalMass() * spaceship.getSpeed() * spaceship.getSpeed() / 2
+        double Etotal = spaceship.getTotalMass() * spaceship.getOrbitalSpeed() * spaceship.getOrbitalSpeed() / 2
                 - Const.G * spaceship.getParent().mass * spaceship.getTotalMass() / r1;
 
         double a = - Const.G * spaceship.getTotalMass() * spaceship.getParent().mass / Etotal / 2;

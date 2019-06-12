@@ -34,4 +34,13 @@ public class Point {
 
         return Math.sqrt(dx*dx + dy*dy);
     }
+
+    public double getModule(){
+        return Math.sqrt(x*x+y*y);
+    }
+
+    //rad
+    public double getAngle(){
+        return Math.atan2(y,x);
+    }
 }
