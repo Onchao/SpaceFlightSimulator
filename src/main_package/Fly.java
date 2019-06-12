@@ -3,16 +3,11 @@ package main_package;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ship.Spaceship;
 import ship.SpaceshipBuilder;
-import utility.LinearFunction;
-import utility.Point;
 import world.*;
-
-import java.util.LinkedList;
 
 public class Fly implements CustomScene{
     private Pane root = new Pane();
@@ -117,7 +112,7 @@ public class Fly implements CustomScene{
         line.setEndY(convertAbsY(spaceship.getParent().getAbsPos().getY()));
         line.setStroke(Color.WHITE);
 */
-        orbitPrediction.getLines();
+        orbitPrediction.drawHelpersSimple();
     }
 
     public double convertAbsX(double x){

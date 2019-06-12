@@ -34,4 +34,12 @@ public class LinearFunction {
     public double getXfromRadius(double r){
         return Math.abs(r * Math.cos(Math.atan(A)));
     }
+
+    public Point getPointInRadius(double r, boolean positive){
+        double tmp = getXfromRadius(r);
+        if(!positive){
+            tmp*=-1;
+        }
+        return new Point(tmp, A*tmp);
+    }
 }
