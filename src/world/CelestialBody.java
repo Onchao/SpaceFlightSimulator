@@ -2,6 +2,7 @@ package world;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import ship.Spaceship;
 import utility.Point;
 
 import static java.lang.Double.MAX_VALUE;
@@ -111,15 +112,6 @@ public class CelestialBody {
         return (radius+distToBottom)*Math.sin(Math.toRadians(angle));
     }
 
-    public Point getPlanetVelocity(){
-        System.out.println("wow " + orbitalRadius);
-        double velocity = 2*orbitalRadius*Math.PI/(orbitalPeriod);
-        System.out.println(velocity);
-        double vel_x = velocity * Math.cos(Math.toRadians(getOrbitalAngle() + 90));
-        double vel_y = velocity * Math.sin(Math.toRadians(getOrbitalAngle() + 90));
-        return new Point(vel_x,vel_y);
-    }
-
     public double getEscapeRadius(){
         if(parent == null)
             return MAX_VALUE;
@@ -128,6 +120,35 @@ public class CelestialBody {
 
     public double getDistanceTo(double x, double y){
         return Math.sqrt((getAbsPos().getX()-x) * (getAbsPos().getX()-x) + (getAbsPos().getY()-y) * (getAbsPos().getY()-y));
+    }
+
+
+
+    public Point getPlanetVelocity(){
+        double velocity = 2*orbitalRadius*Math.PI/(orbitalPeriod);
+        double vel_x = velocity * Math.cos(Math.toRadians(getOrbitalAngle() + 90));
+        double vel_y = velocity * Math.sin(Math.toRadians(getOrbitalAngle() + 90));
+        return new Point(vel_x,vel_y);
+    }
+
+    public Point getPlanetGroundVelocity(Spaceship spaceship){
+        double angle = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY(), spaceship.getAbsPos().getX()));
+        double velocity = 2*radius*Math.PI/(rotationPeriod);
+        double x = velocity * Math.cos(Math.toRadians(angle));
+        double y = velocity * Math.sin(Math.toRadians(angle));
+        return new Point(x,y);
+    }
+
+    public Point getWindVelocity(Spaceship spaceship){
+        if(!atmExist){
+            return new Point(0,0);
+        }
+        double dist = getDistanceTo(spaceship.getAbsPos().getX(), spaceship.getAbsPos().getY());
+        double angle = Math.toDegrees(Math.atan2(spaceship.getAbsPos().getY(), spaceship.getAbsPos().getX()));
+        double velocity = 2*dist*Math.PI/(rotationPeriod);
+        double x = velocity * Math.cos(Math.toRadians(angle));
+        double y = velocity * Math.sin(Math.toRadians(angle));
+        return new Point(x,y);
     }
 }
 

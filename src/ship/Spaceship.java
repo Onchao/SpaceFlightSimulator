@@ -59,11 +59,10 @@ public class Spaceship {
     public CelestialBody getParent(){ return parent; }
     private Point origin;
     private double distToBottom;
-    private double rel_pos_x; // to parent [m]
-    private double rel_pos_y; // to parent [m]
+    private Point relPos; // to parent [m]
     public Point getAbsPos(){
-        return new Point(parent.getAbsPos().getX() + rel_pos_x,
-                parent.getAbsPos().getY() + rel_pos_y);
+        return new Point(parent.getAbsPos().getX() + relPos.getX(),
+                parent.getAbsPos().getY() + relPos.getY());
     }
 
     private double angleOnPlanet;
@@ -100,6 +99,11 @@ public class Spaceship {
         return Math.sqrt(vel_x*vel_x + vel_y*vel_y);
     }
 
+    public Point getVelocityTakingWind(){
+        Point p = parent.getWindVelocity(this);
+        return new Point(vel_x - p.getX(), vel_y - p.getY());
+    }
+
     public void info(){
         System.out.println("pos_x: "  + getAbsPos().getX());
         System.out.println("pos_y: "  + getAbsPos().getY());
@@ -107,6 +111,8 @@ public class Spaceship {
 
         //System.out.println("gravity_x: "  + getGravityInfluence().getX());
         //System.out.println("gravity_y: "  + getGravityInfluence().getY());
+        System.out.println(getVelocityTakingWind().getX());
+        System.out.println(getVelocityTakingWind().getY());
         System.out.println(throttle + " / 100");
     }
 
@@ -158,8 +164,8 @@ public class Spaceship {
         this.angleOnPlanet = angleOnPlanet;
         this.solarSystem = solarSystem;
 
-        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
-        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
+        relPos = new Point(parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom),
+                parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom));
 
         drawable.getTransforms().add(rotate);
         img.getTransforms().add(rotate);
@@ -214,6 +220,8 @@ public class Spaceship {
     }
 
     public synchronized void update(){
+        //System.out.println(getVelocityTakingWind().getY());
+
         chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel_y, -vel_x)) + 90);
         //System.out.println("Vel: " + vel_x + " " + vel_y + ", Angle: " + Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
 
@@ -223,8 +231,8 @@ public class Spaceship {
 
         if(landed){
             updateAngleOnPlanet();
-            rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
-            rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
+            relPos = new Point(parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom),
+                    parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom));
             rotate.setAngle(-angleOnPlanet + 90);
         }
         else{
@@ -233,13 +241,14 @@ public class Spaceship {
 
             vel_x += F.getFx()*Time.deltaTIME/getTotalMass();
             vel_y += F.getFy()*Time.deltaTIME/getTotalMass();
-            rel_pos_x = rel_pos_x + vel_x * Time.deltaTIME;
-            rel_pos_y = rel_pos_y + vel_y * Time.deltaTIME;
+
+            relPos = new Point(relPos.getX() + vel_x * Time.deltaTIME,
+                    relPos.getY() + vel_y * Time.deltaTIME);
+            parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
 
             updateAngleOnPlanet();
             updateParent();
-            distToBottom = Math.sqrt(rel_pos_x*rel_pos_x + rel_pos_y*rel_pos_y) - parent.radius;
-
+            distToBottom = parent.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
             //detect collisions
             if(distToBottom < 0)
                 attemptLanding();
@@ -266,22 +275,26 @@ public class Spaceship {
     }
 
 
-
     void attemptLiftOff(){
         System.out.println("LIFT OFF");
 
         if(!enginesPresent() || !fuelPresent())
             return;
+        Point p = parent.getPlanetGroundVelocity(this);
 
-        double velocity = 2*parent.radius*Math.PI
-                /(parent.rotationPeriod);
-        vel_x = velocity * Math.cos(Math.toRadians(angleOnPlanet + 90));
-        vel_y = velocity * Math.sin(Math.toRadians(angleOnPlanet + 90));
+        vel_x = p.getX();
+        vel_y = p.getY();
+
+        Point u = getVelocityTakingWind();
+        System.out.println(u.getX() + " " + u.getY());
         landed = false;
     }
 
     void attemptLanding(){
+        // TODO: ???????????????????????
         Point v =  parent.getPlanetVelocity();
+        //????????????????????????????
+
         double delta_x = v.getX() - vel_x;
         double delta_y = v.getY() - vel_y;
         double velocity = Math.sqrt(delta_x*delta_x + delta_y*delta_y);
@@ -293,8 +306,7 @@ public class Spaceship {
         }
         vel_x = 0;
         vel_y = 0;
-        rel_pos_x = parent.getShipPosFromAngle_x(angleOnPlanet, distToBottom);
-        rel_pos_y = parent.getShipPosFromAngle_y(angleOnPlanet, distToBottom);
+        relPos = parent.getShipPosFromAngle(angleOnPlanet, distToBottom);
 
         landed = true;
 
@@ -585,12 +597,12 @@ public class Spaceship {
             vel_x += velocity.getX();
             vel_y += velocity.getY();
             if(parent.parent == newParent ){ // earth.parent-> sun  == sun?
-                rel_pos_x = rel_pos_x + parent.getRelPos().getX();
-                rel_pos_y = rel_pos_y + parent.getRelPos().getY();
+                relPos = new Point(relPos.getX() + parent.getRelPos().getX(),
+                relPos.getY() +  parent.getRelPos().getY());
             }
             else{
-                rel_pos_x = rel_pos_x - newParent.getRelPos().getX();
-                rel_pos_y = rel_pos_y - newParent.getRelPos().getY();
+                relPos = new Point(relPos.getX() - parent.getRelPos().getX(),
+                        relPos.getY() -  parent.getRelPos().getY());
             }
             parent = newParent;
             System.out.println("NEW PARENT: " + parent.name);
