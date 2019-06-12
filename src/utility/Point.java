@@ -27,4 +27,11 @@ public class Point {
         pp.setPhi(pp.getPhi() + angle);
         return new Point(pp);
     }
+
+    public double distFrom (Point other) {
+        double dx = x - other.x;
+        double dy = y - other.y;
+
+        return Math.sqrt(dx*dx + dy*dy);
+    }
 }

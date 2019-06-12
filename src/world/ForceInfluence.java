@@ -23,7 +23,7 @@ public class ForceInfluence {
 
     public Force getCombinedForces(){
         LinkedList<Force> forces = new LinkedList<>();
-        //forces.addAll(getPartialAeroForces());
+        forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
         //forces.add(getFrictionInfluence());
 
