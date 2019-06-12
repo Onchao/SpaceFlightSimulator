@@ -28,6 +28,7 @@ public class ControlBox {
                 intervalBox(),
                 singleControlBox("+","time warp increase"),
                 singleControlBox("-","time warp decrease"),
+                singleControlBox("F12","unbreakable parts, infinite fuel"),
                 singleControlBox("ESC","pause"));
         return box;
     }

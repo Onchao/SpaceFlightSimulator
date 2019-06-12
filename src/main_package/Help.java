@@ -30,10 +30,16 @@ public class Help implements CustomScene {
         box.getChildren().add(nameL);
 
         box.getChildren().addAll(
-                customHBox("eterg    wfawfawf fawfaw awf awe fwa  w feef f awf wfw fawawfawfa wf faw faw w a waefwf aw aw aw w a    wfaw fwa wf wfawefawerger"),
-                customHBox("ugag fasfagvgawf w fawe aw faw wff awaa fww aw awf aw"),
-                customHBox("hsafaswa awf wae fawf awa wf awawe aw faw fawf aw afw waf wfawe")
-
+                customHBox("Don't lift dead mass. Single stage to orbit (SSTO) rockets are very inefficient. " +
+                        "Take advantage of decouplers and design multistage vehicles."),
+                customHBox("Remember to assign proper stage numbers in building mode " +
+                        "or you may accidentally open your parachute on lift off."),
+                customHBox("Different engines works better on different pressures of atmosphere."),
+                customHBox("Aerodynamic design will save you tons of fuel."),
+                customHBox("Landing struts can withstand higher stress than other parts of rocket."),
+                customHBox("The most efficient way to reach stable orbit is to first quickly boost through the atmosphere " +
+                        "and shut down the engines when the highest point of your orbit (apoapsis) is at the desired altitude. " +
+                        "Around that point turn on engines again to rise lowest side of your orbit (periapsis).")
         );
         box.setTranslateX(100);
         box.setTranslateY(50);
