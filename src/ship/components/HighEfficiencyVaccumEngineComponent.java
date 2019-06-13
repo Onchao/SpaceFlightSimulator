@@ -146,7 +146,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public double getFrontAvgSurface(){
-        return 2*Math.PI*1.2*(1.2+1.6)/4;
+        return Math.PI*1.2*2;
     }
 
     @Override

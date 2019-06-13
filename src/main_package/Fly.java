@@ -107,7 +107,7 @@ public class Fly implements CustomScene{
 
         pauseScreen = new Group();
         Rectangle screenBg = new Rectangle(500, 500);
-        screenBg.setFill(Color.rgb(8, 8, 32, 0.5));
+        screenBg.setFill(Color.rgb(8, 8, 32, 0.8));
         screenBg.setArcHeight(10);
         screenBg.setArcWidth(10);
         VBox pauseMenu = new VBox();

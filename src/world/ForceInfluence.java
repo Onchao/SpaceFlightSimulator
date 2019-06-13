@@ -26,6 +26,7 @@ public class ForceInfluence {
         for(Force f: getPartialAeroForces()) {
             forces.add(f);
             //System.out.println(f.getFx() + " " + f.getFy());
+            System.out.println(f);
         }
 
 
@@ -139,7 +140,7 @@ public class ForceInfluence {
             return o1.coordinate < o2.coordinate ? -1 : 1;
         });
 
-        //System.out.println(componentCentersRotated);
+        System.out.println(componentCentersRotated);
 
         double vSq = vel.getX()*vel.getX() + vel.getY()*vel.getY();
 

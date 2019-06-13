@@ -57,6 +57,6 @@ public class LandingStrutsComponent extends SpaceshipComponent {
 
     @Override
     public double getFrontAvgSurface(){
-        return 0;
+        return Math.PI*2*2;
     }
 }

@@ -52,7 +52,7 @@ public class CircularDecouplerComponent extends SpaceshipComponent implements Ac
 
     @Override
     public double getFrontAvgSurface(){
-        return 2*Math.PI*2*(2+0.8)/4;
+        return Math.PI*2*2;
     }
 
     @Override

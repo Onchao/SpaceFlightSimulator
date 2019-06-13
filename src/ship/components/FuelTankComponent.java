@@ -54,7 +54,7 @@ public class FuelTankComponent extends SpaceshipComponent {
 
     @Override
     public double getFrontAvgSurface(){
-        return 2*Math.PI*2*(2+4)/4;
+        return Math.PI*2*2;
     }
 
     public double getFuelState() {

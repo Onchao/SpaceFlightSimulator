@@ -50,7 +50,7 @@ public class AerodynamicNoseConeComponent extends SpaceshipComponent {
     @Override
     public double getFrontAvgSurface(){
         ///return Math.PI*2*(2+Math.sqrt(4*4+2*2))/4;
-        return 2*Math.PI*2*(2+4)/4;
+        return Math.PI*2*2;
 
     }
 }

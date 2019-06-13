@@ -45,6 +45,6 @@ public class Force {
     }
 
     public String toString () {
-        return "(" + Fx + ", " + Fy + ")";
+        return "(" + x + ", " + y + ", " + Fx + ", " + Fy + ")";
     }
 }

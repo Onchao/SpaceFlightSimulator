@@ -59,7 +59,7 @@ public class RadialDecouplerComponent extends SpaceshipComponent implements Acti
 
     @Override
     public double getFrontAvgSurface(){
-        return 2*(0.8*1.6 + 0.8*4 + 1.6*4)/4;
+        return Math.PI*2*2;
     }
 
     public Direction getDirection() {
