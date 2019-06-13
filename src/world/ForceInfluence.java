@@ -22,33 +22,47 @@ public class ForceInfluence {
 
 
     public Force getCombinedForces(){
-        System.out.println("Velocity: " + spaceship.getVelocityTakingWind());
-
         LinkedList<Force> forces = new LinkedList<>();
-        forces.addAll(getPartialAeroForces());
-        forces.add(getEngineInfluence());
-        for(Force f: forces) {
-            System.out.println(f.getX()+ " " + f.getY() + " " + f.getFx() + " " + f.getFy());
+        for(Force f: getPartialAeroForces()) {
+            forces.add(f);
+            //System.out.println(f.getFx() + " " + f.getFy());
         }
 
-        forces.add(getFrictionInfluence());
+
+        //forces.addAll(getPartialAeroForces());
+        forces.add(getEngineInfluence());
 
         double momentum = 0;
         LinkedList<Force> centerForces = new LinkedList<>();
         for(Force f : forces){
+            f.moveOrigin(-spaceship.getCenterOfMass().getX(), -spaceship.getCenterOfMass().getY());
+            //System.out.println(spaceship.getCenterOfMass().getX());
+            //System.out.println(spaceship.getThrustCenter().getY());
 
-            double deltaM = - f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getVectorAngle() - f.getPointAngle()));
-            System.out.println(deltaM);
+            //System.out.println(f.getPointDist());
+            //System.out.println(f.getVectorLength());
+            //System.out.println(f.getPointAngle());
+            //System.out.println(f.getVectorAngle());
+            //System.out.println(f.getPointAngle() - f.getVectorAngle());
+            //System.out.println();
+            double deltaM = - f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
+            //System.out.println(deltaM);
             momentum -= deltaM;
 
-            double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getVectorAngle() - f.getPointAngle()));
-            System.out.println(val);
+            //System.out.println(f.getX() + " " + f.getY() + " " + f.getFx() + " " + f.getFx());
+            //System.out.println(Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle())));
+
+            double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
+            //System.out.println(val);
+            //System.out.println(val);
 
             Force F = new Force(0,0,
                     Math.cos(Math.toRadians(f.getPointAngle()))*val,
-                    Math.sin(Math.toRadians(f.getPointAngle()))*val);
+                    -Math.sin(Math.toRadians(f.getPointAngle()))*val);
+            //System.out.println(F.getFx() + " " + F.getFy());
             centerForces.add(F);
         }
+        //System.out.println(momentum);
         spaceship.setForceMomentum(momentum);
 
         centerForces.add(getGravityInfluence());
@@ -94,7 +108,6 @@ public class ForceInfluence {
         List<Spaceship.ComponentWithCenter> componentCenters = spaceship.getComponentCenters();
         List<Spaceship.ComponentWithCenter> componentCentersRotated = new ArrayList<>();
         Point vel = spaceship.getVelocityTakingWind();
-        System.out.println(vel.getX() + "________" + vel.getY());
         double angle = Math.atan2(vel.getY(), vel.getX()) + Math.toRadians(-spaceship.getRotate().getAngle());
 
         for (Spaceship.ComponentWithCenter comp : componentCenters) {
@@ -126,7 +139,7 @@ public class ForceInfluence {
             return o1.coordinate < o2.coordinate ? -1 : 1;
         });
 
-        System.out.println(componentCentersRotated);
+        //System.out.println(componentCentersRotated);
 
         double vSq = vel.getX()*vel.getX() + vel.getY()*vel.getY();
 
@@ -153,7 +166,7 @@ public class ForceInfluence {
                 }
             }
 
-            System.out.println(comp + " " + totalSurface);
+            //System.out.println(comp + " " + totalSurface);
 
             double pd = spaceship.getParent().getAtmDensity(spaceship.getAltitude())*vSq;
             pd /= 2;
@@ -170,10 +183,5 @@ public class ForceInfluence {
         }
 
         return ret;
-    }
-
-    //TODO:
-    private Force getFrictionInfluence(){
-        return new Force(0,0,0,0);
     }
 }

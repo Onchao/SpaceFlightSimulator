@@ -32,6 +32,35 @@ public class Time {
         prevMillis = currentMillis;
     }
 
+    private static boolean timerActive = false;
+    private static long timeStart;
+    private static long timerTime;
+    public static void startTimer(long millis){
+        timerActive = true;
+        timeStart = System.currentTimeMillis();
+        timerTime = millis;
+    }
+    public static boolean isTimerActive(){
+        return timerActive;
+    }
+    public static boolean timePassed(){
+        if(!timerActive){
+            return false;
+        }
+        if(System.currentTimeMillis() - timeStart > timerTime){
+            timerActive = false;
+            return true;
+        }
+        return false;
+    }
+    public static void freeTimer(){
+        timerActive = false;
+    }
+
+
+
+
+
     public static void faster(){
         switch (timeWarp){
             case 1:
