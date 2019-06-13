@@ -26,6 +26,8 @@ public class ForceInfluence {
         System.out.println();
         System.out.println("-----");
 
+        System.out.println("Velocity: " + spaceship.getVelocityTakingWind());
+
         LinkedList<Force> forces = new LinkedList<>();
         for(Force f: getPartialAeroForces()) {
             forces.add(f);
@@ -183,7 +185,7 @@ public class ForceInfluence {
             PolarPoint fvp = new PolarPoint(forceVal, atan2(-vel.getY(), -vel.getX()));
             Point fvk = new Point(fvp);
 
-            Force d = new Force(comp.getCenter().getX(), comp.getCenter().getY(), fvk.getX(), fvk.getY());
+            Force d = new Force(comp.getCenter().rotate(angle).getX(), comp.getCenter().rotate(angle).getY(), fvk.getX(), fvk.getY());
             ret.add(d);
 
             broom.add(new BroomElem(cb, 0));
