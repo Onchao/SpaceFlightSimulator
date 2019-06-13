@@ -109,7 +109,7 @@ public class ForceInfluence {
         List<Spaceship.ComponentWithCenter> componentCenters = spaceship.getComponentCenters();
         List<Spaceship.ComponentWithCenter> componentCentersRotated = new ArrayList<>();
         Point vel = spaceship.getVelocityTakingWind();
-        double angle = Math.atan2(vel.getY(), vel.getX()) + Math.toRadians(-spaceship.getRotate().getAngle());
+        double angle = Math.atan2(vel.getY(), vel.getX()); //+ Math.toRadians(-spaceship.getRotate().getAngle());
 
         for (Spaceship.ComponentWithCenter comp : componentCenters) {
             componentCentersRotated.add(new Spaceship.ComponentWithCenter(comp.getComponent(), comp.getCenter().rotate(-angle)));
@@ -117,12 +117,12 @@ public class ForceInfluence {
 
         componentCentersRotated.sort((o1, o2) -> {
             if (o1.getCenter().getX() == o2.getCenter().getX()) {
-                if (o1.getCenter().getY() < o2.getCenter().getY()) return -1;
-                else if (o1.getCenter().getY() > o2.getCenter().getY()) return 1;
+                if (o1.getCenter().getY() < o2.getCenter().getY()) return 1;
+                else if (o1.getCenter().getY() > o2.getCenter().getY()) return -1;
                 return 0;
             }
-            if (o1.getCenter().getX() < o2.getCenter().getX()) return -1;
-            else if (o1.getCenter().getX() > o2.getCenter().getX()) return 1;
+            if (o1.getCenter().getX() < o2.getCenter().getX()) return 1;
+            else if (o1.getCenter().getX() > o2.getCenter().getX()) return -1;
             return 0;
         });
 
