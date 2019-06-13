@@ -22,25 +22,15 @@ public class ForceInfluence {
 
 
     public Force getCombinedForces(){
-        System.out.println();
-        System.out.println();
-        System.out.println("-----");
-
-        System.out.println("Velocity: " + spaceship.getVelocityTakingWind());
-
         LinkedList<Force> forces = new LinkedList<>();
         for(Force f: getPartialAeroForces()) {
             forces.add(f);
-            System.out.println(f.getFx() + " " + f.getFy());
+            //System.out.println(f.getFx() + " " + f.getFy());
         }
 
-        System.out.println("-----");
-        System.out.println();
-        System.out.println();
 
         //forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
-        forces.add(getFrictionInfluence());
 
         double momentum = 0;
         LinkedList<Force> centerForces = new LinkedList<>();
@@ -56,14 +46,14 @@ public class ForceInfluence {
             //System.out.println(f.getPointAngle() - f.getVectorAngle());
             //System.out.println();
             double deltaM = - f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
-            System.out.println(deltaM);
+            //System.out.println(deltaM);
             momentum -= deltaM;
 
             //System.out.println(f.getX() + " " + f.getY() + " " + f.getFx() + " " + f.getFx());
             //System.out.println(Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle())));
 
             double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
-            System.out.println(val);
+            //System.out.println(val);
             //System.out.println(val);
 
             Force F = new Force(0,0,
@@ -149,7 +139,7 @@ public class ForceInfluence {
             return o1.coordinate < o2.coordinate ? -1 : 1;
         });
 
-        System.out.println(componentCentersRotated);
+        //System.out.println(componentCentersRotated);
 
         double vSq = vel.getX()*vel.getX() + vel.getY()*vel.getY();
 
@@ -176,7 +166,7 @@ public class ForceInfluence {
                 }
             }
 
-            System.out.println(comp + " " + totalSurface);
+            //System.out.println(comp + " " + totalSurface);
 
             double pd = spaceship.getParent().getAtmDensity(spaceship.getAltitude())*vSq;
             pd /= 2;
@@ -193,10 +183,5 @@ public class ForceInfluence {
         }
 
         return ret;
-    }
-
-    //TODO:
-    private Force getFrictionInfluence(){
-        return new Force(0,0,0,0);
     }
 }
