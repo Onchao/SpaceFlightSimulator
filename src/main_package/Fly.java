@@ -45,8 +45,6 @@ public class Fly implements CustomScene{
         }
 
 
-
-
         spaceship = builder.build(solarSystem.bodies.get(1), 0, solarSystem);
         root.getChildren().add(spaceship.getDrawable());
         Origin.setup(solarSystem.bodies, spaceship);

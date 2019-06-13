@@ -9,7 +9,7 @@ import java.util.*;
 public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent implements Engine, ActiveComponent {
     private ImageView img;
 
-    private double maxThrust = 20000.0*1000; // N;
+    private double maxThrust = 10000.0*1000; // N;
 
     private final double fuelConsumption = 0;//1600;  // kg/s
     private boolean isActive;

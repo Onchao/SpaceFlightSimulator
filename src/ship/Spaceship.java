@@ -100,7 +100,8 @@ public class Spaceship {
 
     public Point getVelocityTakingWind(){
         Point p = parent.getWindVelocity(this);
-        return new Point(vel.getX() - p.getX(), vel.getX() - p.getY());
+        System.out.println(p.getX() + " " + p.getY());
+        return new Point(vel.getX() - p.getX(), vel.getY() - p.getY());
     }
 
     public double getVerticalOrbitalSpeed(){
@@ -138,6 +139,12 @@ public class Spaceship {
         double v = getHorizontalSurfaceSpeed();
         return new Point( v * Math.cos(Math.toRadians(Math.toDegrees(pos.getAngle())+90)),
                 v * Math.sin(Math.toRadians(Math.toDegrees(pos.getAngle())+90)));
+    }
+
+    public double getCrashVelocity(){
+        double a = getHorizontalSurfaceSpeed();
+        double b = getVerticalOrbitalSpeed();
+        return Math.sqrt(a*a+b*b);
     }
 
     public double getLowestPointDist(){
@@ -348,9 +355,13 @@ public class Spaceship {
     }
 
     void attemptLanding(){
-        // TODO: ???????????????????????
-        Point v =  parent.getPlanetVelocity();
-        //????????????????????????????
+        if(getCrashVelocity() > 15.0){
+            System.out.println("CRASH");
+        }
+        else {
+
+        }
+
 /*
         double delta_x = v.getX() - vel_x;
         double delta_y = v.getY() - vel_y;
@@ -667,17 +678,4 @@ public class Spaceship {
             System.out.println("NEW PARENT: " + parent.name);
         }
     }
-/*
-    public void calculateDistToBottom() {
-        double minY = 1000000000.0; // almost infinity
-        for (Point v : getVertices()) {
-            if (v.getY() < minY) minY = v.getY();
-        }
-        System.out.println(Math.abs(minY));
-        distToBottom = Math.abs(minY);
-    }
-
-    public double getDistToBottom() {
-        return distToBottom;
-    }*/
 }
