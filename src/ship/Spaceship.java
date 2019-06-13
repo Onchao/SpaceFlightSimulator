@@ -57,7 +57,7 @@ public class Spaceship {
     private CelestialBody parent;
     public CelestialBody getParent(){ return parent; }
     private Point origin;
-    private double distToBottom;
+    //private double distToBottom;
     private Point pos; // to parent [m]
     public Point gestPos(){
         return pos;
@@ -140,10 +140,7 @@ public class Spaceship {
                 v * Math.sin(Math.toRadians(Math.toDegrees(pos.getAngle())+90)));
     }
 
-    public double getAltitude(){
-        double result = parent.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
-        result -= parent.radius;
-
+    public double getLowestPointDist(){
         double angle = Math.toRadians(-getAngleOnPlanet() - rotate.getAngle() + 180);
         double lowestPointDist = 0;
 
@@ -151,8 +148,13 @@ public class Spaceship {
             Point rp = p.rotate(angle);
             lowestPointDist = Math.max(lowestPointDist, Math.abs(rp.getY()));
         }
-        result -= lowestPointDist;
+        return lowestPointDist;
+    }
 
+    public double getAltitude(){
+        double result = parent.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
+        result -= parent.radius;
+        result -= getLowestPointDist();
         return result;
     }
 
@@ -216,14 +218,14 @@ public class Spaceship {
         }
 
         recalculateOrigin(400, 400);
-        calculateDistToBottom();
+        //calculateDistToBottom();
 
         forceInfluence = new ForceInfluence(this, solarSystem);
         this.parent = parent;
         this.angleOnPlanet = angleOnPlanet;
         this.solarSystem = solarSystem;
 
-        pos = parent.getShipPosFromAngle(angleOnPlanet, distToBottom);
+        pos = parent.getShipPosFromAngle(angleOnPlanet, getLowestPointDist());
 
         drawable.getTransforms().add(rotate);
         img.getTransforms().add(rotate);
@@ -289,8 +291,8 @@ public class Spaceship {
 
         if(landed){
             updateAngleOnPlanet();
-            pos = new Point(parent.getShipPosFromAngle(angleOnPlanet, distToBottom).getX(),
-                    parent.getShipPosFromAngle(angleOnPlanet, distToBottom).getY());
+            pos = new Point(parent.getShipPosFromAngle(angleOnPlanet, getLowestPointDist()).getX(),
+                    parent.getShipPosFromAngle(angleOnPlanet, getLowestPointDist()).getY());
             rotate.setAngle(-angleOnPlanet + 90);
         }
         else{
@@ -305,9 +307,8 @@ public class Spaceship {
 
             updateAngleOnPlanet();
             updateParent();
-            distToBottom = parent.getDistanceTo(getAbsPos().getX(), getAbsPos().getY());
             //detect collisions
-            if(distToBottom < 0)
+            if(getLowestPointDist() < 0)
                 attemptLanding();
         }
 
@@ -651,21 +652,22 @@ public class Spaceship {
         if(newParent != parent){
             Point velocity = parent.getPlanetVelocity();
 
-            vel = new Point(vel.getX() + velocity.getX(), vel.getY() + velocity.getY());
+            vel = new Point(vel.getX() + velocity.getX(),
+                    vel.getY() + velocity.getY());
 
             if(parent.parent == newParent ){ // earth.parent-> sun  == sun?
                 pos = new Point(pos.getX() + parent.getRelPos().getX(),
                 pos.getY() +  parent.getRelPos().getY());
             }
             else{
-                pos = new Point(pos.getX() - parent.getRelPos().getX(),
-                        pos.getY() -  parent.getRelPos().getY());
+                pos = new Point(pos.getX() - newParent.getRelPos().getX(),
+                        pos.getY() -  newParent.getRelPos().getY());
             }
             parent = newParent;
             System.out.println("NEW PARENT: " + parent.name);
         }
     }
-
+/*
     public void calculateDistToBottom() {
         double minY = 1000000000.0; // almost infinity
         for (Point v : getVertices()) {
@@ -677,5 +679,5 @@ public class Spaceship {
 
     public double getDistToBottom() {
         return distToBottom;
-    }
+    }*/
 }

@@ -22,18 +22,7 @@ public class ForceInfluence {
 
 
     public Force getCombinedForces(){
-        System.out.println();
-        System.out.println();
-        System.out.println("-----");
-
         LinkedList<Force> forces = new LinkedList<>();
-        for(Force f: getPartialAeroForces()) {
-            forces.add(f);
-            System.out.println(f.getFx() + " " + f.getFy());
-        }
-        System.out.println("-----");
-        System.out.println();
-        System.out.println();
 
         //forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
@@ -53,14 +42,14 @@ public class ForceInfluence {
             //System.out.println(f.getPointAngle() - f.getVectorAngle());
             //System.out.println();
             double deltaM = - f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
-            System.out.println(deltaM);
+            //System.out.println(deltaM);
             momentum -= deltaM;
 
             //System.out.println(f.getX() + " " + f.getY() + " " + f.getFx() + " " + f.getFx());
             //System.out.println(Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle())));
 
             double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
-            System.out.println(val);
+            //System.out.println(val);
             //System.out.println(val);
 
             Force F = new Force(0,0,

@@ -16,10 +16,12 @@ public class CelestialBody {
     public final double radius;          // [m]
     public final double mass;            // [kg]
     public final double rotationPeriod;  // [s]
-    double year1angle;                   // [deg]
-    boolean atmExist;
-    double A;
-    double B;
+    final double year1angle;                   // [deg]
+    final boolean atmExist;
+    final double A;
+    final double B;
+    public Color color;
+
     public double getAtmDensity(double height){
         return A*exp(B*height);
     }
@@ -52,6 +54,7 @@ public class CelestialBody {
         this.A = A;
         this.B = B;
 
+        this.color = color;
         planet = new Circle(0,0,0, color);
         Color colorOpacity = new Color((float)color.getRed(), (float)color.getGreen(), (float)color.getBlue(), 0.2);
 

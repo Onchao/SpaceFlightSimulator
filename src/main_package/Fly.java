@@ -45,16 +45,17 @@ public class Fly implements CustomScene{
         }
 
 
-        flatPlanet = new Polygon();
-        flatPlanet.setFill(Color.LIME);
-        root.getChildren().add(flatPlanet);
+
 
         spaceship = builder.build(solarSystem.bodies.get(1), 0, solarSystem);
-        //spaceship.placeSpaceship();
         root.getChildren().add(spaceship.getDrawable());
         Origin.setup(solarSystem.bodies, spaceship);
         root.getChildren().add(spaceship.img);
         System.out.println(this.spaceship.getThrustCenter().getX() +  " " + this.spaceship.getThrustCenter().getY());
+
+        flatPlanet = new Polygon();
+        flatPlanet.setFill(spaceship.getParent().color);
+        root.getChildren().add(flatPlanet);
 
         altitudeWidget = CustomWidgets.customLabel("Altitude: " + (int)spaceship.getAltitude() + "m", 15);
         altitudeWidget.setLayoutX(700);
@@ -123,8 +124,8 @@ public class Fly implements CustomScene{
             }
 
 
-            double u = (spaceship.getAbsPos().getX() - Origin.getOrigin().getX() - spaceship.getDistToBottom()*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
-            double v = (spaceship.getAbsPos().getY() - Origin.getOrigin().getY() - spaceship.getDistToBottom()*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            double u = (spaceship.getAbsPos().getX() - Origin.getOrigin().getX() - (spaceship.getAltitude() + spaceship.getLowestPointDist())*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            double v = (spaceship.getAbsPos().getY() - Origin.getOrigin().getY() - (spaceship.getAltitude() + spaceship.getLowestPointDist())*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
 
                     flatPlanet.getPoints().addAll(
                     400 + u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
