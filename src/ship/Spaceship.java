@@ -62,6 +62,10 @@ public class Spaceship {
     public Point gestPos(){
         return pos;
     }
+    private boolean crashed = false;
+    public boolean isCrashed() {
+        return crashed;
+    }
 
     public Point getAbsPos(){
         return new Point(parent.getAbsPos().getX() + pos.getX(),
@@ -381,6 +385,7 @@ public class Spaceship {
     void attemptLanding(){
         if(getCrashVelocity() > 20.0){
             System.out.println("CRASH");
+            crashed = true;
         }
         vel = getHorizontalOrbitalVelocity();
         if(!Time.isTimerActive()){

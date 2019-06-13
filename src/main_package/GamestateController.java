@@ -109,6 +109,12 @@ public class GamestateController {
                     spaceship.activateNext();
                 }
 
+                if (e.getCode() == KeyCode.ESCAPE) {
+                    if (currentScene instanceof Fly) {
+                        ((Fly) currentScene).pauseGame();
+                    }
+                }
+
                 // INFO
                 if (e.getCode() == KeyCode.I) {
                     spaceship.info();

@@ -1,5 +1,10 @@
 package main_package;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
@@ -32,6 +37,11 @@ public class Fly implements CustomScene{
     private Label orbitalSpeedWidget;
     private Label verticalSpeedToSurfaceWidget;
     private Label horizontalSpeedToSurfaceWidget;
+
+    private boolean paused = false;
+    private boolean crashScreenDisplayed = false;
+    private Group pauseScreen;
+    private Group crashScreen;
 
     Fly(SpaceshipBuilder builder){
         root.setPrefSize(800, 800);
@@ -95,6 +105,41 @@ public class Fly implements CustomScene{
         fuelWidget.getChildren().add(fuelState);
         root.getChildren().add(fuelWidget);
 
+        pauseScreen = new Group();
+        Rectangle screenBg = new Rectangle(500, 500);
+        screenBg.setFill(Color.rgb(8, 8, 32, 0.5));
+        screenBg.setArcHeight(10);
+        screenBg.setArcWidth(10);
+        VBox pauseMenu = new VBox();
+        pauseMenu.setAlignment(Pos.CENTER);
+        Button continueButton = CustomWidgets.customButton("Continue");
+        Button backButton = CustomWidgets.customButton("Back to menu");
+        pauseMenu.getChildren().add(continueButton);
+        pauseMenu.getChildren().add(backButton);
+        pauseMenu.setLayoutX(200);
+        pauseMenu.setLayoutY(200);
+        pauseScreen.getChildren().addAll(screenBg, pauseMenu);
+        pauseScreen.setLayoutX(150);
+        pauseScreen.setLayoutY(150);
+        continueButton.setOnAction(actionEvent -> {
+            paused = false;
+            root.getChildren().remove(pauseScreen);
+        });
+
+        backButton.setOnAction(actionEvent -> GamestateController.changeScene(Gamestate.gs.MENU, null));
+
+        crashScreen = new Group();
+        VBox crashMenu = new VBox();
+        crashMenu.setAlignment(Pos.CENTER);
+        crashMenu.setSpacing(15);
+        crashMenu.getChildren().add(CustomWidgets.customLabel("You crashed!!!", 25));
+        crashMenu.getChildren().add(backButton);
+        crashMenu.setLayoutX(200);
+        crashMenu.setLayoutY(200);
+        crashScreen.getChildren().addAll(screenBg, crashMenu);
+        crashScreen.setLayoutX(150);
+        crashScreen.setLayoutY(150);
+
         this.orbitPrediction = new OrbitPrediction(spaceship,this);
         update();
     }
@@ -105,6 +150,16 @@ public class Fly implements CustomScene{
     }
     @Override
     public void update() {
+        if (paused) return;
+
+        if (spaceship.isCrashed()) {
+            if (!crashScreenDisplayed) {
+                root.getChildren().add(crashScreen);
+                crashScreenDisplayed = true;
+            }
+            return;
+        }
+
         Time.updateTime();
         flatPlanet.getPoints().clear();
 
@@ -166,5 +221,10 @@ public class Fly implements CustomScene{
         }
 
         orbitPrediction.drawHelpersSimple();
+    }
+
+    public void pauseGame() {
+        paused = true;
+        root.getChildren().add(pauseScreen);
     }
 }
