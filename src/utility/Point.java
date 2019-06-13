@@ -43,4 +43,8 @@ public class Point {
     public double getAngle(){
         return Math.atan2(y,x);
     }
+
+    public String toString () {
+        return "(" + x + ", " + y + ")";
+    }
 }

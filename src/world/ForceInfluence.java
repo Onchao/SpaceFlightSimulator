@@ -27,6 +27,9 @@ public class ForceInfluence {
         forces.add(getEngineInfluence());
         forces.add(getFrictionInfluence());
 
+        System.out.println(spaceship.getVelocityTakingWind());
+        System.out.println(getPartialAeroForces());
+
         double momentum = 0;
         LinkedList<Force> centerForces = new LinkedList<>();
         for(Force f : forces){
@@ -100,7 +103,7 @@ public class ForceInfluence {
         List<Spaceship.ComponentWithCenter> componentCenters = spaceship.getComponentCenters();
         List<Spaceship.ComponentWithCenter> componentCentersRotated = new ArrayList<>();
         Point vel = spaceship.getVelocityTakingWind();
-        double angle = Math.atan2(vel.getY(), vel.getX());
+        double angle = Math.atan2(vel.getY(), vel.getX()) + Math.toRadians(spaceship.getRotate().getAngle());
 
         for (Spaceship.ComponentWithCenter comp : componentCenters) {
             componentCentersRotated.add(new Spaceship.ComponentWithCenter(comp.getComponent(), comp.getCenter().rotate(-angle)));
@@ -131,6 +134,8 @@ public class ForceInfluence {
             return o1.coordinate < o2.coordinate ? -1 : 1;
         });
 
+        System.out.println(componentCentersRotated);
+
         double vSq = vel.getX()*vel.getX() + vel.getY()*vel.getY();
 
         List<Force> ret = new ArrayList<>();
@@ -153,8 +158,10 @@ public class ForceInfluence {
                 lastPos = e.coordinate;
             }
 
-            double pd = spaceship.getParent().getAtmDensity(spaceship.getDistToBottom())*vSq/2;
-            double forceVal = comp.getComponent().getDragCoefficient()*pd*totalSurface;
+            double pd = spaceship.getParent().getAtmDensity(spaceship.getAltitude())*vSq;
+            pd /= 2;
+            double surface = comp.getComponent().getFrontAvgSurface()*totalSurface/(2*comp.getComponent().getFrontAvgRadius());
+            double forceVal = comp.getComponent().getDragCoefficient()*pd*surface;
             PolarPoint fvp = new PolarPoint(forceVal, atan2(-vel.getY(), -vel.getX()));
             Point fvk = new Point(fvp);
 

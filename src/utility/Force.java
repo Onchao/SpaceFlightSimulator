@@ -43,4 +43,8 @@ public class Force {
     public double getVectorAngle(){
         return Math.toDegrees(Math.atan2(Fy,Fx));
     }
+
+    public String toString () {
+        return "(" + Fx + ", " + Fy + ")";
+    }
 }

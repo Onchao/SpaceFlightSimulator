@@ -280,7 +280,7 @@ public class Spaceship {
     public synchronized void update(){
         //System.out.println(getVelocityTakingWind().getY());
 
-        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-vel.getY(), -vel.getX())) + 90);
+        chuteRotate.setAngle(-rotate.getAngle() - Math.toDegrees(Math.atan2(-getVelocityTakingWind().getY(), -getVelocityTakingWind().getX())) + 90);
         //System.out.println("Vel: " + vel_x + " " + vel_y + ", Angle: " + Math.toDegrees(Math.atan2(-vel_y, -vel_x)));
 
         updateThrottle();
