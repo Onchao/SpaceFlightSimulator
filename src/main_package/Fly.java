@@ -114,7 +114,7 @@ public class Fly implements CustomScene{
         altitudeWidget.setText("Altitude: " + (int)spaceship.getAltitude() + "m");
         orbitalSpeedWidget.setText("Orbital speed: " + (int)spaceship.getOrbitalSpeed() + "m/s");
         verticalSpeedToSurfaceWidget.setText("Vertical speed to surface: " + (int)spaceship.getVerticalOrbitalSpeed() + "m/s");
-        horizontalSpeedToSurfaceWidget.setText("Horizontal speed to surface: " + (int)spaceship.getHorizontalOrbitalSpeed() + "m/s");
+        horizontalSpeedToSurfaceWidget.setText("Horizontal speed to surface: " + (int)spaceship.getHorizontalSurfaceSpeed() + "m/s");
 
         if (Origin.originIndex == 0 && Scale.SCALE > 0.1){
             for (CelestialBody B : solarSystem.bodies) {
@@ -122,9 +122,11 @@ public class Fly implements CustomScene{
                 B.planet.setRadius(0);
             }
 
+
             double u = (spaceship.getAbsPos().getX() - Origin.getOrigin().getX() - spaceship.getDistToBottom()*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
             double v = (spaceship.getAbsPos().getY() - Origin.getOrigin().getY() - spaceship.getDistToBottom()*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
-            flatPlanet.getPoints().addAll(
+
+                    flatPlanet.getPoints().addAll(
                     400 + u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
                     400 + (v - 6000*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet())))*-1,
                     400 + u - 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),

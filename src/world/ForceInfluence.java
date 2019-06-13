@@ -22,13 +22,22 @@ public class ForceInfluence {
 
 
     public Force getCombinedForces(){
+        System.out.println();
+        System.out.println();
+        System.out.println("-----");
+
         LinkedList<Force> forces = new LinkedList<>();
-        forces.addAll(getPartialAeroForces());
+        for(Force f: getPartialAeroForces()) {
+            forces.add(f);
+            System.out.println(f.getFx() + " " + f.getFy());
+        }
+        System.out.println("-----");
+        System.out.println();
+        System.out.println();
+
+        //forces.addAll(getPartialAeroForces());
         forces.add(getEngineInfluence());
         forces.add(getFrictionInfluence());
-
-        System.out.println(spaceship.getVelocityTakingWind());
-        System.out.println(getPartialAeroForces());
 
         double momentum = 0;
         LinkedList<Force> centerForces = new LinkedList<>();
@@ -43,12 +52,15 @@ public class ForceInfluence {
             //System.out.println(f.getVectorAngle());
             //System.out.println(f.getPointAngle() - f.getVectorAngle());
             //System.out.println();
+            double deltaM = - f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
+            System.out.println(deltaM);
+            momentum -= deltaM;
 
-            momentum -= f.getPointDist()*f.getVectorLength()*Math.sin(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
             //System.out.println(f.getX() + " " + f.getY() + " " + f.getFx() + " " + f.getFx());
             //System.out.println(Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle())));
 
             double val = f.getPointDist()*f.getVectorLength()*Math.cos(Math.toRadians(f.getPointAngle() + f.getVectorAngle()));
+            System.out.println(val);
             //System.out.println(val);
 
             Force F = new Force(0,0,
@@ -111,12 +123,12 @@ public class ForceInfluence {
 
         componentCentersRotated.sort((o1, o2) -> {
             if (o1.getCenter().getX() == o2.getCenter().getX()) {
-                if (o1.getCenter().getY() < o2.getCenter().getY()) return -1;
-                else if (o1.getCenter().getY() > o2.getCenter().getY()) return 1;
+                if (o1.getCenter().getY() < o2.getCenter().getY()) return 1;
+                else if (o1.getCenter().getY() > o2.getCenter().getY()) return -1;
                 return 0;
             }
-            if (o1.getCenter().getX() < o2.getCenter().getX()) return -1;
-            else if (o1.getCenter().getX() > o2.getCenter().getX()) return 1;
+            if (o1.getCenter().getX() < o2.getCenter().getX()) return 1;
+            else if (o1.getCenter().getX() > o2.getCenter().getX()) return -1;
             return 0;
         });
 
@@ -149,14 +161,19 @@ public class ForceInfluence {
 
             double totalSurface = 0.0;
 
-            for (BroomElem e : broom) {
-                if (e.type == 0 && numNested == 0 && e.coordinate > cb) {
-                    totalSurface += min (e.coordinate, ce) - min (lastPos, ce);
+            if (broom.isEmpty()) totalSurface = 2*comp.getComponent().getFrontAvgRadius();
+            else {
+                for (BroomElem e : broom) {
+                    if (e.type == 0 && numNested == 0 && e.coordinate > cb) {
+                        totalSurface += min(e.coordinate, ce) - min(lastPos, ce);
+                    }
+                    if (e.type == 0) ++numNested;
+                    else --numNested;
+                    lastPos = e.coordinate;
                 }
-                if (e.type == 0) ++ numNested;
-                else -- numNested;
-                lastPos = e.coordinate;
             }
+
+            //System.out.println(comp + " " + totalSurface);
 
             double pd = spaceship.getParent().getAtmDensity(spaceship.getAltitude())*vSq;
             pd /= 2;
