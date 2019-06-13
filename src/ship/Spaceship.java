@@ -101,7 +101,6 @@ public class Spaceship {
         return new Point(vel.getX() - p.getX(), vel.getX() - p.getY());
     }
 
-    //OK
     public double getVerticalOrbitalSpeed(){
         double alpha = pos.getAngle();
         double beta = vel.getAngle();
@@ -109,7 +108,6 @@ public class Spaceship {
         return vel.getModule()*Math.cos(gamma);
     }
 
-    //OK
     public double getHorizontalOrbitalSpeed(){
         double alpha = pos.getAngle();
         double beta = vel.getAngle();

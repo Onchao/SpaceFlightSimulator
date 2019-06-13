@@ -142,7 +142,7 @@ public class CelestialBody {
         if(!atmExist){
             return new Point(0,0);
         }
-        double dist = getDistanceTo(spaceship.gestPos().getX(), spaceship.gestPos().getY());
+        double dist = getDistanceTo(spaceship.getAbsPos().getX(), spaceship.getAbsPos().getY());
         double angle = Math.atan2(spaceship.gestPos().getY(), spaceship.gestPos().getX());
         double velocity = 2*dist*Math.PI/(rotationPeriod);
         double x = velocity * Math.sin(angle);
