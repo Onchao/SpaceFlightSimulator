@@ -48,14 +48,14 @@ public class ParachuteComponent extends SpaceshipComponent implements ActiveComp
 
     @Override
     public double getDragCoefficient() {
-        if (isActive) return 1.75;
+        if (isActive) return 1.25;
         return 0;
     }
 
     @Override
     public double getFrontAvgSurface(){
         if (isActive) return Math.PI*8*8;
-        return 0;
+        return 0.1;
     }
 
     @Override
