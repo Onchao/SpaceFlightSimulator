@@ -224,12 +224,12 @@ public class Fly implements CustomScene{
         if(Scale.SCALE < 1){
             spaceship.img.setVisible(true);
             spaceship.getDrawable().setVisible(false);
-            orbitPrediction.drawHelpersSimple();
         }
         else {
             spaceship.img.setVisible(false);
             spaceship.getDrawable().setVisible(true);
         }
+        orbitPrediction.drawHelpersSimple();
 
     }
 
