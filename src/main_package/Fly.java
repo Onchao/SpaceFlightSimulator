@@ -43,8 +43,10 @@ public class Fly implements CustomScene{
     private Group pauseScreen;
     private Group crashScreen;
 
+    private Circle projection = new Circle(4, Color.RED);
+
     Fly(SpaceshipBuilder builder){
-        root.setPrefSize(800, 800);
+        root.setPrefSize(800, 600);
         background = new Rectangle(0,0,3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));
         root.getChildren().add(background);
@@ -66,30 +68,30 @@ public class Fly implements CustomScene{
         root.getChildren().add(flatPlanet);
 
         altitudeWidget = CustomWidgets.customLabel("Altitude: " + (int)spaceship.getAltitude() + "m", 15);
-        altitudeWidget.setLayoutX(700);
-        altitudeWidget.setLayoutY(610);
+        altitudeWidget.setLayoutX(500);
+        altitudeWidget.setLayoutY(410);
         root.getChildren().add(altitudeWidget);
 
         orbitalSpeedWidget = CustomWidgets.customLabel("Orbital speed: " + (int)spaceship.getOrbitalSpeed() + "m/s", 15);
-        orbitalSpeedWidget.setLayoutX(700);
-        orbitalSpeedWidget.setLayoutY(630);
+        orbitalSpeedWidget.setLayoutX(500);
+        orbitalSpeedWidget.setLayoutY(430);
         root.getChildren().add(orbitalSpeedWidget);
 
         verticalSpeedToSurfaceWidget = CustomWidgets.customLabel("Vertical speed to surface: " + (int)spaceship.getVerticalOrbitalSpeed() + "m/s", 15);
-        verticalSpeedToSurfaceWidget.setLayoutX(700);
-        verticalSpeedToSurfaceWidget.setLayoutY(650);
+        verticalSpeedToSurfaceWidget.setLayoutX(500);
+        verticalSpeedToSurfaceWidget.setLayoutY(450);
         root.getChildren().add(verticalSpeedToSurfaceWidget);
 
         horizontalSpeedToSurfaceWidget = CustomWidgets.customLabel("Horizontal speed to surface: " + (int)spaceship.getHorizontalOrbitalSpeed() + "m/s", 15);
-        horizontalSpeedToSurfaceWidget.setLayoutX(700);
-        horizontalSpeedToSurfaceWidget.setLayoutY(670);
+        horizontalSpeedToSurfaceWidget.setLayoutX(500);
+        horizontalSpeedToSurfaceWidget.setLayoutY(470);
         root.getChildren().add(horizontalSpeedToSurfaceWidget);
 
         VBox throttleWidget = new VBox();
         throttleState = CustomWidgets.customProgressBar("red");
         throttleState.setProgress(0);
-        throttleWidget.setLayoutX(700);
-        throttleWidget.setLayoutY(700);
+        throttleWidget.setLayoutX(500);
+        throttleWidget.setLayoutY(500);
         throttleWidget.getChildren().add(CustomWidgets.customLabel("Throttle:", 15));
         throttleWidget.getChildren().add(throttleState);
         root.getChildren().add(throttleWidget);
@@ -99,8 +101,8 @@ public class Fly implements CustomScene{
         VBox fuelWidget = new VBox();
         fuelState = CustomWidgets.customProgressBar("green");
         fuelState.setProgress(1);
-        fuelWidget.setLayoutX(700);
-        fuelWidget.setLayoutY(750);
+        fuelWidget.setLayoutX(500);
+        fuelWidget.setLayoutY(550);
         fuelWidget.getChildren().add(CustomWidgets.customLabel("Fuel:", 15));
         fuelWidget.getChildren().add(fuelState);
         root.getChildren().add(fuelWidget);
@@ -141,7 +143,10 @@ public class Fly implements CustomScene{
         crashScreen.setLayoutY(150);
 
         this.orbitPrediction = new OrbitPrediction(spaceship,this);
+        //root.getChildren().add(projection);
+
         update();
+
     }
 
     @Override
@@ -176,17 +181,23 @@ public class Fly implements CustomScene{
                 B.planet.setRadius(0);
             }
 
+            double u = Origin.convertAbsX(spaceship.getParent().getAbsSpaceshipProjection(spaceship).getX());
+            double v = Origin.convertAbsY(spaceship.getParent().getAbsSpaceshipProjection(spaceship).getY());
+            projection.setCenterX(u);
+            projection.setCenterY(v);
 
-            double u = (spaceship.getAbsPos().getX() - Origin.getOrigin().getX() - (spaceship.getAltitude() + spaceship.getLowestPointDist())*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
-            double v = (spaceship.getAbsPos().getY() - Origin.getOrigin().getY() - (spaceship.getAltitude() + spaceship.getLowestPointDist())*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            //double u = (spaceship.getAbsPos().getX() - Origin.getOrigin().getX() -
+             //       (spaceship.getAltitude() + spaceship.getLowestPointDist())*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
+            //double v = (spaceship.getAbsPos().getY() - Origin.getOrigin().getY() -
+             //      (spaceship.getAltitude() + spaceship.getLowestPointDist())*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet()))) * Scale.SCALE;
 
-                    flatPlanet.getPoints().addAll(
-                    400 + u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
-                    400 + (v - 6000*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet())))*-1,
-                    400 + u - 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),
-                    400 + (v - 2600*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet() + 90)))*-1,
-                    400 + u + 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),
-                    400 + (v + 2600*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet() + 90)))*-1
+            flatPlanet.getPoints().addAll(
+                     u - 6000*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet())),
+                    v +( - 6000*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet())))*-1,
+                    u - 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),
+                    v + ( - 2600*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet() + 90)))*-1,
+                    u + 2600*Math.cos(Math.toRadians(spaceship.getAngleOnPlanet() + 90)),
+                    v + (2600*Math.sin(Math.toRadians(spaceship.getAngleOnPlanet() + 90)))*-1
             );
         }
         else{
@@ -207,20 +218,19 @@ public class Fly implements CustomScene{
         }
 
         spaceship.update();
-        //TODO: recalculate MINIATURE origin only
         spaceship.recalculateOrigin(Origin.convertAbsX(spaceship.getAbsPos().getX()),
                 Origin.convertAbsY(spaceship.getAbsPos().getY()));
 
         if(Scale.SCALE < 1){
             spaceship.img.setVisible(true);
             spaceship.getDrawable().setVisible(false);
+            orbitPrediction.drawHelpersSimple();
         }
         else {
             spaceship.img.setVisible(false);
             spaceship.getDrawable().setVisible(true);
         }
 
-        orbitPrediction.drawHelpersSimple();
     }
 
     public void pauseGame() {

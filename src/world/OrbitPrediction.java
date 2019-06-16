@@ -8,6 +8,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 import main_package.Fly;
+import main_package.ViewOrign;
 import ship.Spaceship;
 import utility.Const;
 import utility.LinearFunction;
@@ -43,15 +44,15 @@ public class OrbitPrediction {
 
         Point arrow;
         if(spaceship.getVel().getX() > 0){
-            arrow = shipDirection.getPointInRadius(300, true);
+            arrow = shipDirection.getPointInRadius(250, true);
         }
         else{
-            arrow = shipDirection.getPointInRadius(300, false);
+            arrow = shipDirection.getPointInRadius(250, false);
         }
-        arrowImg.setX(400 + arrow.getX() - 20);
-        arrowImg.setY(400 + -arrow.getY() - 20);
-        arrowRotate.setPivotX(400 + arrow.getX());
-        arrowRotate.setPivotY(400 + -arrow.getY());
+        arrowImg.setX(ViewOrign.getX() + arrow.getX() - 20);
+        arrowImg.setY(ViewOrign.getY() + -arrow.getY() - 20);
+        arrowRotate.setPivotX(ViewOrign.getX() + arrow.getX());
+        arrowRotate.setPivotY(ViewOrign.getY() + -arrow.getY());
         arrowRotate.setAngle(-Math.toDegrees(Math.atan2(arrow.getY(), arrow.getX())) + 90);
         if(Origin.shipFocused()){
             arrowImg.setVisible(true);

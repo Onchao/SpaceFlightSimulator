@@ -41,7 +41,7 @@ public class GamestateController {
         else if(newGS == Gamestate.gs.BUILD){
             Gamestate.setGamestateBUILD();
 
-            ObservableList <SpaceshipComponentFactory> components = FXCollections.observableArrayList(    // TODO: find a good place to put this list
+            ObservableList <SpaceshipComponentFactory> components = FXCollections.observableArrayList(
                     new SpaceshipComponentFactory<>(CrewCapsuleComponent.class),
                     new SpaceshipComponentFactory<>(FuelTankComponent.class),
                     new SpaceshipComponentFactory<>(PowerfulAtmosphericEngineComponent.class),
@@ -67,12 +67,12 @@ public class GamestateController {
             SC.setOnKeyPressed(e -> {
                 if (e.getCode() == KeyCode.ADD || e.getCode() == KeyCode.EQUALS) {
                     Time.faster();
-                    System.out.println(Time.timeWarp + "x");
+                    System.out.println(Time.getTimeWarp() + "x");
 
                 }
                 if (e.getCode() == KeyCode.SUBTRACT || e.getCode() == KeyCode.MINUS) {
                     Time.slower();
-                    System.out.println(Time.timeWarp + "x");
+                    System.out.println(Time.getTimeWarp() + "x");
                 }
 
                 if(e.getCode() == KeyCode.TAB){

@@ -9,9 +9,9 @@ import java.util.*;
 public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent implements Engine, ActiveComponent {
     private ImageView img;
 
-    private final double maxThrust = 6000.0*1000;
+    private final double maxThrust = 2000.0*1000;
     private double curThrust = 0.0;
-    private final double maxFuelConsumption = 1600.0;
+    private final double maxFuelConsumption = 200.0;
     private boolean isActive;
     private int activationNumber = 0;
 
@@ -68,7 +68,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     }
 
     public static String getName() {
-        return "High Efficiency Vaccum Engine";
+        return "Vacuum Engine";
     }
 
     @Override
@@ -97,8 +97,8 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
     }
 
     @Override
-    public double getThrust() {
-        return curThrust;
+    public double getThrust(double density) {
+        return curThrust*(1-(density/2));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class HighEfficiencyVaccumEngineComponent extends SpaceshipComponent impl
 
     @Override
     public double getFuelConsumption() {
-        return maxFuelConsumption * (getThrust()/maxThrust());
+        return maxFuelConsumption;
     }
 
     @Override

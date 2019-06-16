@@ -106,7 +106,6 @@ public abstract class SpaceshipComponent {
     public String getDescription() {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("\n");
         builder.append("Id: ");
         builder.append(id);
         builder.append('\n');

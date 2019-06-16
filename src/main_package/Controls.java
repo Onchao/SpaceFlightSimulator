@@ -3,6 +3,7 @@ package main_package;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -14,7 +15,7 @@ public class Controls implements CustomScene {
     private Pane root = new Pane();
 
     Controls(){
-        root.setPrefSize(800, 800);
+        root.setPrefSize(800, 600);
 
         Rectangle background = new Rectangle(0, 0, 3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));
@@ -38,15 +39,13 @@ public class Controls implements CustomScene {
         buttonBack.setOnMouseExited(e -> buttonBack.setStyle(iddleButton));
         buttonBack.setTextFill(Color.rgb(0,255,255,0.8));
         buttonBack.setTranslateX(600);
-        buttonBack.setTranslateY(700);
+        buttonBack.setTranslateY(500);
         root.getChildren().add(buttonBack);
 
-        VBox controls = ControlBox.createControlBox();
+        HBox controls = ControlBox.createControlBox();
         controls.setTranslateX(100);
         controls.setTranslateY(50);
 
-        buttonBack.setTranslateX(600);
-        buttonBack.setTranslateY(700);
 
 
         root.getChildren().add(controls);

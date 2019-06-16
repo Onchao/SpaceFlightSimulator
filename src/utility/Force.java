@@ -38,13 +38,13 @@ public class Force {
         return Math.sqrt(Fx*Fx+Fy*Fy);
     }
     public double getPointAngle(){
-        return Math.toDegrees(Math.atan2(y,x));
+        return Math.atan2(y,x);
     }
     public double getVectorAngle(){
-        return Math.toDegrees(Math.atan2(Fy,Fx));
+        return Math.atan2(Fy,Fx);
     }
 
     public String toString () {
-        return "(" + x + ", " + y + ", " + Fx + ", " + Fy + ")";
+        return "( " + x + "  " + y + "  " + Fx + "  " + Fy + " )";
     }
 }

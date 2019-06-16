@@ -7,14 +7,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
+import main_package.ViewOrign;
 import ship.components.*;
 import utility.*;
 import world.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Spaceship {
 
@@ -59,7 +57,7 @@ public class Spaceship {
     private Point origin;
     //private double distToBottom;
     private Point pos; // to parent [m]
-    public Point gestPos(){
+    public Point getPos(){
         return pos;
     }
     private boolean crashed = false;
@@ -99,6 +97,8 @@ public class Spaceship {
 
 
     public double getOrbitalSpeed(){
+        if(landed)
+            return - getHorizontalOrbitalSpeed() + parent.getPlanetSurfaceSpeed();
         return Math.sqrt(vel.getX()* vel.getX() + vel.getY()* vel.getY());
     }
 
@@ -124,6 +124,8 @@ public class Spaceship {
 
 
     public double getHorizontalSurfaceSpeed(){
+        if(landed)
+            return 0;
         return getHorizontalOrbitalSpeed() - parent.getPlanetSurfaceSpeed();
     }
 
@@ -152,14 +154,17 @@ public class Spaceship {
     }
 
     public double getLowestPointDist(){
-        double angle = Math.toRadians(-getAngleOnPlanet() - rotate.getAngle() + 180);
-        double lowestPointDist = 0;
+        double angle = Math.toRadians(-getAngleOnPlanet() + 90);
+        double lowestPointDist = 1e+10;
 
         for (Point p : getVertices()) {
-            Point rp = p.rotate(angle);
-            lowestPointDist = Math.max(lowestPointDist, Math.abs(rp.getY()));
+            p = p.rotate(angle);
+            System.out.println(p.toString());
+
+            lowestPointDist = Math.min(lowestPointDist, p.getY());
         }
-        return lowestPointDist;
+        System.out.println(lowestPointDist);
+        return Math.abs(lowestPointDist);
     }
 
     public double getAltitude(){
@@ -203,7 +208,7 @@ public class Spaceship {
         double r = Math.sqrt(dx*dx + dy*dy);
         double angle = Math.atan2(dy, dx) + Math.toRadians(rotate.getAngle());// (rotate.getAngle()*(2*Math.PI))/360;
 
-        return new Point(r*Math.cos(angle), r*Math.sin(angle));
+        return new Point(r*Math.cos(angle), -r*Math.sin(angle));
     }
 
     public Spaceship (List<List<SpaceshipComponent>> stages, List<List<ActiveComponent>> activationQueue, CelestialBody parent, double angleOnPlanet, SolarSystem solarSystem) {
@@ -236,8 +241,7 @@ public class Spaceship {
             }
         }
 
-        recalculateOrigin(400, 400);
-        //calculateDistToBottom();
+        recalculateOrigin(ViewOrign.getX(), ViewOrign.getY());
 
         forceInfluence = new ForceInfluence(this, solarSystem);
         this.parent = parent;
@@ -292,7 +296,7 @@ public class Spaceship {
                 img.getTransforms().add(chuteRotate);
                 drawable.getChildren().add(img);
             }
-            recalculateOrigin(400, 400);
+            recalculateOrigin(ViewOrign.getX(), ViewOrign.getY());
 
         }
         activationQueue.remove(0);
@@ -319,11 +323,11 @@ public class Spaceship {
             updateTurn();
             Force F = forceInfluence.getCombinedForces();
 
-            vel = new Point(vel.getX() + F.getFx()*Time.deltaTIME/getTotalMass(),
-                    vel.getY() + F.getFy()*Time.deltaTIME/getTotalMass());
+            vel = new Point(vel.getX() + F.getFx()*Time.getDeltaTIME()/getTotalMass(),
+                    vel.getY() + F.getFy()*Time.getDeltaTIME()/getTotalMass());
 
-            pos = new Point(pos.getX() + vel.getX() * Time.deltaTIME,
-                    pos.getY() + vel.getY() * Time.deltaTIME);
+            pos = new Point(pos.getX() + vel.getX() * Time.getDeltaTIME(),
+                    pos.getY() + vel.getY() * Time.getDeltaTIME());
 
             updateAngleOnPlanet();
             updateParent();
@@ -335,8 +339,8 @@ public class Spaceship {
 
         for (List<SpaceshipComponent> stage : stages) {
             for (SpaceshipComponent comp : stage) {
-                if ((comp instanceof Engine) && ((Engine) comp).getThrust() != 0) {
-                    ((Engine) comp).burnFuel(((Engine) comp).getFuelConsumption()*throttle/100*Time.deltaTIME);
+                if ((comp instanceof Engine) && ((Engine) comp).getThrust(parent.getAtmDensity(getAltitude())) != 0) {
+                    ((Engine) comp).burnFuel(((Engine) comp).getFuelConsumption()*throttle/100*Time.getDeltaTIME());
                 }
             }
         }
@@ -350,7 +354,7 @@ public class Spaceship {
         }
         shipDebris.removeAll(toRemove);
 
-        recalculateOrigin(400,400);
+        recalculateOrigin(ViewOrign.getX(),ViewOrign.getY());
     }
 
 
@@ -373,10 +377,8 @@ public class Spaceship {
 
         if(!enginesPresent() || !fuelPresent())
             return;
-        Point p = parent.getPlanetSurfaceVelocity(this);
 
-        vel = new Point(p.getX(), p.getY());
-        System.out.println("nice: " + p.getX() + " " + p.getY());
+        vel = parent.getPlanetSurfaceVelocity(this);
 
         System.out.println(getHorizontalOrbitalSpeed());
         landed = false;
@@ -430,8 +432,6 @@ public class Spaceship {
         return ret;
     }
 
-
-    private Circle yellowCircle = null;
     private Circle BIGyellowCircle = null;
     public Point getCenterOfMass(){
         return convertCoordinates(getPixelCenterOfMass());
@@ -462,18 +462,10 @@ public class Spaceship {
         origin = new Point(x, y);
 
         Point center = getPixelCenterOfMass();
-        if (yellowCircle == null) {
-            yellowCircle = new Circle();
-            yellowCircle.setFill(Color.rgb(255, 255, 0, 1));
-            yellowCircle.setRadius(7);
-            drawable.getChildren().add(yellowCircle);
-        }
-        yellowCircle.setCenterX(center.getX());
-        yellowCircle.setCenterY(center.getY());
 
         if (BIGyellowCircle == null) {
             BIGyellowCircle = new Circle();
-            BIGyellowCircle.setFill(Color.rgb(255, 255, 0, 0.2));
+            BIGyellowCircle.setFill(Color.TRANSPARENT);
             double maxDist = 0;
             Point convCenter = convertCoordinates(center);
             for (Point p : getVertices()) {
@@ -488,7 +480,6 @@ public class Spaceship {
         double dx = (x - drawable.getBoundsInLocal().getCenterX());
         double dy = (y - drawable.getBoundsInLocal().getCenterY());
 
-        //TODO: make it better
         img.setX(x - 25);
         img.setY(y - 46);
 
@@ -512,9 +503,9 @@ public class Spaceship {
         for (List<SpaceshipComponent> stage : stages) {
             for (SpaceshipComponent comp : stage) {
                 if (comp instanceof Engine) {
-                    xs += ((Engine) comp).getThrust() * comp.getCenterOfMassX();
-                    ys += ((Engine) comp).getThrust() * comp.getCenterOfMassY();
-                    d += ((Engine) comp).getThrust();
+                    xs += ((Engine) comp).getThrust(parent.getAtmDensity(getAltitude())) * comp.getCenterOfMassX();
+                    ys += ((Engine) comp).getThrust(parent.getAtmDensity(getAltitude())) * comp.getCenterOfMassY();
+                    d += ((Engine) comp).getThrust(parent.getAtmDensity(getAltitude()));
                 }
             }
         }
@@ -523,7 +514,7 @@ public class Spaceship {
             blueCircle = new Circle();
             blueCircle.setFill(Color.BLUE);
             blueCircle.setRadius(7);
-            drawable.getChildren().add(blueCircle);
+            //drawable.getChildren().add(blueCircle);
         }
 
         if (d == 0) {
@@ -543,7 +534,7 @@ public class Spaceship {
         for (List<SpaceshipComponent> stage : stages) {
             for (SpaceshipComponent comp : stage) {
                 if (comp instanceof Engine) {
-                    d += ((Engine) comp).getThrust();
+                    d += ((Engine) comp).getThrust(parent.getAtmDensity(getAltitude()));
                 }
             }
         }
@@ -600,18 +591,34 @@ public class Spaceship {
         return fuelStatesSum/numTanks;
     }
 
-
-
-    public List<ComponentWithCenter> getComponentCenters () {
-        List<ComponentWithCenter> ret = new ArrayList<>();
-
-        for (List <SpaceshipComponent> stage : stages)
-            for (SpaceshipComponent comp : stage)
-                ret.add(new ComponentWithCenter(comp, convertCoordinates(comp.getGeoCenter())));
-        return ret;
+    public ArrayList<AeroComponent> getAeroComponents() {
+        ArrayList<AeroComponent> result = new ArrayList<>();
+        for (List <SpaceshipComponent> stage : stages){
+            for (SpaceshipComponent comp : stage){
+                if(!(comp instanceof ParachuteComponent)) {
+                    Point realPos = convertCoordinates(new Point(comp.getCenterOfMassX(), comp.getCenterOfMassY()));
+                    //System.out.println(realPos.toString());
+                    result.add(new AeroComponent(comp.getDragCoefficient(), comp.getFrontAvgRadius(), comp.getFrontAvgSurface(), realPos, this));
+                }
+            }
+        }
+        return result;
     }
 
-    //TODO: make this based on moment and time
+    public ArrayList<AeroComponent> getAeroParachute() {
+        ArrayList<AeroComponent> result = new ArrayList<>();
+        for (List <SpaceshipComponent> stage : stages){
+            for (SpaceshipComponent comp : stage){
+                if(comp instanceof  ParachuteComponent) {
+                    Point realPos = convertCoordinates(new Point(comp.getCenterOfMassX(), comp.getCenterOfMassY()));
+                    result.add(new AeroComponent(comp.getDragCoefficient(), comp.getFrontAvgRadius(), comp.getFrontAvgSurface(), realPos, this ));
+                }
+            }
+        }
+        return result;
+    }
+
+    //TODO: make this based time
     public void maxThrottle(){
         throttle = 100;
         setThrottleModifier(0);
@@ -646,10 +653,10 @@ public class Spaceship {
     private void updateTurn(){
         double totalMomentum = turnMomentum + forceMomentum;
         double angleAcceleration = Math.toDegrees(totalMomentum / getMomentOfInertia());
-        double turnDelta = angleAcceleration*Time.deltaTIME;
-        turnSpeed +=turnDelta;
+        double turnSpeedDelta = angleAcceleration*Time.getDeltaTIME();
+        turnSpeed +=turnSpeedDelta;
         //System.out.println(turnDelta);
-        rotate.setAngle(rotate.getAngle() + turnSpeed);
+        rotate.setAngle(rotate.getAngle() + turnSpeed * Time.getTimeWarp());
     }
 
     public void updateParent(){

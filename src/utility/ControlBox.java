@@ -10,9 +10,12 @@ import javafx.scene.paint.Color;
 
 
 public class ControlBox {
-    public static VBox createControlBox(){
-        VBox box = new VBox();
-        box.getChildren().addAll(
+    public static HBox createControlBox(){
+        VBox leftBox = new VBox();
+        VBox rightBox = new VBox();
+        HBox box = new HBox(leftBox, rightBox);
+
+        leftBox.getChildren().addAll(
                 nameBox("  Controls"),
                 singleControlBox("A","turn left"),
                 singleControlBox("D","turn right"),
@@ -20,15 +23,17 @@ public class ControlBox {
                 singleControlBox("X","cut throttle"),
                 singleControlBox("SHIFT  ,  W","increase throttle"),
                 singleControlBox("CTRL  ,  S","decrease throttle"),
-                singleControlBox("SPACE", "activate next stage"),
-                intervalBox(),
+                singleControlBox("SPACE", "activate next stage"));
+
+
+        rightBox.getChildren().addAll(
+                nameBox(""),
                 singleControlBox("TAB","cycle origin"),
                 singleControlBox("M","cycle zoom"),
                 singleControlBox("MOUSE SCROLL","zoom in / zoom out"),
                 intervalBox(),
                 singleControlBox("+","time warp increase"),
                 singleControlBox("-","time warp decrease"),
-                singleControlBox("F12","unbreakable parts, infinite fuel"),
                 singleControlBox("ESC","pause"));
         return box;
     }
@@ -48,8 +53,8 @@ public class ControlBox {
         keyL.setTextFill(Color.rgb(0,255,255,0.8));
         descL.setTextFill(Color.rgb(0,255,255,0.8));
 
-        box.setMinWidth(400);
-        box.setMaxWidth(400);
+        box.setMinWidth(300);
+        box.setMaxWidth(300);
 
         HBox keyBox = new HBox(keyL);
         HBox descBox = new HBox(descL);

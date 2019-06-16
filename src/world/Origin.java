@@ -1,6 +1,7 @@
 package world;
 
 
+import main_package.ViewOrign;
 import ship.Spaceship;
 import utility.Point;
 
@@ -35,11 +36,11 @@ public class Origin {
     public static double convertAbsX(double x){
         x -= getOrigin().getX();
         x *= Scale.SCALE;
-        return x + 400;
+        return x + ViewOrign.getX();
     }
     public static double convertAbsY(double y){
         y -= getOrigin().getY();
         y *= Scale.SCALE;
-        return - y + 400;
+        return - y + ViewOrign.getY();
     }
 }

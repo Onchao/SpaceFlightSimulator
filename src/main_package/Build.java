@@ -48,44 +48,54 @@ public class Build implements CustomScene {
     }
 
     Build (ObservableList<SpaceshipComponentFactory> availableComponents) {
+        root.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+
         builder = new SpaceshipBuilder();
 
         Rectangle background = new Rectangle(0, 0, 3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));
         root.getChildren().add(background);
 
-        root.getChildren().add(scroller);
         Pane spaceshipView = new Pane();
         scroller.setContent(spaceshipView);
-        scroller.setVmax(850);
-        scroller.setPrefSize(600, 850);
+        scroller.setPrefSize(800, 600);
         scroller.setPannable(true);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        spaceshipView.setMinSize(600, 850);
-        spaceshipView.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        spaceshipView.setMinSize(600, 600);
+        spaceshipView.setBackground(new Background(new BackgroundFill(Color.rgb(32, 80,  216), CornerRadii.EMPTY, Insets.EMPTY)));
 
         componentProperties = new VBox();
-        componentProperties.setLayoutX(610);
-        componentProperties.setLayoutY(400);
-        componentProperties.setAlignment(Pos.CENTER);
+        componentProperties.setPadding(new Insets(5));
 
         activationOrder = new VBox();
-        activationOrder.setLayoutX(900);
+        activationOrder.setLayoutX(270);
+        activationOrder.setLayoutY(20);
 
         componentList = CustomWidgets.customListView();
+
         componentList.setItems(availableComponents);
+        componentList.setMaxHeight(243);
+        componentList.setMaxWidth(230);
 
-        componentList.setLayoutX(600);
-
-        root.setPrefSize(850, 850);
-        root.getChildren().addAll(componentList, componentProperties, activationOrder);
-
+        Separator separator1 = new Separator();
+        separator1.setPadding(new Insets(3,0,3,0));
+        Separator separator2 = new Separator();
+        separator2.setPadding(new Insets(3,0,12,0));
         Button flyButton = CustomWidgets.customButton("Let's fly!");
-        // TODO: event handler for this one
+        VBox flyBox = new VBox(flyButton);
+        flyBox.setAlignment(Pos.CENTER);
 
-        root.getChildren().add(flyButton);
+        VBox componentBox = new VBox(componentList, separator1, componentProperties, separator2, flyBox);
+        componentBox.setPadding(new Insets(10));
+
+        root.setPrefSize(800, 600);
+        HBox mainBox = new HBox();
+
+        mainBox.getChildren().addAll(componentBox, scroller);
+        root.getChildren().addAll(mainBox, activationOrder);
+
 
         componentList.setOnMouseClicked(mouseEvent -> {
             ArrayList<Node> toRemove = new ArrayList<>();
@@ -104,7 +114,6 @@ public class Build implements CustomScene {
             for (Mount m : possibleMountPoints) {
                 MountImg img = getMountPointImg(m);
                 spaceshipView.getChildren().add(0, img);
-
                 img.setOnMouseClicked(new MountClickHandler(spaceshipView, componentProperties, builder, factory, m));
             }
         });
@@ -123,9 +132,9 @@ public class Build implements CustomScene {
             HBox items = new HBox();
             items.setAlignment(Pos.CENTER_LEFT);
 
-            items.getChildren().add(CustomWidgets.customLabel(activationNumber + ":    ", 15));
+            items.getChildren().add(CustomWidgets.customBoldLabel("stage " + activationNumber + " Id:    ", 14));
             for (ActiveComponent comp : stage) {
-                items.getChildren().add(CustomWidgets.customLabel(((SpaceshipComponent) comp).getId() + "   ", 12));
+                items.getChildren().add(CustomWidgets.customBoldLabel(((SpaceshipComponent) comp).getId() + "   ", 14));
             }
              ++ activationNumber;
             activationOrder.getChildren().add(items);
@@ -190,23 +199,30 @@ public class Build implements CustomScene {
 
             componentImage.setOnMouseClicked(mouseEvent -> {
                 componentProperties.getChildren().clear();
-                componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.toString(), 20));
+                componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.toString(), 18));
                 componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.getDescription(), 14));
+                HBox buttonBox = new HBox();
+                buttonBox.setAlignment(Pos.CENTER);
+
                 if (chosenComponentCpy instanceof ActiveComponent) {
                     TextField numInput =
                             CustomWidgets.customTextField(Integer.toString(((ActiveComponent) chosenComponentCpy).getActivationNumber()));
                     HBox actNo = new HBox(CustomWidgets.customLabel("Activation number: ", 12), numInput);
                     actNo.setAlignment(Pos.CENTER_LEFT);
+
+
                     componentProperties.getChildren().add(actNo);
-                    Button saveProperties = CustomWidgets.customButton("Save");
-                    componentProperties.getChildren().add(saveProperties);
+                    Button saveProperties = CustomWidgets.customSmallButton("Save");
+
+                    buttonBox.getChildren().add(saveProperties);
                     saveProperties.setOnAction(actionEvent1 -> {
                         ((ActiveComponent) chosenComponentCpy).setActivationNumber(Integer.parseInt(numInput.getCharacters().toString()));
                         update();
                     });
                 }
-                Button deleteComponent = CustomWidgets.customButton("Delete component");
-                componentProperties.getChildren().add(deleteComponent);
+                Button deleteComponent = CustomWidgets.customSmallButton("Delete component");
+                buttonBox.getChildren().add(deleteComponent);
+                componentProperties.getChildren().add(buttonBox);
                 deleteComponent.setOnAction(e -> {
                     if (chosenComponentCpy.getUpperMount() != null && chosenComponentCpy.getUpperMount().isUsed()) {
                         chosenComponentCpy.getUpperMount().getAttached().getLowerMount().setUsed(false, null);
@@ -225,6 +241,10 @@ public class Build implements CustomScene {
                     builder.removeComponent(chosenComponentCpy);
                     componentProperties.getChildren().clear();
                 });
+
+
+
+
             });
 
             ArrayList<Node> toRemove = new ArrayList<>();
@@ -247,7 +267,6 @@ public class Build implements CustomScene {
 
             spaceshipView.getChildren().add(componentImage);
             shiftView(chosenComponent);
-
             builder.addComponent(chosenComponent);
             update();
         }

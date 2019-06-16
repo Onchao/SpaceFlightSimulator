@@ -8,7 +8,6 @@ public class Gamestate {
         HELP,
         CONTROLS,
         EXIT
-        //TODO: crashed
     }
     public static gs GS;
     public static gs getGS(){

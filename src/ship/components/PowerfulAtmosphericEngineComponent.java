@@ -10,8 +10,9 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     private ImageView img;
 
     private double maxThrust = 10000.0*1000; // N;
+    private double curThrust = 0;
 
-    private final double fuelConsumption = 0;//1600;  // kg/s
+    private final double fuelConsumption = 2000;//1600;  // kg/s
     private boolean isActive;
     private int activationNumber = 0;
 
@@ -68,7 +69,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     }
 
     public static String getName() {
-        return "Powerful Atmospheric Engine";
+        return "Atmospheric Engine";
     }
 
     @Override
@@ -97,9 +98,9 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     }
 
     @Override
-    public double getThrust() {
+    public double getThrust(double density) {
         if (!isActive) return 0.0;
-        return maxThrust;
+        return curThrust*(1-(density/4));
     }
 
     @Override
@@ -109,7 +110,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
 
     @Override
     public void setThrust(double val) {
-        maxThrust = val;
+        curThrust = val;
     }
 
     @Override
@@ -145,7 +146,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
         }
 
         if (leftToBurn > amount/2)
-            maxThrust = 0;
+            curThrust = 0;
 
         return amount - leftToBurn;  // == 0 if we're out of fuel
     }
@@ -154,6 +155,7 @@ public class PowerfulAtmosphericEngineComponent extends SpaceshipComponent imple
     public ComponentAction activate() {
         isActive = true;
         detectTanks();
+        setThrust(maxThrust);
         return new ComponentAction(ComponentAction.ActionType.ACTIVATE_ENGINE, stageNumber);
     }
 

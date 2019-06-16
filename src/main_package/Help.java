@@ -15,7 +15,7 @@ public class Help implements CustomScene {
     private Pane root = new Pane();
 
     Help(){
-        root.setPrefSize(800, 800);
+        root.setPrefSize(800, 600);
 
         Rectangle background = new Rectangle(0, 0, 3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));
@@ -36,11 +36,11 @@ public class Help implements CustomScene {
                         "or you may accidentally open your parachute on lift off."),
                 customHBox("Different engines works better on different pressures of atmosphere."),
                 customHBox("Aerodynamic design will save you tons of fuel."),
-                customHBox("Landing struts can withstand higher stress than other parts of rocket."),
                 customHBox("The most efficient way to reach stable orbit is to first quickly boost through the atmosphere " +
                         "and shut down the engines when the highest point of your orbit (apoapsis) is at the desired altitude. " +
-                        "Around that point turn on engines again to rise lowest side of your orbit (periapsis).")
-        );
+                        "Around that point turn on engines again to rise lowest side of your orbit (periapsis)."),
+                customHBox("Remember that time warping reduce accuracy of computations which may lead to unexpected behaviour.")
+                );
         box.setTranslateX(100);
         box.setTranslateY(50);
         root.getChildren().add(box);
@@ -63,7 +63,8 @@ public class Help implements CustomScene {
         buttonBack.setOnMouseExited(e -> buttonBack.setStyle(iddleButton));
         buttonBack.setTextFill(Color.rgb(0,255,255,0.8));
         buttonBack.setTranslateX(600);
-        buttonBack.setTranslateY(700);
+        buttonBack.setTranslateY(500);
+
         root.getChildren().add(buttonBack);
 
         EventHandler<ActionEvent> eventBack= new EventHandler<ActionEvent>() {
@@ -86,7 +87,7 @@ public class Help implements CustomScene {
 
         Label textL = new Label(text);
         textL.setWrapText(true);
-        textL.setTextFill(Color.rgb(0,255,255,0.8));
+        textL.setTextFill(Color.rgb( 0,255,255,0.8));
         box.getChildren().add(textL);
         box.setMaxWidth(600);
         return box;

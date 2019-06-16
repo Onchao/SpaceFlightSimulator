@@ -1,9 +1,19 @@
 package world;
 
 public class Time {
-    public static double TIME; // s
-    public static double deltaTIME; //s
-    public static int timeWarp;
+    private static double TIME; // s
+    private static double deltaTIME; //s
+    private static int timeWarp;
+
+    public static double getTIME(){
+        return TIME;
+    }
+    public static double getDeltaTIME(){
+        return deltaTIME;
+    }
+    public static int getTimeWarp(){
+        return timeWarp;
+    }
 
     private static double prevMillis;
 

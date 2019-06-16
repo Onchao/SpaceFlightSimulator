@@ -40,7 +40,7 @@ public class SpaceshipBuilder {
             }
 
             if (components.isEmpty()) {
-                ret.add(new Mount(150, 720, 50, 200, Mount.Direction.UPPER, null));
+                ret.add(new Mount(150, 500, 50, 200, Mount.Direction.UPPER, null));
             } else {
                 for (SpaceshipComponent c : components) {
                     if (c.getUpperMount() != null && !c.getUpperMount().isUsed()) ret.add(c.getUpperMount());

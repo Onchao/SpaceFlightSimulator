@@ -17,7 +17,7 @@ public class Menu implements CustomScene {
 
     //TODO: set title of game
     Menu(){
-        root.setPrefSize(800, 800);
+        root.setPrefSize(800, 600);
 
         Rectangle background = new Rectangle(0, 0, 3840, 2160);
         background.setFill(Color.rgb(8, 8, 32));

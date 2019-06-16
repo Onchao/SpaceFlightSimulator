@@ -1,8 +1,8 @@
 package ship.components;
 
 public interface ActiveComponent {
-    ComponentAction activate ();
+    ComponentAction activate();
     boolean isActive();
-    void setActivationNumber (int num);
-    int getActivationNumber ();
+    void setActivationNumber(int num);
+    int getActivationNumber();
 }

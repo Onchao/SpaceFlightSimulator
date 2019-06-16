@@ -6,8 +6,6 @@ import ship.components.SpaceshipComponent;
 
 import java.util.List;
 
-
-//TODO
 public class Debris {
     private List <SpaceshipComponent> components;
     private double velocityX;
@@ -39,7 +37,6 @@ public class Debris {
 
     public void update () {
         ++ numIterations;
-        //TODO
     }
 
     public int getNumIterations() {
