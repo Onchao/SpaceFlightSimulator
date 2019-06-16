@@ -76,7 +76,7 @@ public class Build implements CustomScene {
         componentList = CustomWidgets.customListView();
 
         componentList.setItems(availableComponents);
-        componentList.setMaxHeight(243);
+        componentList.setMaxHeight(255);
         componentList.setMaxWidth(230);
 
         Separator separator1 = new Separator();
