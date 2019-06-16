@@ -159,11 +159,11 @@ public class Spaceship {
 
         for (Point p : getVertices()) {
             p = p.rotate(angle);
-            System.out.println(p.toString());
+            //System.out.println(p.toString());
 
             lowestPointDist = Math.min(lowestPointDist, p.getY());
         }
-        System.out.println(lowestPointDist);
+       // System.out.println(lowestPointDist);
         return Math.abs(lowestPointDist);
     }
 
