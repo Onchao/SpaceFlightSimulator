@@ -199,7 +199,7 @@ public class Build implements CustomScene {
 
             componentImage.setOnMouseClicked(mouseEvent -> {
                 componentProperties.getChildren().clear();
-                componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.toString(), 18));
+                componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.toString(), 17));
                 componentProperties.getChildren().add(CustomWidgets.customLabel(chosenComponentCpy.getDescription(), 14));
                 HBox buttonBox = new HBox();
                 buttonBox.setAlignment(Pos.CENTER);
@@ -220,7 +220,7 @@ public class Build implements CustomScene {
                         update();
                     });
                 }
-                Button deleteComponent = CustomWidgets.customSmallButton("Delete component");
+                Button deleteComponent = CustomWidgets.customSmallButton("Delete");
                 buttonBox.getChildren().add(deleteComponent);
                 componentProperties.getChildren().add(buttonBox);
                 deleteComponent.setOnAction(e -> {

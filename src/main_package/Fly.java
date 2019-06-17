@@ -229,7 +229,8 @@ public class Fly implements CustomScene{
             spaceship.img.setVisible(false);
             spaceship.getDrawable().setVisible(true);
         }
-        orbitPrediction.drawHelpersSimple();
+        if(!spaceship.isLanded())
+            orbitPrediction.drawHelpersSimple();
 
     }
 

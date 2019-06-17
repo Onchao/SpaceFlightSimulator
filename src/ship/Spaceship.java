@@ -69,6 +69,10 @@ public class Spaceship {
         return new Point(parent.getAbsPos().getX() + pos.getX(),
                 parent.getAbsPos().getY() + pos.getY());
     }
+    public boolean isLanded(){
+        return landed;
+    }
+
 
     private double angleOnPlanet;
     public double getAngleOnPlanet(){
