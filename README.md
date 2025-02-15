@@ -23,7 +23,7 @@ It is inspired by _Kerbal Space Program_ but in a two-dimensional environment.
 
 <p align="center">
     <div style="text-align: center; width: 80%;">
-        <img src="docs/building.png" alt width="80%">
+        <img src="docs/building.png" alt width="100%">
         <em>Designing a rocket.</em>
     </div>div>
 </p>
