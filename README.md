@@ -22,12 +22,14 @@ It is inspired by _Kerbal Space Program_ but in a two-dimensional environment.
 ## Screenshots From Gameplay
 
 <p align="center">
-    <img src="docs/building.png" alt width="80%">
-    <em>Designing a rocket.</em>
+    <div style="text-align: center; width: 80%;">
+        <img src="docs/building.png" alt width="80%">
+        <em>Designing a rocket.</em>
+    </div>div>
 </p>
 
 <p align="center">
-    <img src="docs/on_surface.png" alt width="80%">
+    <img src="docs/on_surface.png" alt width="80%" style="display: block; margin: 0 auto;">
     <em>Rocket fully assembled on a surface with three stages.</em>
 </p>
 
