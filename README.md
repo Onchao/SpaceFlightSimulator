@@ -10,7 +10,7 @@ It is inspired by _Kerbal Space Program_ but in a two-dimensional environment.
     - Planets and moons follow orbital mechanics and have mass that affects gravity.
     - Celestial bodies can have atmospheres, with density decreasing with altitude.
 - Physics-based simulation    
-    - Rockets are affected by **collisions, mass, gravity,** and **aerodynamic drag**.
+    - Rockets are affected by **propulsion, gravity, aerodynamic drag** and **collisions**.
     - The rocket's mass decreases as fuel is burned or when stages separate.
     - Aerodynamic drag is calculated using the atmospheric drag coefficient of each individual rocket component 
     and its surface area that directly faces the atmosphere (perpendicular to the velocity vector). 
